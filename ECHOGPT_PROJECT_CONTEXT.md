@@ -583,82 +583,86 @@ Do not blindly approve agent output.
 ## CURRENT STATUS
 
 Current milestone:
-Web App Shell completed.
+Web App Shell — Interaction & Theme Polish
 
 Status:
 Implemented and verified.
 
 ## COMPLETED WORK
 
-- Implemented reusable `AppShell` component (`src/components/layout/AppShell.tsx`) coordinating desktop persistent sidebar, tablet collapse, and mobile drawer.
-- Implemented persistent and collapsible desktop/tablet `Sidebar` (`src/components/layout/Sidebar.tsx`) with brand header, New Chat CTA, scrollable navigation list, Pro upgrade card, and bottom utility toolbar.
-- Implemented accessible `MobileNav` component (`src/components/layout/MobileNav.tsx`) with sticky top header bar, slide-in drawer, backdrop blur, `Escape` key handler, and body scroll lock.
-- Separated navigation configuration data (`src/config/navigation.ts`) and TypeScript types (`src/types/navigation.ts`) into `ENGAGEMENT_ITEMS`, `HELP_SUPPORT_ITEMS`, and `BOTTOM_UTILITY_ITEMS`.
-- Added PRO badges for Image Studio and Video Studio with restrained brand styling.
-- Implemented polished `UpgradeCard` (`src/components/layout/UpgradeCard.tsx`) with subtle brand accent, feature summary, and upgrade button.
-- Implemented accessible `NavItem` component (`src/components/layout/NavItem.tsx`) with `#713CF4` active indicator bar, hover/focus-visible states, external link support, and compact tooltip support.
-- Implemented clean, neutral `PlaceholderWorkspace` (`src/components/dashboard/PlaceholderWorkspace.tsx`) with model selector, "How can EchoGPT help you today?" greeting, prompt action cards, and bottom message input.
-- Calibrated Lexend typography system to prevent bulky geometric letterforms across headers, nav items, and controls.
-- Configured `#713CF4` brand tokens and slim scrollbars in `globals.css`.
-- Updated `page.tsx` and `layout.tsx` to mount AppShell with strict Lexend font usage.
-- Configured `build` script with `--webpack` for Windows platform compatibility.
+- Implemented zero-dependency `ThemeProvider` using `useSyncExternalStore` (`src/context/ThemeContext.tsx`) with instant system detection, `localStorage` persistence, and zero-flicker inline script in `<head>`.
+- Connected the Sidebar utility Theme button to dynamically toggle between Dark and Light mode with adaptive Sun/Moon icons and accessible ARIA attributes.
+- Configured class-based dark mode (`@custom-variant dark (&:where(.dark, .dark *));`) and adaptive CSS variables in `src/app/globals.css`.
+- Implemented functional "New Chat" interaction that resets conversation messages, clears input, resets mock assistant state, returns to empty state, and auto-focuses the prompt textarea.
+- Created accessible `ModelSelector` popover dropdown (`src/components/dashboard/ModelSelector.tsx`) with neutral capability models ("Standard Model", "Fast Model", "Creative Studio Model", "Analytical Model"), Escape to close, outside click dismissal, and visible selection state.
+- Made quick prompt action cards interactive: clicking cards pre-fills the prompt into the message input, updates navigation focus, and auto-focuses the textarea.
+- Implemented functional frontend message input in `PlaceholderWorkspace`:
+  - Multi-line textarea support with auto-expanding height
+  - Enter to send, Shift+Enter for newlines
+  - Real-time conversation message stream (user message on right, EchoGPT assistant message on left)
+  - Simulated typing indicator with animated bouncing dots
+  - Realistic mock responses tailored to the topic (SOP outline, Image Studio concepts, Model comparisons), clearly marked as demo/mock responses
+  - One-click copy message content with visual "Copied" feedback
+- Preserved brand identity: strict `#713CF4` primary accent, Lexend font, neutral white/zinc surfaces across both light and dark themes.
 
 ## FILES CREATED / MODIFIED
 
-- `src/types/navigation.ts` (Created)
-- `src/config/navigation.ts` (Created)
-- `src/components/layout/AppShell.tsx` (Created)
-- `src/components/layout/Sidebar.tsx` (Created)
-- `src/components/layout/NavItem.tsx` (Created)
-- `src/components/layout/UpgradeCard.tsx` (Created)
-- `src/components/layout/MobileNav.tsx` (Created)
-- `src/components/dashboard/PlaceholderWorkspace.tsx` (Created)
+- `src/context/ThemeContext.tsx` (Created)
+- `src/components/dashboard/ModelSelector.tsx` (Created)
+- `src/components/dashboard/PlaceholderWorkspace.tsx` (Modified)
+- `src/components/layout/Sidebar.tsx` (Modified)
 - `src/app/globals.css` (Modified)
 - `src/app/layout.tsx` (Modified)
 - `src/app/page.tsx` (Modified)
-- `package.json` (Modified)
+- `src/components/layout/AppShell.tsx` (Preserved)
+- `src/components/layout/NavItem.tsx` (Preserved)
+- `src/components/layout/UpgradeCard.tsx` (Preserved)
+- `src/components/layout/MobileNav.tsx` (Preserved)
+- `src/config/navigation.ts` (Preserved)
+- `src/types/navigation.ts` (Preserved)
 
 ## IMPORTANT DESIGN / ARCHITECTURE DECISIONS
 
-- Primary brand color strictly set to `#713CF4` (EchoGPT brand purple), applied intentionally for CTAs, active items, and accents rather than large overwhelming backgrounds.
-- Lexend font preserved as primary font with calibrated sizing (`text-[13.5px]` nav, `text-[11px]` section headers) to maintain crisp, non-bulky geometric proportions.
-- Navigation data decoupled from UI components into `src/config/navigation.ts` for clean maintainability and easy future route extensions.
-- Official EchoGPT SVG logo (`/favicon.svg`) integrated in brand headers without synthetic version numbers or beta labels.
-- Sidebar viewport safety achieved by pinning brand header/CTA at top and UpgradeCard/utilities at bottom, with independent slim scrolling for navigation items (`overflow-y-auto min-h-0`).
-- Neutral product copy ("How can EchoGPT help you today?", "Select AI model") used in place of unverified user names or model versions.
-- Local state handles active item selection and responsive collapse/drawer toggling.
+- Modern React 19 `useSyncExternalStore` used for ThemeContext to prevent hydration tearing and avoid `setState` cascading renders in `useEffect`.
+- Anti-FOUC script placed directly in `layout.tsx` `<head>` ensuring dark mode renders instantaneously without flash on page reload.
+- Neutral model names ("Standard Model", "Fast Model", "Creative Studio Model", "Analytical Model") chosen to avoid fabricating unverified EchoGPT model version names.
+- State reset on "New Chat" handled cleanly via React `key={chatSessionId}` remounting in `src/app/page.tsx`.
+- Mock responses clearly labeled as simulated frontend responses, providing realistic feel without pretending to connect to a real backend AI.
 
 ## VERIFICATION
 
 - `npm run lint` → passed (0 errors, 0 warnings)
 - `npm run build` (`next build --webpack`) → passed (0 errors, static prerendering succeeded)
 - Local dev server (`npm run dev`) → verified rendering on `http://localhost:3001`
-- Desktop persistent sidebar (264px) & collapse toggle (72px) → verified
-- Mobile slide-in drawer with backdrop dismiss & Escape listener → verified
-- Sidebar scroll containment on limited vertical viewports → verified
+- Dark/Light theme switching → verified with dynamic Sun/Moon icon toggle and full surface contrast
+- Theme persistence across reloads → verified via `localStorage` + anti-flicker script
+- Model selector dropdown → verified keyboard Escape dismissal, outside click, and selection
+- Prompt card click → verified pre-fills textarea and auto-focuses cursor
+- Chat input submission → verified Enter key submission, message bubble appearance, simulated typing indicator, and assistant reply
+- "New Chat" button → verified resets conversation state to welcome screen and focuses input
+- Multi-viewport layout (Desktop 1440px/1280px, Tablet 768px-1024px, Mobile 375px/430px) → verified without horizontal overflow
 
 ## KNOWN ISSUES
 
-- None currently identified. All components compile cleanly and render as specified.
+- None currently identified.
 
 ## NEXT STEPS
 
-1. Perform visual review of the Web App Shell in browser across desktop, tablet, and mobile viewports.
-2. Implement the Web App `/chat` page (conversation view, message history, user prompt input, streaming/mock response states).
-3. Connect sidebar navigation items to real Next.js App Router routes as feature pages are created.
-4. Implement `/history` and studio preview pages.
-5. Plan the single-page EchoGPT landing website.
+1. Conduct user visual walkthrough & feedback on interactive shell.
+2. Implement dedicated `/chat` route or sub-pages while maintaining shell layout.
+3. Wire individual sidebar items (`/image-studio`, `/compare`, `/history`, etc.) to Next.js file-system routes.
+4. Prepare single-page EchoGPT landing website concept.
 
 ## CURRENT MILESTONE
 
 Current milestone:
-Web App Shell
+Web App Shell — Interaction & Theme Polish
 
 Status:
 Completed
 
 Next milestone:
-Web App Visual Review & /chat Page Implementation
+Web App Full Page Routing & Landing Page Planning
 
 ---
 
