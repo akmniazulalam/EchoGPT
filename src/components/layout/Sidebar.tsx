@@ -6,11 +6,14 @@ import {
   Plus,
   PanelLeftClose,
   PanelLeftOpen,
+  Sun,
+  Moon,
 } from "lucide-react";
 import {
   NAVIGATION_SECTIONS,
   BOTTOM_UTILITY_ITEMS,
 } from "@/config/navigation";
+import { useTheme } from "@/context/ThemeContext";
 import { NavItem } from "./NavItem";
 import { UpgradeCard } from "./UpgradeCard";
 
@@ -33,6 +36,8 @@ export function Sidebar({
   className = "",
   isMobileDrawer = false,
 }: SidebarProps) {
+  const { theme, toggleTheme, mounted } = useTheme();
+
   return (
     <aside
       className={`relative flex flex-col h-full bg-white dark:bg-[#111217] border-r border-zinc-200/80 dark:border-zinc-800/80 transition-all duration-200 ease-in-out select-none ${
@@ -48,8 +53,8 @@ export function Sidebar({
       >
         <button
           type="button"
-          onClick={() => onSelectNav("new-chat")}
-          className="flex items-center gap-2.5 outline-none rounded-lg p-1 -ml-1 focus-visible:ring-2 focus-visible:ring-[#713CF4] group"
+          onClick={onNewChat}
+          className="flex items-center gap-2.5 outline-none rounded-lg p-1 -ml-1 focus-visible:ring-2 focus-visible:ring-[#713CF4] group cursor-pointer"
           aria-label="EchoGPT Home"
         >
           <div className="relative size-7 shrink-0 rounded-lg overflow-hidden flex items-center justify-center">
@@ -167,13 +172,35 @@ export function Sidebar({
           }`}
         >
           {BOTTOM_UTILITY_ITEMS.map((item) => {
-            const Icon = item.icon;
+            const isThemeItem = item.id === "theme";
+            const Icon = isThemeItem
+              ? mounted && theme === "dark"
+                ? Sun
+                : Moon
+              : item.icon;
             const isItemActive = activeId === item.id;
+            const itemLabel = isThemeItem
+              ? mounted && theme === "dark"
+                ? "Light"
+                : "Dark"
+              : item.label;
+            const itemTitle = isThemeItem
+              ? mounted && theme === "dark"
+                ? "Switch to light theme"
+                : "Switch to dark theme"
+              : item.label;
+
             return (
               <button
                 key={item.id}
                 type="button"
-                onClick={() => onSelectNav(item.id)}
+                onClick={() => {
+                  if (isThemeItem) {
+                    toggleTheme();
+                  } else {
+                    onSelectNav(item.id);
+                  }
+                }}
                 className={`flex items-center justify-center rounded-lg transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] cursor-pointer ${
                   isCollapsed
                     ? "size-9 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800/60"
@@ -183,13 +210,13 @@ export function Sidebar({
                     ? "text-[#713CF4] dark:text-[#a78bfa] font-medium"
                     : ""
                 }`}
-                title={item.label}
-                aria-label={item.ariaLabel || item.label}
+                title={itemTitle}
+                aria-label={itemTitle}
               >
                 <Icon className="size-4 shrink-0" strokeWidth={1.8} />
                 {!isCollapsed && (
                   <span className="text-[12px] font-normal leading-tight">
-                    {item.label}
+                    {itemLabel}
                   </span>
                 )}
               </button>
