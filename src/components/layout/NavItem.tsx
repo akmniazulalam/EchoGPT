@@ -1,21 +1,30 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import type { NavItem as NavItemType } from "@/types/navigation";
 
 interface NavItemProps {
   item: NavItemType;
-  isActive?: boolean;
   isCollapsed?: boolean;
   onClick?: () => void;
 }
 
 export function NavItem({
   item,
-  isActive = false,
   isCollapsed = false,
   onClick,
 }: NavItemProps) {
+  const pathname = usePathname();
+
+  // Active if the current path matches this item's href exactly
+  // External links (discord) are never active
+  const isActive =
+    !item.isExternal &&
+    !item.href.startsWith("#") &&
+    pathname === item.href;
+
   const Icon = item.icon;
 
   const content = (
@@ -102,15 +111,14 @@ export function NavItem({
   }
 
   return (
-    <button
-      type="button"
-      onClick={onClick}
+    <Link
+      href={item.href}
       className={baseClasses}
       aria-current={isActive ? "page" : undefined}
       aria-label={item.label}
-      disabled={item.disabled}
+      onClick={onClick}
     >
       {content}
-    </button>
+    </Link>
   );
 }
