@@ -13,16 +13,45 @@ import { AIModel, AI_MODELS } from "@/config/models";
 import { Badge } from "@/components/ui/Badge";
 import { useUpgradeModal } from "@/context/UpgradeModalContext";
 
-interface ModelSelectorProps {
-  selectedModelId: string;
-  onSelectModel: (model: AIModel) => void;
+export interface ModelSelectorProps {
+  // Single-select mode (default)
+  selectedModelId?: string;
+  onSelectModel?: (model: AIModel) => void;
+
+  // Multi-select mode (for Compare)
+  multiSelect?: boolean;
+  selectedModelIds?: string[];
+  onToggleModel?: (model: AIModel) => void;
+  maxSelected?: number;
+
+  // Models catalog (defaults to AI_MODELS, can pass IMAGE_MODELS)
+  models?: AIModel[];
+
+  // Customization
+  triggerLabel?: string;
+  triggerIcon?: React.ReactNode;
+  triggerClassName?: string;
   className?: string;
+  align?: "left" | "right";
+  headerTitle?: string;
+  allowProSelection?: boolean;
 }
 
 export function ModelSelector({
   selectedModelId,
   onSelectModel,
+  multiSelect = false,
+  selectedModelIds = [],
+  onToggleModel,
+  maxSelected = 4,
+  models = AI_MODELS,
+  triggerLabel,
+  triggerIcon,
+  triggerClassName = "",
   className = "",
+  align = "right",
+  headerTitle,
+  allowProSelection = false,
 }: ModelSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -32,8 +61,8 @@ export function ModelSelector({
   const { openUpgradeModal } = useUpgradeModal();
 
   const selectedModel = useMemo(() => {
-    return AI_MODELS.find((m) => m.id === selectedModelId) || AI_MODELS[0];
-  }, [selectedModelId]);
+    return models.find((m) => m.id === selectedModelId) || models[0];
+  }, [models, selectedModelId]);
 
   // Focus search input on open
   useEffect(() => {
@@ -82,15 +111,15 @@ export function ModelSelector({
 
   // Filtered models
   const filteredModels = useMemo(() => {
-    if (!searchQuery.trim()) return AI_MODELS;
+    if (!searchQuery.trim()) return models;
     const q = searchQuery.toLowerCase();
-    return AI_MODELS.filter(
+    return models.filter(
       (m) =>
         m.name.toLowerCase().includes(q) ||
         m.provider.toLowerCase().includes(q) ||
         m.description.toLowerCase().includes(q)
     );
-  }, [searchQuery]);
+  }, [models, searchQuery]);
 
   // Group by category
   const categories = useMemo(() => {
@@ -105,19 +134,35 @@ export function ModelSelector({
     return Array.from(map.entries());
   }, [filteredModels]);
 
-  const handleSelect = (model: AIModel) => {
-    if (model.isPro) {
-      openUpgradeModal(
-        `${model.name} is an EchoGPT Pro model. Upgrade to access frontier AI reasoning.`
-      );
+  const handleItemClick = (model: AIModel) => {
+    if (multiSelect) {
+      if (model.isPro && !allowProSelection) {
+        openUpgradeModal(
+          `${model.name} is an EchoGPT Pro model. Upgrade to include frontier models in your comparison.`
+        );
+        return;
+      }
+      onToggleModel?.(model);
+    } else {
+      if (model.isPro && !allowProSelection) {
+        openUpgradeModal(
+          `${model.name} is an EchoGPT Pro model. Upgrade to access frontier AI reasoning.`
+        );
+        setIsOpen(false);
+        setSearchQuery("");
+        return;
+      }
+      onSelectModel?.(model);
       setIsOpen(false);
       setSearchQuery("");
-      return;
     }
+  };
 
-    onSelectModel(model);
-    setIsOpen(false);
-    setSearchQuery("");
+  const isModelSelected = (id: string) => {
+    if (multiSelect) {
+      return selectedModelIds.includes(id);
+    }
+    return selectedModelId === id;
   };
 
   return (
@@ -130,17 +175,25 @@ export function ModelSelector({
         ref={triggerRef}
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#1b1725] text-xs font-medium text-zinc-800 dark:text-zinc-200 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors shadow-2xs outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] cursor-pointer"
+        className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#1b1725] text-xs font-medium text-zinc-800 dark:text-zinc-200 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors shadow-2xs outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] cursor-pointer ${triggerClassName}`}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
-        aria-label={`Select AI model. Current: ${selectedModel.name}`}
       >
-        <SlidersHorizontal className="size-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
-        <span className="truncate max-w-32.5 sm:max-w-45">
-          {selectedModel.name}
+        {triggerIcon || (
+          <SlidersHorizontal className="size-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
+        )}
+
+        <span className="truncate max-w-36 sm:max-w-48">
+          {triggerLabel ? (
+            triggerLabel
+          ) : multiSelect ? (
+            `${selectedModelIds.length} Models Selected`
+          ) : (
+            selectedModel.name
+          )}
         </span>
 
-        {selectedModel.isPro && (
+        {!multiSelect && selectedModel.isPro && (
           <Badge variant="pro" size="sm" className="hidden sm:inline-flex">
             PRO
           </Badge>
@@ -157,18 +210,22 @@ export function ModelSelector({
       {isOpen && (
         <div
           role="listbox"
-          aria-label="Available AI models"
-          className="absolute right-0 top-full mt-1.5 w-80 sm:w-92 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#1b1725] shadow-2xl p-2 z-50 focus:outline-none animate-in fade-in-50 zoom-in-95 duration-100"
+          aria-label={headerTitle || "Available AI models"}
+          className={`absolute ${
+            align === "left" ? "left-0" : "right-0"
+          } top-full mt-1.5 w-80 sm:w-92 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#1b1725] shadow-2xl p-2 z-50 focus:outline-none animate-in fade-in-50 zoom-in-95 duration-100`}
         >
           {/* Header & Search */}
           <div className="p-1.5 space-y-2 border-b border-zinc-100 dark:border-zinc-850 pb-2.5">
             <div className="flex items-center justify-between px-1">
               <span className="text-[11px] font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
-                Select AI Model
+                {headerTitle || (multiSelect ? "Select Models" : "Select AI Model")}
               </span>
               <span className="text-[10px] text-zinc-400 dark:text-zinc-500 flex items-center gap-1">
                 <Sparkles className="size-3 text-[#713CF4]" />
-                {AI_MODELS.length} Models
+                {multiSelect
+                  ? `${selectedModelIds.length}/${maxSelected} selected`
+                  : `${models.length} Models`}
               </span>
             </div>
 
@@ -193,22 +250,22 @@ export function ModelSelector({
                 No matching models found
               </div>
             ) : (
-              categories.map(([category, models]) => (
+              categories.map(([category, catModels]) => (
                 <div key={category} className="space-y-1">
                   <div className="px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
                     {category}
                   </div>
 
                   <div className="space-y-0.5">
-                    {models.map((model) => {
-                      const isSelected = model.id === selectedModelId;
+                    {catModels.map((model) => {
+                      const isSelected = isModelSelected(model.id);
                       return (
                         <button
                           key={model.id}
                           type="button"
                           role="option"
                           aria-selected={isSelected}
-                          onClick={() => handleSelect(model)}
+                          onClick={() => handleItemClick(model)}
                           className={`w-full text-left p-2 rounded-xl transition-all duration-100 flex items-start gap-2.5 outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] cursor-pointer ${
                             isSelected
                               ? "bg-[#713CF4]/10 dark:bg-[#713CF4]/20 text-zinc-900 dark:text-zinc-100 border border-[#713CF4]/30"
@@ -249,7 +306,7 @@ export function ModelSelector({
                             </p>
                           </div>
 
-                          {model.isPro ? (
+                          {model.isPro && !allowProSelection ? (
                             <Lock className="size-3.5 text-zinc-400 dark:text-zinc-500 shrink-0 mt-1" />
                           ) : isSelected ? (
                             <Check className="size-4 text-[#713CF4] dark:text-[#a78bfa] shrink-0 mt-0.5" />

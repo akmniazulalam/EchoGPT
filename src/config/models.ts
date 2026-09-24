@@ -119,4 +119,44 @@ export const AI_MODELS: AIModel[] = [
   },
 ];
 
+export const IMAGE_MODELS: AIModel[] = [
+  {
+    id: "flux-pro",
+    name: "Flux Pro",
+    provider: "EchoGPT",
+    category: "Flagship",
+    description: "Highest-fidelity 4K neural synthesis and photorealistic detail",
+    isPro: true,
+    badge: "Frontier",
+  },
+  {
+    id: "dall-e-3",
+    name: "DALL-E 3",
+    provider: "OpenAI",
+    category: "Flagship",
+    description: "Superior prompt adherence, typography, and scene composition",
+    isPro: true,
+    badge: "Accurate",
+  },
+  {
+    id: "midjourney-v6",
+    name: "Midjourney v6",
+    provider: "EchoGPT",
+    category: "Flagship",
+    description: "Cinematic lighting, rich textures, and painterly aesthetic styles",
+    isPro: true,
+    badge: "Cinematic",
+  },
+  {
+    id: "sdxl-turbo",
+    name: "SDXL Turbo",
+    provider: "EchoGPT",
+    category: "Fast",
+    description: "Real-time sub-second generation for rapid concept prototyping",
+    isPro: false,
+    badge: "Fast",
+  },
+];
+
 export const DEFAULT_MODEL_ID = "echogpt";
+export const DEFAULT_IMAGE_MODEL_ID = "flux-pro";
