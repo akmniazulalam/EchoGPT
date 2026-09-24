@@ -583,64 +583,157 @@ Do not blindly approve agent output.
 ## CURRENT STATUS
 
 Current milestone:
-Web App Shell — Interaction & Theme Polish
+EchoGPT Product UI System + Core UX Polish (Milestone 4 - Full)
 
 Status:
-Implemented and verified.
+Implemented and verified ✓
 
 ## COMPLETED WORK
 
-- Implemented zero-dependency `ThemeProvider` using `useSyncExternalStore` (`src/context/ThemeContext.tsx`) with instant system detection, `localStorage` persistence, and zero-flicker inline script in `<head>`.
-- Connected the Sidebar utility Theme button to dynamically toggle between Dark and Light mode with adaptive Sun/Moon icons and accessible ARIA attributes.
-- Configured class-based dark mode (`@custom-variant dark (&:where(.dark, .dark *));`) and adaptive CSS variables in `src/app/globals.css`.
-- Implemented functional "New Chat" interaction that resets conversation messages, clears input, resets mock assistant state, returns to empty state, and auto-focuses the prompt textarea.
-- Created accessible `ModelSelector` popover dropdown (`src/components/dashboard/ModelSelector.tsx`) with neutral capability models ("Standard Model", "Fast Model", "Creative Studio Model", "Analytical Model"), Escape to close, outside click dismissal, and visible selection state.
-- Made quick prompt action cards interactive: clicking cards pre-fills the prompt into the message input, updates navigation focus, and auto-focuses the textarea.
-- Implemented functional frontend message input in `PlaceholderWorkspace`:
-  - Multi-line textarea support with auto-expanding height
-  - Enter to send, Shift+Enter for newlines
-  - Real-time conversation message stream (user message on right, EchoGPT assistant message on left)
-  - Simulated typing indicator with animated bouncing dots
-  - Realistic mock responses tailored to the topic (SOP outline, Image Studio concepts, Model comparisons), clearly marked as demo/mock responses
-  - One-click copy message content with visual "Copied" feedback
-- Preserved brand identity: strict `#713CF4` primary accent, Lexend font, neutral white/zinc surfaces across both light and dark themes.
+### Milestone 4 (Full): EchoGPT Product UI System + Core UX Polish
 
-## FILES CREATED / MODIFIED
+#### Brand & Sidebar Polish
+1. **Logo hover scale removed**: `group-hover:scale-105` eliminated from logo Image element.
+2. **Clean horizontal brand lockup**: Logo mark + EchoGPT wordmark — `text-[17px] font-semibold tracking-[-0.025em]` (no gradient text — restrained and premium).
+3. **Sidebar utility grid stays inside bounds**: Replaced `justify-between px-1` flex row with `grid grid-cols-4 gap-1 w-full` — utility items never overflow.
+4. **Keyboard shortcut updated**: `Ctrl+K` → `Ctrl+Shift+K` (Windows/Linux), `⌘K` → `⌘⇧K` (macOS) — shortcut badge reflects new binding. Global listener updated in AppShell.tsx.
 
-- `src/context/ThemeContext.tsx` (Created)
-- `src/components/dashboard/ModelSelector.tsx` (Created)
-- `src/components/dashboard/PlaceholderWorkspace.tsx` (Modified)
-- `src/components/layout/Sidebar.tsx` (Modified)
-- `src/app/globals.css` (Modified)
-- `src/app/layout.tsx` (Modified)
-- `src/app/page.tsx` (Modified)
-- `src/components/layout/AppShell.tsx` (Preserved)
-- `src/components/layout/NavItem.tsx` (Preserved)
-- `src/components/layout/UpgradeCard.tsx` (Preserved)
-- `src/components/layout/MobileNav.tsx` (Preserved)
-- `src/config/navigation.ts` (Preserved)
-- `src/types/navigation.ts` (Preserved)
+#### Custom Scrollbar Update
+- EchoGPT purple gradient (`#713CF4` tints) scrollbar replaces neutral gray.
+- Dark mode compatible — `.dark .custom-scrollbar` rules in globals.css.
 
-## IMPORTANT DESIGN / ARCHITECTURE DECISIONS
+#### Global UI Primitives Created
+- `src/components/ui/Badge.tsx` — Pro/default/success/outline badges.
+- `src/components/ui/Button.tsx` — Primary/secondary/outline/ghost/danger variants with loading state.
+- `src/components/ui/Modal.tsx` — Accessible modal with Escape, backdrop, body scroll lock.
+- `src/components/ui/Toast.tsx` — `ToastContainer` + `showToast()` global notification system.
 
-- Modern React 19 `useSyncExternalStore` used for ThemeContext to prevent hydration tearing and avoid `setState` cascading renders in `useEffect`.
-- Anti-FOUC script placed directly in `layout.tsx` `<head>` ensuring dark mode renders instantaneously without flash on page reload.
-- Neutral model names ("Standard Model", "Fast Model", "Creative Studio Model", "Analytical Model") chosen to avoid fabricating unverified EchoGPT model version names.
-- State reset on "New Chat" handled cleanly via React `key={chatSessionId}` remounting in `src/app/page.tsx`.
-- Mock responses clearly labeled as simulated frontend responses, providing realistic feel without pretending to connect to a real backend AI.
+#### UpgradeProModal + Global Context
+- `src/context/UpgradeModalContext.tsx` — Global React context for opening the modal from any component.
+- `src/components/billing/UpgradeProModal.tsx` — Premium upgrade modal: billing switcher (Annual/Monthly), pricing, benefits grid (GPT-5, Claude Opus, Image Studio, Video Studio, Compute tiers), Upgrade CTA, "Maybe later" close. No real checkout.
+- AppShell wraps entire app in `<UpgradeModalProvider>` and renders `<UpgradeProModal />` globally.
 
-## VERIFICATION
+#### Global Model Catalog
+- `src/config/models.ts` — 11 realistic AI models: EchoGPT (free), GPT-4o mini (free), DeepSeek-V3 (free), GPT-5 (PRO), GPT-4o (PRO), Gemini Advanced (PRO), Claude 4 Sonnet (PRO), Claude Opus (PRO), DeepSeek R1 (PRO), Grok 4 (PRO), Mistral Pro (PRO).
+- Organized by provider, category (Flagship/Reasoning/Fast/Open Source), with contextWindow and isPro flags.
 
-- `npm run lint` → passed (0 errors, 0 warnings)
-- `npm run build` (`next build --webpack`) → passed (0 errors, static prerendering succeeded)
-- Local dev server (`npm run dev`) → verified rendering on `http://localhost:3001`
-- Dark/Light theme switching → verified with dynamic Sun/Moon icon toggle and full surface contrast
-- Theme persistence across reloads → verified via `localStorage` + anti-flicker script
-- Model selector dropdown → verified keyboard Escape dismissal, outside click, and selection
-- Prompt card click → verified pre-fills textarea and auto-focuses cursor
-- Chat input submission → verified Enter key submission, message bubble appearance, simulated typing indicator, and assistant reply
-- "New Chat" button → verified resets conversation state to welcome screen and focuses input
-- Multi-viewport layout (Desktop 1440px/1280px, Tablet 768px-1024px, Mobile 375px/430px) → verified without horizontal overflow
+#### Rebuilt ModelSelector
+- Full rebuild of `src/components/dashboard/ModelSelector.tsx`.
+- Searchable popover with category group headers, PRO badges, provider labels, context window sizes.
+- Lock icon for PRO models. Selecting PRO model → `openUpgradeModal()` (no PRO response generated).
+- Removed all legacy neutral model IDs.
+
+#### Chat Protection Flow
+- `PlaceholderWorkspace.tsx`: If user selects a PRO model and tries to send → UpgradeProModal opens instead of response.
+- Free model selection → simulated mock response as before.
+
+#### Chat Persistence Overhaul
+- `src/lib/chatStorage.ts` completely rewritten:
+  - Keys: `echogpt:current-chat`, `echogpt:chat-history`, `echogpt:selected-model`
+  - Full `CurrentChatData` object: id, title, modelId, messages[], createdAt, updatedAt
+  - Legacy key migration from `echogpt_active_chat_messages` on first load
+  - `loadCurrentChat()`, `saveCurrentChat()`, `clearCurrentChat()`, `updateCurrentChatMessages()`, `archiveCurrentChat()`
+  - `loadSelectedModel()`, `saveSelectedModel(modelId)`
+  - `loadHistory()`, `saveHistory()`, `deleteHistoryItem()`, `clearAllHistory()`
+  - Seed history updated with realistic EchoGPT/DeepSeek/GPT-4o model names
+
+#### Workspace Layout Components Created
+- `src/components/workspace/WorkspaceHeader.tsx` — Reusable responsive workspace header: breadcrumb/title left, actions right. Mobile: wraps cleanly. Subtitle, badge optional.
+- `src/components/workspace/WorkspaceLayout.tsx` — Simple page wrapper component.
+- `src/components/workspace/WorkspaceToolbar.tsx` — Secondary toolbar for left/right content.
+
+#### Studio Components Created
+- `src/components/studio/StudioPrompt.tsx` — Prompt input with blueprint templates, character counter, and Generate button.
+- `src/components/studio/StudioPreview.tsx` — Studio output canvas: header, isGenerating animation, metadata bar, Download/Copy/Regenerate actions.
+
+#### Compare Components Created
+- `src/components/compare/CompareToolbar.tsx` — Compare prompt + Focus Mode toggle toolbar.
+- `src/components/compare/ComparePanel.tsx` — Individual model comparison panel with metrics, Vote Best, Regenerate, Copy, Focus actions.
+
+#### Feature Workspaces Updated
+All major workspaces updated with:
+- `WorkspaceHeader` component (consistent responsive header pattern)
+- Two-column studio layouts (controls left, preview right on desktop; vertical stack on mobile)
+
+1. **Image Studio** (`ImageStudioWorkspace.tsx`) — Full remake:
+   - Left: Neural engine model grid (Flux Pro, DALL-E 3, Midjourney v6, SDXL Turbo), visual style pills, aspect ratio select, batch count.
+   - Right: `StudioPreview` with animated gradient canvas, recent gallery grid.
+   - Simulated generate → gallery update → showToast flow.
+
+2. **Video Studio** (`VideoStudioWorkspace.tsx`) — Full remake:
+   - Left: `StudioPrompt` with camera trajectory grid (Drone Pan, Orbital 360, Kinetic Push, Static Close-up), duration/ratio selectors.
+   - Right: Cinematic video player with interactive scrubber, mute toggle, project library.
+   - Simulated generate → new project → auto-play flow.
+
+3. **Compare** (`CompareWorkspace.tsx`) — Full remake:
+   - `CompareToolbar` with shared prompt input.
+   - Active model chip selector (Add/Remove up to 4 models).
+   - `ComparePanel` grid (2-4 cols on desktop, stacked on mobile).
+   - Focus Mode: expand single panel to full width.
+   - Vote Best Answer (highlights winning panel with PRO ring).
+
+4. **History** (`HistoryWorkspace.tsx`) — Updated:
+   - Uses new `echogpt:chat-history` key.
+   - Restores conversations via `updateCurrentChatMessages()`.
+   - `showToast` for restore and delete confirmations.
+
+5. **AI Job Analysis** + **AI SOP Builder** — Updated headers only (WorkspaceHeader integration).
+
+#### MobileNav Polish
+- Brand lockup in mobile header matches Sidebar: `size-7` logo container + `text-[17px] font-semibold tracking-[-0.025em]`.
+- Logo container has proper border and bg in both light/dark.
+
+#### AppShell Composition
+- `UpgradeModalProvider` wraps entire app shell.
+- `<UpgradeProModal />` rendered globally.
+- `<ToastContainer />` rendered globally (bottom-right, max 3 toasts).
+- Keyboard shortcut updated to `Ctrl+Shift+K` / `⌘⇧K`.
+
+## FILES CREATED / MODIFIED (Milestone 4 Full)
+
+**New Files:**
+- `src/config/models.ts`
+- `src/components/ui/Badge.tsx`
+- `src/components/ui/Button.tsx`
+- `src/components/ui/Modal.tsx`
+- `src/components/ui/Toast.tsx`
+- `src/context/UpgradeModalContext.tsx`
+- `src/components/billing/UpgradeProModal.tsx`
+- `src/components/workspace/WorkspaceHeader.tsx`
+- `src/components/workspace/WorkspaceLayout.tsx`
+- `src/components/workspace/WorkspaceToolbar.tsx`
+- `src/components/studio/StudioPrompt.tsx`
+- `src/components/studio/StudioPreview.tsx`
+- `src/components/compare/CompareToolbar.tsx`
+- `src/components/compare/ComparePanel.tsx`
+
+**Updated Files:**
+- `src/app/globals.css` — Purple gradient scrollbar, dark mode scrollbar rules
+- `src/lib/chatStorage.ts` — Overhauled with new keys and CurrentChatData type
+- `src/components/layout/AppShell.tsx` — UpgradeModalProvider, ToastContainer, Ctrl+Shift+K
+- `src/components/layout/Sidebar.tsx` — No scale hover, clean brand, grid utility bar, UpgradeModal
+- `src/components/layout/MobileNav.tsx` — Consistent brand lockup
+- `src/components/dashboard/ModelSelector.tsx` — Full rebuild with AI_MODELS, search, PRO gating
+- `src/components/dashboard/PlaceholderWorkspace.tsx` — WorkspaceHeader, chat protection, persistence fix
+- `src/components/dashboard/CompareWorkspace.tsx` — Full remake with ComparePanel, Focus Mode
+- `src/components/dashboard/ImageStudioWorkspace.tsx` — Full remake with StudioPrompt/Preview
+- `src/components/dashboard/VideoStudioWorkspace.tsx` — Full remake with camera controls and player
+- `src/components/dashboard/HistoryWorkspace.tsx` — WorkspaceHeader, new storage keys
+- `src/components/dashboard/JobAnalysisWorkspace.tsx` — WorkspaceHeader integration
+- `src/components/dashboard/SopBuilderWorkspace.tsx` — WorkspaceHeader integration
+
+## IMPORTANT ARCHITECTURE DECISIONS (Milestone 4 Full)
+
+- `UpgradeModalContext` is injected at AppShell level — all child components call `useUpgradeModal()` without prop drilling.
+- `showToast()` is a DOM-event-based global function (no React context) — works from anywhere including event handlers.
+- Model lazy state initialization: `useState(() => loadSelectedModel())` to avoid `setState-in-effect` lint errors.
+- `useMemo(() => currentChat?.messages || [], [currentChat])` prevents messages dependency changing on every render.
+- ModelSelector clears `searchQuery` state in the `mousedown` and `keydown` cleanup paths (not in effect body) to avoid set-state-in-effect errors.
+
+## VERIFICATION (Milestone 4 Full)
+
+- `npm run lint` → 0 errors, 0 warnings ✓
+- `npm run build` (`next build --webpack`) → 16 routes prerendered, 0 errors ✓
 
 ## KNOWN ISSUES
 
@@ -648,21 +741,20 @@ Implemented and verified.
 
 ## NEXT STEPS
 
-1. Conduct user visual walkthrough & feedback on interactive shell.
-2. Implement dedicated `/chat` route or sub-pages while maintaining shell layout.
-3. Wire individual sidebar items (`/image-studio`, `/compare`, `/history`, etc.) to Next.js file-system routes.
-4. Prepare single-page EchoGPT landing website concept.
+1. **Landing Page**: Design and implement the single-page EchoGPT landing website (`src/app/page.tsx`).
+2. **Chrome Extension Concept**: Plan and implement the Chrome Extension popup UI.
+3. **README**: Write a polished project README for GitHub/Vercel submission.
 
 ## CURRENT MILESTONE
 
 Current milestone:
-Web App Shell — Interaction & Theme Polish
+EchoGPT Product UI System + Core UX Polish
 
 Status:
-Completed
+Completed ✓
 
 Next milestone:
-Web App Full Page Routing & Landing Page Planning
+EchoGPT Landing Page (Single-page marketing website at /)
 
 ---
 
@@ -679,6 +771,7 @@ When giving AI-agent prompts:
 - clearly define scope
 - prevent unnecessary refactoring
 - prevent scope creep
+
 
 Do not overwhelm me with unnecessary theory.
 
