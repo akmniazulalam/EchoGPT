@@ -608,10 +608,26 @@ Implemented and verified ✓
 - `src/components/ui/Modal.tsx` — Accessible modal with Escape, backdrop, body scroll lock.
 - `src/components/ui/Toast.tsx` — `ToastContainer` + `showToast()` global notification system.
 
-#### UpgradeProModal + Global Context
-- `src/context/UpgradeModalContext.tsx` — Global React context for opening the modal from any component.
-- `src/components/billing/UpgradeProModal.tsx` — Premium upgrade modal: billing switcher (Annual/Monthly), pricing, benefits grid (GPT-5, Claude Opus, Image Studio, Video Studio, Compute tiers), Upgrade CTA, "Maybe later" close. No real checkout.
-- AppShell wraps entire app in `<UpgradeModalProvider>` and renders `<UpgradeProModal />` globally.
+#### UpgradeProModal Redesign (Visual Reference Elevation)
+- **High-End 2-Column Responsive Architecture**:
+  - Modal container expanded to `5xl` with bespoke squircle backdrop blur and hair-line border accents (`dark:border-white/[0.08]`).
+  - Desktop (≥ 1024px): 58% Features column on left, 42% Billing/Pricing/Models column on right.
+  - Mobile (< 1024px): Intelligently inverted stack order (`order-1` for Billing/Pricing/CTA, `order-2` for full Features breakdown) so mobile users immediately see plans and the Upgrade CTA on first paint without endless scrolling.
+- **Categorized Premium Features Engine**:
+  - Chat Category: AI Chat, AI Characters, AI Tasks, Brainstorming.
+  - Content Category: ChatDoc, Content Summary, Content Editing, Language Translator, Code Generation, Web Search ("Coming Soon" badge).
+  - Image & Multimodal Category: Text to Image (Image Studio 4K), Ask Image (Vision), Video Studio (PRO Studio).
+  - High-res micro-squircles with color-coded Lucide SVG icons.
+- **4-Period Interactive Billing Engine**:
+  - Segmented control supporting `Monthly`, `Quarterly` (Save 10%), `Semi-Annual` (Save 20%), and `Annual` (Save 30% • Best Value).
+  - Dynamic pricing calculation ($9.99/mo base matching screenshot, down to $6.99/mo on Annual).
+  - Dynamic plan summary and billing cadence notes.
+- **Frontier AI Models Showcase Box**:
+  - Compact, modern 9+ model showcase: `DeepSeek V4 Pro`, `GPT-5.6 Sol`, `Qwen 3.7 Plus`, `GLM-5.2`, `MiMo V2.5 Pro`, `Kimi K3`, `MiniMax M3`, `GLM-5.3 Flash`, `Qwen 3.8 27B`.
+  - Tags for Reasoning, Frontier, Code & Math, Vision, Multimodal.
+- **Theme & Design System Fidelity**:
+  - Strict adherence to `#713CF4` primary accent, Lexend typography, and dark/light contrast standards.
+  - Money-back guarantee trust badge and "Maybe later" dismissal link.
 
 #### Global Model Catalog
 - `src/config/models.ts` — 11 realistic AI models: EchoGPT (free), GPT-4o mini (free), DeepSeek-V3 (free), GPT-5 (PRO), GPT-4o (PRO), Gemini Advanced (PRO), Claude 4 Sonnet (PRO), Claude Opus (PRO), DeepSeek R1 (PRO), Grok 4 (PRO), Mistral Pro (PRO).
