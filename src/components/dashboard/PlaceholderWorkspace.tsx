@@ -322,7 +322,7 @@ Key architectural takeaways:
   };
 
   return (
-    <div className="flex flex-col flex-1 h-full min-h-0 bg-[#FAFAFC] dark:bg-[#0C0D11] text-zinc-900 dark:text-zinc-100">
+    <div className="flex flex-col flex-1 h-full min-h-0 bg-[#FAFAFC] dark:bg-[#0E0C15] text-zinc-900 dark:text-zinc-100">
       {/* 1. Responsive Workspace Header */}
       <WorkspaceHeader
         title="Chat"
@@ -435,7 +435,7 @@ Key architectural takeaways:
                     className={`group relative max-w-[85%] sm:max-w-[78%] rounded-2xl p-4 leading-relaxed ${
                       isUser
                         ? "bg-[#713CF4] text-white rounded-br-xs shadow-xs"
-                        : "bg-white dark:bg-[#15161C] border border-zinc-200/80 dark:border-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-bl-xs shadow-xs"
+                        : "bg-white dark:bg-[#1b1725] border border-zinc-200/80 dark:border-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-bl-xs shadow-xs"
                     }`}
                   >
                     <div className="text-[13.5px] leading-relaxed whitespace-pre-wrap">
@@ -490,7 +490,7 @@ Key architectural takeaways:
                     className="size-5 object-contain"
                   />
                 </div>
-                <div className="bg-white dark:bg-[#15161C] border border-zinc-200/80 dark:border-zinc-800 rounded-2xl rounded-bl-xs p-4 shadow-xs flex items-center gap-1.5">
+                <div className="bg-white dark:bg-[#1b1725] border border-zinc-200/80 dark:border-zinc-800 rounded-2xl rounded-bl-xs p-4 shadow-xs flex items-center gap-1.5">
                   <span className="size-2 rounded-full bg-[#713CF4] animate-bounce [animation-delay:-0.3s]" />
                   <span className="size-2 rounded-full bg-[#713CF4] animate-bounce [animation-delay:-0.15s]" />
                   <span className="size-2 rounded-full bg-[#713CF4] animate-bounce" />

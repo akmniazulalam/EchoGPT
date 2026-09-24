@@ -90,7 +90,7 @@ export function StudioPreview({
       </div>
 
       {/* Canvas / Viewport Area */}
-      <div className="flex-1 min-h-75 flex items-center justify-center p-4 bg-zinc-50/50 dark:bg-[#0C0D11]/50 relative overflow-hidden">
+      <div className="flex-1 min-h-75 flex items-center justify-center p-4 bg-zinc-50/50 dark:bg-[#0E0C15]/50 relative overflow-hidden">
         {isGenerating ? (
           <div className="flex flex-col items-center justify-center gap-3 text-center z-10 animate-in fade-in">
             <div className="size-10 rounded-full border-2 border-[#713CF4] border-t-transparent animate-spin" />

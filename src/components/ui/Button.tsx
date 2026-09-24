@@ -29,7 +29,7 @@ export function Button({
     secondary:
       "bg-zinc-100 hover:bg-zinc-200/80 active:bg-zinc-200 text-zinc-800 dark:bg-zinc-800 dark:hover:bg-zinc-750 dark:active:bg-zinc-700 dark:text-zinc-100",
     outline:
-      "border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#15161C] hover:bg-zinc-50 dark:hover:bg-zinc-800/60 text-zinc-700 dark:text-zinc-300 shadow-2xs",
+      "border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#1b1725] hover:bg-zinc-50 dark:hover:bg-zinc-800/60 text-zinc-700 dark:text-zinc-300 shadow-2xs",
     ghost:
       "bg-transparent hover:bg-zinc-100 dark:hover:bg-zinc-800/60 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100",
     danger:

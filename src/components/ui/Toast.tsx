@@ -57,7 +57,7 @@ export function ToastContainer() {
         return (
           <div
             key={toast.id}
-            className="pointer-events-auto flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl border bg-white dark:bg-[#15161C] border-zinc-200 dark:border-zinc-800 shadow-lg text-zinc-900 dark:text-zinc-100 text-[13px] font-medium animate-in slide-in-from-bottom-3 fade-in duration-200"
+            className="pointer-events-auto flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl border bg-white dark:bg-[#1b1725] border-zinc-200 dark:border-zinc-800 shadow-lg text-zinc-900 dark:text-zinc-100 text-[13px] font-medium animate-in slide-in-from-bottom-3 fade-in duration-200"
           >
             {isSuccess && (
               <CheckCircle2 className="size-4 text-emerald-500 shrink-0" />

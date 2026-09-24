@@ -48,7 +48,7 @@ export function ComparePanel({
     <div
       className={`flex flex-col h-full rounded-2xl border transition-all duration-150 overflow-hidden shadow-xs ${
         isBest
-          ? "border-[#713CF4] ring-1 ring-[#713CF4]/40 bg-white dark:bg-[#15161C]"
+          ? "border-[#713CF4] ring-1 ring-[#713CF4]/40 bg-white dark:bg-[#1b1725]"
           : "border-zinc-200/90 dark:border-zinc-800 bg-white dark:bg-[#121319]"
       } ${isFocused ? "col-span-full shadow-lg" : ""}`}
     >

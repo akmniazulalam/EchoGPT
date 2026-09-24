@@ -202,7 +202,7 @@ ${sopDoc.failureModes.map((f) => `- ${f}`).join("\n")}
   };
 
   return (
-    <div className="flex flex-col flex-1 h-full min-h-0 bg-[#FAFAFC] dark:bg-[#0C0D11] text-zinc-900 dark:text-zinc-100 font-lexend">
+    <div className="flex flex-col flex-1 h-full min-h-0 bg-[#FAFAFC] dark:bg-[#0E0C15] text-zinc-900 dark:text-zinc-100 font-lexend">
       {/* Top Header */}
       <WorkspaceHeader
         title="AI SOP Builder"

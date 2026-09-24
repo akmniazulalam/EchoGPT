@@ -10,7 +10,7 @@ interface PlaceholderPageProps {
 
 export function PlaceholderPage({ title, description, icon }: PlaceholderPageProps) {
   return (
-    <div className="flex flex-col flex-1 h-full min-h-0 items-center justify-center bg-[#FAFAFC] dark:bg-[#0C0D11] px-6">
+    <div className="flex flex-col flex-1 h-full min-h-0 items-center justify-center bg-[#FAFAFC] dark:bg-[#0E0C15] px-6">
       <div className="text-center space-y-4 max-w-md">
         {icon && (
           <div className="flex justify-center mb-2">

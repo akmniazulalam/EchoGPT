@@ -130,7 +130,7 @@ export function ModelSelector({
         ref={triggerRef}
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#15161C] text-xs font-medium text-zinc-800 dark:text-zinc-200 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors shadow-2xs outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] cursor-pointer"
+        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#1b1725] text-xs font-medium text-zinc-800 dark:text-zinc-200 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors shadow-2xs outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] cursor-pointer"
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         aria-label={`Select AI model. Current: ${selectedModel.name}`}
@@ -158,7 +158,7 @@ export function ModelSelector({
         <div
           role="listbox"
           aria-label="Available AI models"
-          className="absolute right-0 top-full mt-1.5 w-80 sm:w-92 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#15161C] shadow-2xl p-2 z-50 focus:outline-none animate-in fade-in-50 zoom-in-95 duration-100"
+          className="absolute right-0 top-full mt-1.5 w-80 sm:w-92 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#1b1725] shadow-2xl p-2 z-50 focus:outline-none animate-in fade-in-50 zoom-in-95 duration-100"
         >
           {/* Header & Search */}
           <div className="p-1.5 space-y-2 border-b border-zinc-100 dark:border-zinc-850 pb-2.5">
