@@ -16,6 +16,7 @@ import {
   User,
   Settings,
   SunMoon,
+  Share2,
 } from "lucide-react";
 import type { NavSection, NavItem, BottomUtilityItem } from "@/types/navigation";
 
@@ -23,7 +24,7 @@ export const ENGAGEMENT_ITEMS: NavItem[] = [
   {
     id: "image-studio",
     label: "Image Studio",
-    href: "#image-studio",
+    href: "/image-studio",
     icon: ImageIcon,
     isPro: true,
     badge: { text: "PRO", variant: "pro" },
@@ -31,7 +32,7 @@ export const ENGAGEMENT_ITEMS: NavItem[] = [
   {
     id: "video-studio",
     label: "Video Studio",
-    href: "#video-studio",
+    href: "/video-studio",
     icon: VideoIcon,
     isPro: true,
     badge: { text: "PRO", variant: "pro" },
@@ -39,43 +40,43 @@ export const ENGAGEMENT_ITEMS: NavItem[] = [
   {
     id: "compare",
     label: "Compare",
-    href: "#compare",
+    href: "/compare",
     icon: Columns2,
   },
   {
     id: "connectors",
     label: "Connectors",
-    href: "#connectors",
+    href: "/connectors",
     icon: Workflow,
   },
   {
     id: "history",
     label: "History",
-    href: "#history",
+    href: "/history",
     icon: History,
   },
   {
     id: "store",
     label: "Store",
-    href: "#store",
+    href: "/store",
     icon: Store,
   },
   {
     id: "ai-tasks",
     label: "AI Tasks",
-    href: "#ai-tasks",
+    href: "/ai-tasks",
     icon: ListCheck,
   },
   {
     id: "ai-job-analysis",
     label: "AI Job Analysis",
-    href: "#ai-job-analysis",
+    href: "/ai-job-analysis",
     icon: Briefcase,
   },
   {
     id: "ai-sop-builder",
     label: "AI SOP Builder",
-    href: "#ai-sop-builder",
+    href: "/ai-sop-builder",
     icon: FileText,
   },
 ];
@@ -84,25 +85,25 @@ export const HELP_SUPPORT_ITEMS: NavItem[] = [
   {
     id: "support",
     label: "Support",
-    href: "#support",
+    href: "/support",
     icon: LifeBuoy,
   },
   {
     id: "newsletter",
     label: "Newsletter",
-    href: "#newsletter",
+    href: "/newsletter",
     icon: Mail,
   },
   {
     id: "subscriptions",
     label: "Subscriptions",
-    href: "#subscriptions",
+    href: "/subscriptions",
     icon: CreditCard,
   },
   {
     id: "api-platform",
     label: "API Platform",
-    href: "#api-platform",
+    href: "/api-platform",
     icon: Code2,
   },
   {
@@ -141,6 +142,13 @@ export const BOTTOM_UTILITY_ITEMS: BottomUtilityItem[] = [
     href: "#settings",
     icon: Settings,
     ariaLabel: "Application settings",
+  },
+  {
+    id: "share",
+    label: "Share",
+    href: "#share",
+    icon: Share2,
+    ariaLabel: "Share application",
   },
   {
     id: "theme",
