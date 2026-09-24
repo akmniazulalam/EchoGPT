@@ -583,12 +583,94 @@ Do not blindly approve agent output.
 ## CURRENT STATUS
 
 Current milestone:
-EchoGPT Product UI System + Core UX Polish (Milestone 4 - Full)
+Milestone 4.x — Image Studio & Compare Visual Refinement
 
 Status:
 Implemented and verified ✓
 
 ## COMPLETED WORK
+
+### Milestone 4.x: Image Studio & Compare Visual Refinement
+
+#### Reference-Driven UX Decisions
+- Deep study of the 3 original EchoGPT screenshots:
+  - Original Image Studio: Clean top prompt card with inline controls (aspect ratio, batch, model dropdown, primary Generate button) and spacious output area.
+  - Original Compare page: Clean top toggle (`[ ⊞ Compare ]` | `[ ↗ Focus ]`), focused prompt container with multi-model dropdown, and side-by-side reading cards.
+  - Original Compare Focus mode: Selected model tabs (`[ EchoGPT ]`, `[ DeepSeek V4 Pro ]`, `[ Nemotron 3 Ultra ]`) under the toggle, with single-model distraction-free reading canvas.
+- Elimination of visual crowding:
+  - Replaced permanent model grid cards in Image Studio with reusable `ModelSelector` popover.
+  - Replaced permanent 8-chip model strip in Compare with a multi-select popover, displaying ONLY the active selected models.
+  - Adopted progressive disclosure: Primary controls always visible; secondary blueprints in popovers; advanced parameters (negative prompt, CFG, seed) in clean collapsibles.
+
+#### Image Studio Redesign
+1. **Focused Prompt & Control Area**:
+   - Clean prompt textarea with live character counter (`prompt.length / 1000`).
+   - Integrated inline bottom toolbar inside the prompt card:
+     - Reference attachment button `[ + ]` (triggers PRO upload info).
+     - Aspect ratio segmented pills (`1:1`, `16:9`, `9:16`, `4:3`).
+     - Batch count segmented pills (`1`, `2`, `4`).
+     - Reusable `ModelSelector` using `IMAGE_MODELS` (`Flux Pro`, `DALL-E 3`, `Midjourney v6`, `SDXL Turbo`).
+     - Primary CTA: `Generate` in `#713CF4` with loading animation.
+   - Subtext: "Each image uses 1 generation credit. Takes ~30 seconds."
+2. **Progressive Disclosure for Settings & Blueprints**:
+   - `[ Explore Prompts ▾ ]`: Popover with curated blueprints that populates the textarea on click and closes cleanly.
+   - `Style: [ 3D Isometric ▾ ]`: Compact native dropdown with 6 visual styles (replaces giant 6-card grid).
+   - `[ ⚙ Advanced options ▾ ]`: Collapsible containing negative prompt textarea, CFG Guidance Scale slider (1-20), and random seed input.
+3. **Visually Dominant Artwork Canvas**:
+   - Preview canvas takes primary visual prominence in the workspace.
+   - Generating state: Elegant latent space synthesis pulse with progress indicators.
+   - Rendered state: High-resolution aspect-ratio-accurate canvas with subtle overlay actions (Copy prompt, Regenerate, Export 4K).
+   - Minimalist metadata footer: Model, Aspect Ratio, Latency (`1.2s`), Octane render.
+4. **Compact Recent Artwork Gallery**:
+   - "Your Creations" compact 4-column / horizontal strip with thumbnail previews, styles, and prompt snippets.
+   - Clicking any thumbnail smoothly restores it into the active preview canvas.
+5. **Responsive Stacking**:
+   - Desktop (≥ 1024px): Balanced 2-column layout (5 cols prompt/controls, 7 cols canvas, full-width gallery below).
+   - Mobile (< 1024px): Seamless vertical flow without horizontal overflow.
+
+#### Compare Page Redesign
+1. **WorkspaceHeader & View Switcher**:
+   - Breadcrumb: `WORKSPACE / COMPARE`
+   - Title: `Compare AI Models`
+   - Actions bar: Segmented switch pill `[ ⊞ Compare ]` | `[ ↗ Focus ]` + `ModelSelector` dropdown (`[ 3 Models ▾ ]`).
+2. **Multi-Select ModelSelector (Critical Improvement)**:
+   - Enhanced reusable `ModelSelector` to support `multiSelect={true}`.
+   - Searchable popover with category groupings (FAST & FREE vs ADVANCED & REASONING PRO).
+   - Checked indicators for selected models (up to 4 models).
+   - PRO badges with gating to `UpgradeProModal`.
+   - Keyboard accessible (Escape closes, click outside closes).
+   - Completely eliminated the permanent 8-chip horizontal model strip!
+3. **Active Model Chips**:
+   - Secondary strip displays ONLY the currently selected models as compact chips: `[ EchoGPT × ] [ GPT-4o × ] [ Claude 4 Sonnet × ]`.
+   - Quick removal via `×` (enforces at least 2 models).
+   - `+ Add Model` dashed button to quickly open selector when under 4 models.
+4. **Focused Benchmark Prompt Area**:
+   - Clean, centered input container: "Message 3 models...".
+   - `[ 💡 Try benchmark ▾ ]` popover with 4 curated benchmark queries.
+   - Helper subtext: "5 of 5 comparisons left today · resets in a day · upgrade for unlimited".
+   - Primary action: `Compare` button in `#713CF4`.
+5. **Authentic Focus Mode**:
+   - When Focus Mode is active:
+     - Top switcher reflects Focus active.
+     - Horizontal model tabs appear directly beneath: `[ EchoGPT ]`, `[ GPT-4o ]`, `[ Claude 4 Sonnet ]`.
+     - Active tab highlighted in `#713CF4` purple with smooth 1-click model switching.
+     - Distraction-free, centered reading layout (`max-w-4xl mx-auto`) with enhanced line-height and typography.
+     - Clear `[ Exit Focus ]` button to return to side-by-side grid view.
+6. **Side-by-Side Comparison Grid**:
+   - In Compare mode: Responsive reading cards (2, 3, or 4 columns based on selection).
+   - Model name, provider, PRO badge, "★ Top Pick" vote tag.
+   - Actions: Vote Best, Focus (`↗ Focus`), Regenerate, Copy Response.
+   - Subtle latency (`380ms`) and context metadata.
+7. **Mobile Optimization**:
+   - Clean single-column stacking with full-width cards.
+   - Zero horizontal scroll bleed or layout breaking.
+
+#### Verification
+- `npm run lint` → 0 errors, 0 warnings ✓
+- `npx next build --webpack` → 17 static routes prerendered, 0 errors ✓
+- HTTP 200 OK verified on `/image-studio` and `/compare` ✓
+
+---
 
 ### Milestone 4 (Full): EchoGPT Product UI System + Core UX Polish
 
@@ -764,7 +846,7 @@ All major workspaces updated with:
 ## CURRENT MILESTONE
 
 Current milestone:
-EchoGPT Product UI System + Core UX Polish
+Milestone 4.x — Image Studio & Compare Visual Refinement
 
 Status:
 Completed ✓
