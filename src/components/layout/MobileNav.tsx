@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X, Plus } from "lucide-react";
 import { Sidebar } from "./Sidebar";
 
@@ -9,8 +11,6 @@ interface MobileNavProps {
   isOpen: boolean;
   onOpen: () => void;
   onClose: () => void;
-  activeId: string;
-  onSelectNav: (id: string) => void;
   onNewChat: () => void;
 }
 
@@ -18,10 +18,19 @@ export function MobileNav({
   isOpen,
   onOpen,
   onClose,
-  activeId,
-  onSelectNav,
   onNewChat,
 }: MobileNavProps) {
+  const pathname = usePathname();
+  const prevPathnameRef = useRef(pathname);
+
+  // Close drawer ONLY when the pathname actually changes from user navigation
+  useEffect(() => {
+    if (prevPathnameRef.current !== pathname) {
+      prevPathnameRef.current = pathname;
+      onClose();
+    }
+  }, [pathname, onClose]);
+
   // Close drawer on Escape key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -29,7 +38,9 @@ export function MobileNav({
         onClose();
       }
     };
-    window.addEventListener("keydown", handleKeyDown);
+    if (isOpen) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
@@ -44,11 +55,6 @@ export function MobileNav({
       document.body.style.overflow = "";
     };
   }, [isOpen]);
-
-  const handleNavSelect = (id: string) => {
-    onSelectNav(id);
-    onClose();
-  };
 
   const handleNewChat = () => {
     onNewChat();
@@ -70,18 +76,25 @@ export function MobileNav({
             <Menu className="size-5" />
           </button>
 
-          <div className="flex items-center gap-2">
-            <Image
-              src="/favicon.svg"
-              alt="EchoGPT"
-              width={24}
-              height={24}
-              className="size-6 object-contain"
-            />
-            <span className="text-[15px] font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
+          <Link
+            href="/chat"
+            className="flex items-center gap-2.5 outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] rounded-md group"
+            aria-label="EchoGPT Home"
+          >
+            <div className="relative size-7 shrink-0 rounded-lg overflow-hidden flex items-center justify-center bg-white dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-800/60 shadow-2xs">
+              <Image
+                src="/favicon.svg"
+                alt="EchoGPT Logo"
+                width={26}
+                height={26}
+                className="size-6 object-contain"
+                priority
+              />
+            </div>
+            <span className="text-[17px] font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 leading-none">
               EchoGPT
             </span>
-          </div>
+          </Link>
         </div>
 
         {/* Quick New Chat Button for Mobile */}
@@ -106,7 +119,7 @@ export function MobileNav({
         {/* Backdrop Overlay */}
         <div
           onClick={onClose}
-          className={`absolute inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-xs transition-opacity duration-300 ease-in-out ${
+          className={`absolute inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-xs transition-opacity duration-300 ease-in-out ${
             isOpen ? "opacity-100" : "opacity-0"
           }`}
           aria-hidden="true"
@@ -117,7 +130,8 @@ export function MobileNav({
           role="dialog"
           aria-modal="true"
           aria-label="Mobile Navigation"
-          className={`relative z-10 flex flex-col w-[280px] max-w-[85vw] h-full bg-white dark:bg-[#111217] shadow-xl transition-transform duration-300 ease-in-out ${
+          onClick={(e) => e.stopPropagation()}
+          className={`relative z-10 flex flex-col w-70 max-w-[85vw] h-full bg-white dark:bg-[#111217] shadow-2xl transition-transform duration-300 ease-in-out ${
             isOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
@@ -135,9 +149,8 @@ export function MobileNav({
 
           {/* Full Sidebar inside drawer */}
           <Sidebar
-            activeId={activeId}
-            onSelectNav={handleNavSelect}
             onNewChat={handleNewChat}
+            onNavClick={onClose}
             isCollapsed={false}
             isMobileDrawer={true}
             className="w-full border-r-0"
