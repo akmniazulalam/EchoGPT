@@ -3,8 +3,9 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #fcfcfd;
+  --background: #fff;
   --foreground: #111827;
+  --surface: #f7f5ff;
   --brand-primary: #713cf4;
   --brand-hover: #602ee0;
   --brand-active: #5223c7;
@@ -14,8 +15,9 @@
 }
 
 .dark {
-  --background: #090a0f;
+  --background: #0e0c15;
   --foreground: #f3f4f6;
+  --surface: #16131f;
   --brand-light: rgba(113, 60, 244, 0.16);
   --brand-muted: rgba(113, 60, 244, 0.14);
   --brand-border: rgba(113, 60, 244, 0.28);
@@ -24,6 +26,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-primary: #7c3aed;
+  --color-secondary: #6366f1;
   --font-lexend: var(--font-lexend);
   --color-brand: var(--brand-primary);
   --color-brand-hover: var(--brand-hover);
@@ -40,21 +45,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Slim elegant custom scrollbar */
+/* Slim elegant custom scrollbar with subtle EchoGPT purple tint */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 3px;
+  height: 4px;
+  background-color: transparent;
 }
 
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
+.custom-scrollbar.scroll-top::-webkit-scrollbar-thumb, .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: linear-gradient(transparent,#7c3aed);
+    border-radius: 8px;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(156, 163, 175, 0.25);
-  border-radius: 9999px;
-}
 
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(156, 163, 175, 0.45);
-}
