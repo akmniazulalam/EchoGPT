@@ -9,7 +9,10 @@ const lexend = Lexend({
 });
 
 export const metadata: Metadata = {
-  title: "EchoGPT - AI-Driven Productivity Solutions",
+  title: {
+    template: "%s | EchoGPT",
+    default: "EchoGPT - AI-Driven Productivity Solutions",
+  },
   description: "Modern AI Productivity & Creation Ecosystem",
   icons: {
     icon: "/favicon.svg",
