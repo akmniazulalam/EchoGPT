@@ -29,7 +29,7 @@ export function UpgradeCard({
   }
 
   return (
-    <div className="relative overflow-hidden rounded-xl border border-zinc-200/80 dark:border-zinc-800/90 bg-gradient-to-b from-white to-zinc-50/80 dark:from-zinc-900/80 dark:to-zinc-900/40 p-3.5 shadow-xs">
+    <div className="relative overflow-hidden rounded-xl border border-zinc-200/80 dark:border-zinc-800/90 bg-linear-to-b from-white to-zinc-50/80 dark:from-zinc-900/80 dark:to-zinc-900/40 p-3.5 shadow-xs">
       {/* Subtle brand ambient accent (non-garish) */}
       <div
         className="pointer-events-none absolute -right-6 -top-6 size-20 rounded-full bg-[#713CF4]/8 dark:bg-[#713CF4]/12 blur-xl"
