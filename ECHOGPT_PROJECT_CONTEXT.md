@@ -843,10 +843,60 @@ All major workspaces updated with:
 2. **Chrome Extension Concept**: Plan and implement the Chrome Extension popup UI.
 3. **README**: Write a polished project README for GitHub/Vercel submission.
 
+### Milestone 4.x: Video Studio Visual Refinement
+
+#### Architecture Decisions
+- Added `VIDEO_MODELS` array to `src/config/models.ts` (4 engines: Veo 3.1 fast [free], Sora [PRO], Kling v1.5 [PRO], Runway Gen-3 [PRO])
+- Added `DEFAULT_VIDEO_MODEL_ID = "veo-3-fast"` constant
+- `WAVEFORM_BARS` pre-computed at module level to satisfy `react-hooks/purity` (no `Math.random()` in render)
+- PRO model gating: selecting any PRO video engine → `openUpgradeModal()` fires (no generation attempted)
+- Advanced quality `4K` option → `openUpgradeModal()` fires (export gated)
+- Export button → `openUpgradeModal()` (ProRes export gated)
+
+#### Progressive Disclosure Layout
+1. **PRIMARY (always visible)**: Scene prompt textarea, inline bottom toolbar (Duration segments `3s/5s/10s`, Ratio pills `16:9/9:16/1:1`, ModelSelector popover, Generate CTA)
+2. **SECONDARY**: Camera Motion card (4 options: Drone Pan, Orbital 360, Kinetic Push, Static Close-up) — compact icon+label buttons
+3. **TERTIARY**: Advanced Settings collapsible (Motion Intensity slider, Speed segments, Quality segments, Seed input)
+
+#### Scene Templates Popover
+- `[ ✨ Scene Templates ▾ ]` button in prompt card header
+- 4 curated templates: Cinematic city night, Product 360 orbit, Biophilic interior, Abstract particles
+- Clicking a template populates textarea and closes popover
+- Click-outside closes it (no useEffect setState — mousedown listener attached only when open)
+
+#### 3-State Generation Flow
+- **IDLE**: Minimal empty-state with Film icon ("Describe a scene above and click Generate")
+- **GENERATING**: Cinematic pulsing animation (ping + pulse rings), "Rendering cinematic scene…", live countdown timer (`formatCountdown()`), waveform bars
+  - Countdown duration: `3s→12s`, `5s→15s`, `10s→18s` mocked render time
+- **COMPLETE**: Premium video player with gradient canvas, scanline texture, play/pause button, interactive scrubber, time display, mute toggle
+
+#### Premium Media Player (COMPLETE state)
+- Gradient canvas (changes per project)
+- CSS scanline texture overlay
+- Top bar: camera mode + ratio label, mute button
+- Center: play/pause button (hover → purple, scale-110)
+- Bottom: clickable progress scrubber + time display (current second / total)
+- "New scene" ghost button resets to IDLE state
+- Prompt snippet shown in footer
+
+#### Recent Video Library
+- Full-width grid below main editor (1 col mobile, 2 col tablet, 3 col desktop)
+- Each card: camera mode badge, ratio, duration, prompt snippet (2-line clamp), timestamp, model name
+- Active card: purple ring indicator dot (top-right)
+- Non-active cards: ×  dismiss button (appears on hover via `group-hover:opacity-100`)
+- Clicking card: restores to COMPLETE state with that project in player
+- Empty state: dashed border with `<MonitorPlay>` icon and "Nothing here yet" copy
+
+#### Verification
+- `npm run lint` → 0 errors, 0 warnings ✓
+- `npx next build --webpack` → 17 static routes prerendered, 0 errors ✓
+
+---
+
 ## CURRENT MILESTONE
 
 Current milestone:
-Milestone 4.x — Image Studio & Compare Visual Refinement
+Milestone 4.x — Video Studio Visual Refinement
 
 Status:
 Completed ✓
