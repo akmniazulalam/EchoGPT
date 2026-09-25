@@ -26,10 +26,6 @@ import {
   Move,
   Maximize2,
   MonitorPlay,
-  MoreHorizontal,
-  Star,
-  Trash2,
-  Copy,
   Wand2,
   AlertCircle,
   ZoomIn,
@@ -46,6 +42,7 @@ import { Badge } from "@/components/ui/Badge";
 import { showToast } from "@/components/ui/Toast";
 import { useUpgradeModal } from "@/context/UpgradeModalContext";
 import { VIDEO_MODELS, DEFAULT_VIDEO_MODEL_ID, AIModel } from "@/config/models";
+import { CreationCard, CreationItem } from "@/components/dashboard/CreationCard";
 
 /* ─────────────────────── Types ────────────────────────── */
 type GenState = "idle" | "queued" | "generating" | "processing" | "complete" | "failed";
@@ -252,11 +249,6 @@ export function VideoStudioWorkspace() {
   const [projects, setProjects] = useState<VideoProject[]>(SAMPLE_PROJECTS);
   const [activeProject, setActiveProject] = useState<VideoProject>(SAMPLE_PROJECTS[0]);
 
-  /* — creation card overflow menus — */
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
-  const [renamingId, setRenamingId] = useState<string | null>(null);
-  const [renameValue, setRenameValue] = useState("");
-
   const { openUpgradeModal } = useUpgradeModal();
 
   /* — derived — */
@@ -300,20 +292,6 @@ export function VideoStudioWorkspace() {
     if (moreCamerasOpen) document.addEventListener("mousedown", handle);
     return () => document.removeEventListener("mousedown", handle);
   }, [moreCamerasOpen]);
-
-  // Close creation overflow menu on outside click
-  useEffect(() => {
-    function handle(e: MouseEvent) {
-      const target = e.target as Node;
-      // Check if click is inside any menu — find closest [data-menu]
-      const menus = document.querySelectorAll("[data-creation-menu]");
-      let inside = false;
-      menus.forEach((m) => { if (m.contains(target)) inside = true; });
-      if (!inside) setOpenMenuId(null);
-    }
-    if (openMenuId) document.addEventListener("mousedown", handle);
-    return () => document.removeEventListener("mousedown", handle);
-  }, [openMenuId]);
 
   /* ── scrubber playback timer ─── */
   useEffect(() => {
@@ -453,31 +431,36 @@ export function VideoStudioWorkspace() {
     setProjects((prev) =>
       prev.map((p) => (p.id === id ? { ...p, isFavorite: !p.isFavorite } : p))
     );
-    setOpenMenuId(null);
+    if (activeProject.id === id) {
+      setActiveProject((prev) => ({ ...prev, isFavorite: !prev.isFavorite }));
+    }
   };
 
-  const handleDuplicate = (proj: VideoProject) => {
+  const handleDuplicate = (item: CreationItem) => {
     setProjects((prev) => {
       const newId = `vid-${Date.now()}`;
       const dup: VideoProject = {
-        ...proj,
         id: newId,
-        title: proj.title + " (copy)",
+        title: `${item.title} (copy)`,
+        prompt: item.prompt,
+        duration: item.duration || "0:05",
+        ratio: item.ratio,
+        camera: item.badge,
+        model: item.model,
+        colorGrad: item.colorGrad,
         timestamp: "Just now",
         isFavorite: false,
       };
-      const idx = prev.findIndex((p) => p.id === proj.id);
+      const idx = prev.findIndex((p) => p.id === item.id);
       const next = [...prev];
       next.splice(idx + 1, 0, dup);
       return next;
     });
-    setOpenMenuId(null);
     showToast("Scene duplicated.", "success");
   };
 
-  const handleRegenerate = (proj: VideoProject) => {
-    setPrompt(proj.prompt);
-    setOpenMenuId(null);
+  const handleRegenerate = (item: CreationItem) => {
+    setPrompt(item.prompt);
     showToast("Prompt restored — click Generate when ready.", "success");
   };
 
@@ -488,24 +471,17 @@ export function VideoStudioWorkspace() {
       else setGenState("idle");
     }
     setProjects((prev) => prev.filter((p) => p.id !== id));
-    setOpenMenuId(null);
+    showToast("Scene removed.", "success");
   };
 
-  const startRename = (proj: VideoProject) => {
-    setRenamingId(proj.id);
-    setRenameValue(proj.title);
-    setOpenMenuId(null);
-  };
-
-  const commitRename = () => {
-    if (!renameValue.trim()) { setRenamingId(null); return; }
+  const handleRename = (id: string, newTitle: string) => {
     setProjects((prev) =>
-      prev.map((p) => (p.id === renamingId ? { ...p, title: renameValue.trim() } : p))
+      prev.map((p) => (p.id === id ? { ...p, title: newTitle } : p))
     );
-    if (activeProject.id === renamingId) {
-      setActiveProject((prev) => ({ ...prev, title: renameValue.trim() }));
+    if (activeProject.id === id) {
+      setActiveProject((prev) => ({ ...prev, title: newTitle }));
     }
-    setRenamingId(null);
+    showToast("Scene title updated.", "success");
   };
 
   const isGenerating =
@@ -1174,165 +1150,64 @@ export function VideoStudioWorkspace() {
           {/* ════════ YOUR CREATIONS ════════ */}
           <div className="space-y-3 pb-2">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-semibold uppercase tracking-widest text-zinc-400">
+              <span className="text-xs font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
                 Your Creations
               </span>
-              <span className="text-[11px] text-zinc-400">
+              <span className="text-[11px] text-zinc-400 dark:text-zinc-500">
                 {projects.length} {projects.length === 1 ? "scene" : "scenes"}
               </span>
             </div>
 
             {projects.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-[#121319] py-12 flex flex-col items-center gap-3 text-center">
-                <MonitorPlay className="size-6 text-zinc-300 dark:text-zinc-600" />
-                <p className="text-sm text-zinc-400 dark:text-zinc-500">
-                  Nothing here yet — describe a scene above to get started.
-                </p>
+              <div className="rounded-2xl border border-dashed border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-[#121319] py-12 flex flex-col items-center justify-center gap-3 text-center">
+                <div className="size-12 rounded-2xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 dark:text-zinc-500">
+                  <MonitorPlay className="size-6" />
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+                    No creations yet
+                  </p>
+                  <p className="text-xs text-zinc-400 dark:text-zinc-500">
+                    Describe a scene above and click Generate to start building your gallery.
+                  </p>
+                </div>
                 <Button variant="outline" size="sm" onClick={handleNewScene} leftIcon={<Film className="size-3.5" />}>
                   Create your first scene
                 </Button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {projects.map((proj) => {
-                  const isActive = activeProject.id === proj.id;
-                  const menuOpen = openMenuId === proj.id;
-                  const isRenaming = renamingId === proj.id;
-
-                  return (
-                    <div
-                      key={proj.id}
-                      className={`relative rounded-xl border overflow-hidden transition-all ${
-                        isActive
-                          ? "border-[#713CF4] ring-2 ring-[#713CF4]/25"
-                          : "border-zinc-200/60 dark:border-zinc-700/60 hover:border-zinc-300 dark:hover:border-zinc-600"
-                      }`}
-                    >
-                      {/* clickable area */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (isRenaming) return;
-                          setActiveProject(proj);
-                          setProgress(0);
-                          setIsPlaying(false);
-                          setGenState("complete");
-                        }}
-                        className={`w-full text-left p-3.5 bg-gradient-to-br ${proj.colorGrad} outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] cursor-pointer`}
-                      >
-                        {/* active dot */}
-                        {isActive && (
-                          <span className="absolute top-2.5 right-2.5 size-2 rounded-full bg-[#713CF4]" />
-                        )}
-
-                        {/* title row */}
-                        {isRenaming ? (
-                          <input
-                            type="text"
-                            value={renameValue}
-                            onChange={(e) => setRenameValue(e.target.value)}
-                            onBlur={commitRename}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter") commitRename();
-                              if (e.key === "Escape") setRenamingId(null);
-                            }}
-                            autoFocus
-                            onClick={(e) => e.stopPropagation()}
-                            className="w-full bg-black/30 text-white text-[12px] font-semibold px-2 py-0.5 rounded outline-none focus:ring-1 focus:ring-white/40 mb-1.5"
-                          />
-                        ) : (
-                          <div className="flex items-center gap-1.5 mb-1.5 pr-6">
-                            {proj.isFavorite && <Star className="size-3 text-amber-400 shrink-0 fill-amber-400" />}
-                            <span className="text-[11.5px] font-semibold text-white/90 line-clamp-1">{proj.title}</span>
-                          </div>
-                        )}
-
-                        {/* badges row */}
-                        <div className="flex items-center gap-1.5 mb-2">
-                          <span className="text-[9.5px] font-semibold text-white/70 bg-black/30 px-1.5 py-0.5 rounded-full">{proj.camera}</span>
-                          <span className="text-[9.5px] text-white/50">{proj.ratio}</span>
-                          <span className="ml-auto text-[9.5px] text-white/50 font-mono">{proj.duration}</span>
-                        </div>
-
-                        <p className="text-[11px] text-white/75 line-clamp-2 leading-relaxed">{proj.prompt}</p>
-
-                        <div className="flex items-center justify-between mt-2">
-                          <span className="text-[10px] text-white/40">{proj.timestamp}</span>
-                          <span className="text-[10px] text-white/40">{proj.model}</span>
-                        </div>
-                      </button>
-
-                      {/* overflow menu button */}
-                      <div className="absolute top-2.5 right-2.5" data-creation-menu>
-                        {!isActive && (
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setOpenMenuId(menuOpen ? null : proj.id);
-                            }}
-                            aria-label="More options"
-                            aria-expanded={menuOpen}
-                            className="size-6 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-white/60 hover:text-white transition-colors cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-white/40"
-                          >
-                            <MoreHorizontal className="size-3.5" />
-                          </button>
-                        )}
-
-                        {/* dropdown */}
-                        {menuOpen && (
-                          <div
-                            data-creation-menu
-                            className="absolute right-0 top-full mt-1 w-40 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#1b1725] shadow-xl z-50 py-1 overflow-hidden"
-                          >
-                            {[
-                              {
-                                label: "Rename",
-                                icon: <Film className="size-3.5" />,
-                                action: () => startRename(proj),
-                              },
-                              {
-                                label: proj.isFavorite ? "Unfavorite" : "Favorite",
-                                icon: <Star className={`size-3.5 ${proj.isFavorite ? "fill-amber-400 text-amber-400" : ""}`} />,
-                                action: () => handleFavorite(proj.id),
-                              },
-                              {
-                                label: "Duplicate",
-                                icon: <Copy className="size-3.5" />,
-                                action: () => handleDuplicate(proj),
-                              },
-                              {
-                                label: "Regenerate",
-                                icon: <RotateCcw className="size-3.5" />,
-                                action: () => handleRegenerate(proj),
-                              },
-                              {
-                                label: "Delete",
-                                icon: <Trash2 className="size-3.5" />,
-                                action: () => handleDelete(proj.id),
-                                danger: true,
-                              },
-                            ].map((item) => (
-                              <button
-                                key={item.label}
-                                type="button"
-                                onClick={item.action}
-                                className={`w-full flex items-center gap-2.5 px-3 py-2 text-[12px] font-medium cursor-pointer outline-none transition-colors ${
-                                  item.danger
-                                    ? "text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10"
-                                    : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/60"
-                                }`}
-                              >
-                                <span className={item.danger ? "text-red-400" : "text-zinc-400"}>{item.icon}</span>
-                                {item.label}
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {projects.map((proj) => (
+                  <CreationCard
+                    key={proj.id}
+                    item={{
+                      id: proj.id,
+                      title: proj.title,
+                      prompt: proj.prompt,
+                      type: "video",
+                      badge: proj.camera,
+                      badgeIcon: <Camera className="size-3 text-white/80" />,
+                      colorGrad: proj.colorGrad,
+                      ratio: proj.ratio,
+                      model: proj.model,
+                      timestamp: proj.timestamp,
+                      duration: proj.duration,
+                      isFavorite: proj.isFavorite,
+                    }}
+                    isActive={activeProject.id === proj.id}
+                    onSelect={() => {
+                      setActiveProject(proj);
+                      setProgress(0);
+                      setIsPlaying(false);
+                      setGenState("complete");
+                    }}
+                    onRename={handleRename}
+                    onFavorite={handleFavorite}
+                    onDuplicate={handleDuplicate}
+                    onRegenerate={handleRegenerate}
+                    onDelete={handleDelete}
+                  />
+                ))}
               </div>
             )}
           </div>
