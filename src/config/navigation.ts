@@ -103,7 +103,7 @@ export const HELP_SUPPORT_ITEMS: NavItem[] = [
   {
     id: "api-platform",
     label: "API Platform",
-    href: "/api-platform",
+    href: "https://platform.echogpt.live/",
     icon: Code2,
   },
   {
