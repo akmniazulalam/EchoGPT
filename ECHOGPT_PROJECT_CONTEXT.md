@@ -1115,10 +1115,64 @@ Each non-active creation card has a `⋯` icon button (only visible, always acce
 
 ---
 
+---
+
+### Milestone 4.x: Subscriptions & Plans Experience Redesign
+
+#### Reference-Driven UX Analysis & Transformation
+- **Reference Image Analysis**: Studied original EchoGPT Subscription page screenshot containing 4 plan columns (Monthly $9.99, Quarterly $29.99, Half-Yearly $59.99, Annual $99.99), each redundantly listing 40+ AI models inside every single card, along with 10 FAQ questions and a customer support email link.
+- **Flaws Eliminated from Original**:
+  1. *Repetitive 40-model dump*: Instead of duplicating 40 model names in every pricing card, models are now organized into a dedicated, searchable, categorized **Neural Engines Browser** section.
+  2. *Duplicate "Recommended" badges*: In the original, every plan had a "Recommended" badge. In our design, only the Annual Plan is highlighted as **Recommended (Best Value — Save 17%)**.
+  3. *Unstructured FAQ*: Replaced flat list with an accessible interactive accordion with real-time keyword search.
+  4. *Support link*: Transformed from plain text into an integrated **Customer Support Banner** navigating to the existing `/support` route.
+
+#### Architecture & Sections Implemented
+1. **Hero & Plan Overview**:
+   - Compact hero with "Affordable Plans for Every Need" badge and strong heading.
+   - Interactive segmented billing switcher: `All Durations`, `Monthly ($9.99/mo)`, `Annual ($99.99/yr — Save 17%)`.
+2. **Pricing Plan Cards (`PRICING_PLANS`)**:
+   - 4 distinct plans with clear value props:
+     - **Monthly Plan**: $9.99/mo — maximum flexibility, cancel anytime.
+     - **Quarterly Plan**: $29.99/quarter ($9.99/mo equivalent) — sustained sprint continuity.
+     - **Semi-Annual Plan**: $59.99/6 mo ($9.99/mo equivalent) — 6 months uninterrupted reasoning.
+     - **Annual Plan**: $99.99/yr ($8.33/mo equivalent, 17% savings) — Best Value, highlighted with `#713CF4` border and Crown badge.
+   - Distinct, scannable bullet points highlighting frontier intelligence, daily tokens, Image & Video studio suites.
+3. **AI Model Availability Catalog**:
+   - Unifies `AI_MODELS`, `IMAGE_MODELS`, and `VIDEO_MODELS` from `@/config/models` (no duplicate database).
+   - Real-time search filter and category pills: `All Models`, `Frontier Flagship`, `Deep Reasoning`, `Image Engines`, `Video Studios`, `Free Baseline`.
+   - Polished compact model cards with domain icons, provider tags, context windows, and Free/PRO availability badges.
+4. **Feature Comparison Matrix**:
+   - Scannable side-by-side comparison across 4 categories: Core Intelligence, Creative Studios, Usage Quotas & Performance, Security & Support.
+   - Mobile-responsive layout preventing horizontal overflow.
+5. **Customer Support CTA Banner**:
+   - Dedicated card: "Need help choosing the right plan?".
+   - Next.js Link navigating directly to the verified `/support` route.
+6. **Frequently Asked Questions (FAQ) Accordion**:
+   - 10 comprehensive answers based on original EchoGPT policies.
+   - Smooth accordion expand/collapse with chevron indicator.
+   - Keyboard accessible (`aria-expanded`, `aria-controls`), plus real-time question search.
+7. **Final Conversion CTA**:
+   - Conversion-focused bottom banner with direct upgrade action.
+8. **Interactive Mock Checkout Modal**:
+   - Clicking "Subscribe" on any plan opens a checkout confirmation modal with plan details, effective monthly rate, and a clear demo notice.
+   - Simulates activation and updates the user's active plan with a success toast.
+
+#### Verification
+- `npm run lint` → 0 errors, 0 warnings across all files ✓
+- `npm run build` (`next build --webpack`) → 17 static routes prerendered, 0 errors ✓
+
+#### Files Created / Changed
+- `src/components/subscriptions/SubscriptionsWorkspace.tsx` — **NEW** Complete Subscriptions workspace component
+- `src/app/(app)/subscriptions/page.tsx` — Mounted `SubscriptionsWorkspace` with updated metadata
+- `ECHOGPT_PROJECT_CONTEXT.md` — Updated
+
+---
+
 ## CURRENT MILESTONE
 
 Current milestone:
-Milestone 4.x — Studio Consistency & Creation Actions Menu Portal Fix
+Milestone 4.x — Subscriptions & Plans Experience Redesign
 
 Status:
 Completed ✓
