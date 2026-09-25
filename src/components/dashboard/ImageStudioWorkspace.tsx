@@ -20,9 +20,6 @@ import {
   Layers,
   Wand2,
   Sliders,
-  MoreHorizontal,
-  Star,
-  Trash2,
   Search,
   Maximize2,
   Minimize2,
@@ -45,12 +42,14 @@ import { Badge } from "@/components/ui/Badge";
 import { showToast } from "@/components/ui/Toast";
 import { useUpgradeModal } from "@/context/UpgradeModalContext";
 import { IMAGE_MODELS, DEFAULT_IMAGE_MODEL_ID, AIModel } from "@/config/models";
+import { CreationCard, CreationItem } from "@/components/dashboard/CreationCard";
 
 /* ─────────────────────── Types ────────────────────────── */
 type GenState = "idle" | "generating" | "processing" | "complete" | "error";
 
 interface GeneratedImage {
   id: string;
+  title?: string;
   prompt: string;
   style: string;
   ratio: string;
@@ -161,6 +160,7 @@ const CURATED_CATEGORIES = ["All", "Product", "Portrait", "Landscape", "Architec
 const INITIAL_GALLERY: GeneratedImage[] = [
   {
     id: "img-1",
+    title: "Isometric SaaS Dashboard",
     prompt: "Minimalist 3D isometric dashboard floating in dark space with glowing #713CF4 nodes",
     style: "3D Isometric",
     ratio: "16:9",
@@ -173,6 +173,7 @@ const INITIAL_GALLERY: GeneratedImage[] = [
   },
   {
     id: "img-2",
+    title: "Organic Concrete Atrium",
     prompt: "Futuristic architectural atrium with curved organic concrete fins and diffused skylight",
     style: "Photorealistic",
     ratio: "1:1",
@@ -185,6 +186,7 @@ const INITIAL_GALLERY: GeneratedImage[] = [
   },
   {
     id: "img-3",
+    title: "Titanium Glass Headphones",
     prompt: "Studio product shot of transparent glass headphones on brushed titanium plate",
     style: "Product Studio",
     ratio: "1:1",
@@ -197,6 +199,7 @@ const INITIAL_GALLERY: GeneratedImage[] = [
   },
   {
     id: "img-4",
+    title: "Cyberpunk Rain Street",
     prompt: "Cyberpunk Tokyo rain street at twilight with violet neon reflections on asphalt",
     style: "Cinematic",
     ratio: "9:16",
@@ -253,11 +256,6 @@ export function ImageStudioWorkspace() {
   const exportRef = useRef<HTMLDivElement>(null);
   const previewCanvasRef = useRef<HTMLDivElement>(null);
 
-  /* — creations overflow & rename — */
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
-  const [renamingId, setRenamingId] = useState<string | null>(null);
-  const [renameValue, setRenameValue] = useState("");
-
   const { openUpgradeModal } = useUpgradeModal();
 
   /* — derived model and style — */
@@ -290,18 +288,6 @@ export function ImageStudioWorkspace() {
     if (exportOpen) document.addEventListener("mousedown", handle);
     return () => document.removeEventListener("mousedown", handle);
   }, [exportOpen]);
-
-  useEffect(() => {
-    function handle(e: MouseEvent) {
-      const target = e.target as Node;
-      const menus = document.querySelectorAll("[data-image-menu]");
-      let inside = false;
-      menus.forEach((m) => { if (m.contains(target)) inside = true; });
-      if (!inside) setOpenMenuId(null);
-    }
-    if (openMenuId) document.addEventListener("mousedown", handle);
-    return () => document.removeEventListener("mousedown", handle);
-  }, [openMenuId]);
 
   /* ── Cleanup timer ── */
   useEffect(() => {
@@ -396,12 +382,14 @@ export function ImageStudioWorkspace() {
         };
 
         const assignedGrad = colorMap[selectedStyle] || "from-violet-900/60 via-purple-950/40 to-black";
+        const assignedTitle = prompt.length > 32 ? `${prompt.slice(0, 32).trim()}...` : prompt;
 
         setGallery((prev) => {
           const generatedItems: GeneratedImage[] = [];
           for (let i = 0; i < batchCount; i++) {
             generatedItems.push({
               id: `img-${Date.now()}-${i}`,
+              title: assignedTitle,
               prompt,
               style: activeStyleObj.name,
               ratio: selectedRatio,
@@ -420,6 +408,7 @@ export function ImageStudioWorkspace() {
 
         const newPrimaryImg: GeneratedImage = {
           id: `img-${Date.now()}-0`,
+          title: assignedTitle,
           prompt,
           style: activeStyleObj.name,
           ratio: selectedRatio,
@@ -488,7 +477,7 @@ export function ImageStudioWorkspace() {
   };
 
   /* ── Creation Card Actions ── */
-  const handleToggleFavorite = (id: string) => {
+  const handleFavorite = (id: string) => {
     setGallery((prev) =>
       prev.map((item) =>
         item.id === id ? { ...item, isFavorite: !item.isFavorite } : item
@@ -497,34 +486,46 @@ export function ImageStudioWorkspace() {
     if (activeImage?.id === id) {
       setActiveImage((prev) => (prev ? { ...prev, isFavorite: !prev.isFavorite } : prev));
     }
-    setOpenMenuId(null);
   };
 
-  const handleDuplicate = (img: GeneratedImage) => {
+  const handleDuplicate = (item: CreationItem) => {
     setGallery((prev) => {
       const newId = `img-${Date.now()}`;
+      const original = prev.find((i) => i.id === item.id);
       const duplicate: GeneratedImage = {
-        ...img,
         id: newId,
-        prompt: `${img.prompt} (copy)`,
+        title: `${item.title || original?.title || "Artwork"} (copy)`,
+        prompt: item.prompt,
+        style: item.badge || original?.style || "3D Isometric",
+        ratio: item.ratio,
+        model: item.model,
+        colorGrad: item.colorGrad,
         timestamp: "Just now",
         isFavorite: false,
+        batchIndex: item.batchIndex,
+        batchTotal: item.batchTotal,
+        cfg: original?.cfg,
+        seed: original?.seed,
       };
-      const idx = prev.findIndex((i) => i.id === img.id);
+      const idx = prev.findIndex((i) => i.id === item.id);
       const next = [...prev];
-      next.splice(idx + 1, 0, duplicate);
+      if (idx !== -1) {
+        next.splice(idx + 1, 0, duplicate);
+      } else {
+        next.unshift(duplicate);
+      }
       return next;
     });
-    setOpenMenuId(null);
     showToast("Artwork duplicated.", "success");
   };
 
-  const handleRegenerateFromCard = (img: GeneratedImage) => {
-    setPrompt(img.prompt);
-    const matchedStyle = STYLES.find((s) => s.name === img.style);
+  const handleRegenerate = (item: CreationItem) => {
+    setPrompt(item.prompt);
+    const matchedStyle = STYLES.find(
+      (s) => s.name.toLowerCase() === item.badge.toLowerCase() || s.id === item.badge.toLowerCase()
+    );
     if (matchedStyle) setSelectedStyle(matchedStyle.id);
-    setSelectedRatio(img.ratio);
-    setOpenMenuId(null);
+    setSelectedRatio(item.ratio);
     showToast("Prompt & settings restored — click Generate to run.", "success");
   };
 
@@ -538,22 +539,17 @@ export function ImageStudioWorkspace() {
       }
     }
     setGallery((prev) => prev.filter((i) => i.id !== id));
-    setOpenMenuId(null);
     showToast("Artwork removed.", "success");
   };
 
-  const commitRename = () => {
-    if (!renameValue.trim()) { setRenamingId(null); return; }
+  const handleRename = (id: string, newTitle: string) => {
     setGallery((prev) =>
-      prev.map((item) =>
-        item.id === renamingId ? { ...item, prompt: renameValue.trim() } : item
-      )
+      prev.map((item) => (item.id === id ? { ...item, title: newTitle } : item))
     );
-    if (activeImage?.id === renamingId) {
-      setActiveImage((prev) => (prev ? { ...prev, prompt: renameValue.trim() } : prev));
+    if (activeImage?.id === id) {
+      setActiveImage((prev) => (prev ? { ...prev, title: newTitle } : prev));
     }
-    setRenamingId(null);
-    showToast("Artwork prompt updated.", "success");
+    showToast("Artwork title updated.", "success");
   };
 
   const isGeneratingOrProcessing = genState === "generating" || genState === "processing";
@@ -1402,7 +1398,7 @@ export function ImageStudioWorkspace() {
           </div>
 
           {/* ════════════ PRIORITY 11 & 12: YOUR CREATIONS GALLERY ════════════ */}
-          <div className="space-y-3 pt-2">
+          <div className="space-y-3 pb-2 pt-2">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
                 Your Creations
@@ -1414,9 +1410,11 @@ export function ImageStudioWorkspace() {
 
             {gallery.length === 0 ? (
               <div className="rounded-2xl border border-dashed border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-[#121319] py-12 flex flex-col items-center justify-center gap-3 text-center">
-                <ImageIcon className="size-8 text-zinc-300 dark:text-zinc-600" />
+                <div className="size-12 rounded-2xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 dark:text-zinc-500">
+                  <ImageIcon className="size-6" />
+                </div>
                 <div className="space-y-1">
-                  <p className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
+                  <p className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
                     No creations yet
                   </p>
                   <p className="text-xs text-zinc-400 dark:text-zinc-500">
@@ -1428,151 +1426,37 @@ export function ImageStudioWorkspace() {
                 </Button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-                {gallery.map((item) => {
-                  const isActive = activeImage?.id === item.id;
-                  const menuOpen = openMenuId === item.id;
-                  const isRenaming = renamingId === item.id;
-
-                  return (
-                    <div
-                      key={item.id}
-                      className={`relative rounded-xl border overflow-hidden transition-all ${
-                        isActive
-                          ? "border-[#713CF4] ring-2 ring-[#713CF4]/30"
-                          : "border-zinc-200/80 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700"
-                      }`}
-                    >
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (isRenaming) return;
-                          setActiveImage(item);
-                          setGenState("complete");
-                        }}
-                        className={`w-full aspect-[16/11] p-3 text-left flex flex-col justify-between bg-gradient-to-br ${
-                          item.colorGrad
-                        } cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4]`}
-                      >
-                        {/* Top info */}
-                        <div className="flex items-center justify-between z-10 pr-6">
-                          <span className="text-[10px] font-semibold text-white/90 bg-black/30 px-1.5 py-0.5 rounded">
-                            {item.style}
-                          </span>
-                          <div className="flex items-center gap-1.5">
-                            {item.isFavorite && (
-                              <Star className="size-3 text-amber-400 fill-amber-400" />
-                            )}
-                            <span className="text-[9.5px] text-white/60 font-mono">
-                              {item.ratio}
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Inline rename or prompt display */}
-                        {isRenaming ? (
-                          <input
-                            type="text"
-                            value={renameValue}
-                            onChange={(e) => setRenameValue(e.target.value)}
-                            onBlur={commitRename}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter") commitRename();
-                              if (e.key === "Escape") setRenamingId(null);
-                            }}
-                            autoFocus
-                            onClick={(e) => e.stopPropagation()}
-                            className="w-full bg-black/40 text-white text-[11px] px-2 py-0.5 rounded outline-none focus:ring-1 focus:ring-white/50 z-20"
-                          />
-                        ) : (
-                          <p className="text-[11px] text-white/85 line-clamp-2 leading-relaxed z-10">
-                            {item.prompt}
-                          </p>
-                        )}
-
-                        {/* Footer metadata */}
-                        <div className="flex items-center justify-between text-[9.5px] text-white/50 z-10">
-                          <span>{item.model}</span>
-                          <span>{item.timestamp}</span>
-                        </div>
-                      </button>
-
-                      {/* Card Overflow Menu Button */}
-                      <div className="absolute top-2.5 right-2.5 z-20" data-image-menu>
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setOpenMenuId(menuOpen ? null : item.id);
-                          }}
-                          aria-label="Creation options"
-                          className="size-6 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-white/70 hover:text-white transition-colors cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-white/50"
-                        >
-                          <MoreHorizontal className="size-3.5" />
-                        </button>
-
-                        {/* Dropdown Menu */}
-                        {menuOpen && (
-                          <div
-                            data-image-menu
-                            className="absolute right-0 top-full mt-1 w-38 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#1b1725] shadow-xl z-50 py-1 overflow-hidden animate-in fade-in zoom-in-95"
-                          >
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setRenamingId(item.id);
-                                setRenameValue(item.prompt);
-                                setOpenMenuId(null);
-                              }}
-                              className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer"
-                            >
-                              <FileText className="size-3.5 text-zinc-400" />
-                              Rename
-                            </button>
-
-                            <button
-                              type="button"
-                              onClick={() => handleToggleFavorite(item.id)}
-                              className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer"
-                            >
-                              <Star className={`size-3.5 ${item.isFavorite ? "fill-amber-400 text-amber-400" : "text-zinc-400"}`} />
-                              {item.isFavorite ? "Unfavorite" : "Favorite"}
-                            </button>
-
-                            <button
-                              type="button"
-                              onClick={() => handleDuplicate(item)}
-                              className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer"
-                            >
-                              <Copy className="size-3.5 text-zinc-400" />
-                              Duplicate
-                            </button>
-
-                            <button
-                              type="button"
-                              onClick={() => handleRegenerateFromCard(item)}
-                              className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer"
-                            >
-                              <RefreshCw className="size-3.5 text-zinc-400" />
-                              Regenerate
-                            </button>
-
-                            <div className="border-t border-zinc-100 dark:border-zinc-800 my-1" />
-
-                            <button
-                              type="button"
-                              onClick={() => handleDelete(item.id)}
-                              className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 cursor-pointer"
-                            >
-                              <Trash2 className="size-3.5 text-red-400" />
-                              Delete
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {gallery.map((item) => (
+                  <CreationCard
+                    key={item.id}
+                    item={{
+                      id: item.id,
+                      title: item.title || item.style,
+                      prompt: item.prompt,
+                      type: "image",
+                      badge: item.style,
+                      badgeIcon: <Layers className="size-3 text-white/80" />,
+                      colorGrad: item.colorGrad,
+                      ratio: item.ratio,
+                      model: item.model,
+                      timestamp: item.timestamp,
+                      isFavorite: item.isFavorite,
+                      batchIndex: item.batchIndex,
+                      batchTotal: item.batchTotal,
+                    }}
+                    isActive={activeImage?.id === item.id}
+                    onSelect={() => {
+                      setActiveImage(item);
+                      setGenState("complete");
+                    }}
+                    onRename={handleRename}
+                    onFavorite={handleFavorite}
+                    onDuplicate={handleDuplicate}
+                    onRegenerate={handleRegenerate}
+                    onDelete={handleDelete}
+                  />
+                ))}
               </div>
             )}
           </div>
