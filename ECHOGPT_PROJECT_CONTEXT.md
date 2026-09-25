@@ -1075,10 +1075,50 @@ Each non-active creation card has a `⋯` icon button (only visible, always acce
 
 ---
 
+### Milestone 4.x: Studio Consistency & Creation Actions Menu Portal Fix
+
+#### Problem Addressed
+1. **Creation Card Overflow Menu Clipping**: On Video Studio, clicking the three-dot action menu (`⋯`) resulted in the menu being clipped or truncated. Root cause: The card wrapper had CSS `overflow: hidden` (`rounded-xl border overflow-hidden`), creating a clipping boundary that truncated any absolutely-positioned children regardless of `z-index`.
+2. **Inconsistent "Your Creations" Sections**: Image Studio and Video Studio had divergent creation card UI, metadata layouts, and separate inline dropdown implementations.
+
+#### Architecture & Implementation Solutions
+1. **Portal-Based Menu Architecture (`CreationActionsMenu.tsx`)**:
+   - Uses `createPortal(..., document.body)` so menus render directly under `document.body`, completely escaping any parent container clipping rectangles.
+   - Dynamic viewport-aware positioning: measures trigger via `getBoundingClientRect()`, calculates available space below vs. above (`placement: "bottom" | "top"`), and clamps `left` coordinate to viewport boundaries (`12px` margin).
+   - Real-time updates: recalculates position on scroll and resize, closes menu automatically if trigger scrolls out of viewport.
+   - Full keyboard and pointer accessibility: click-outside listener, Escape key dismissal with focus restoration to trigger button, proper `aria-haspopup` and `role="menu"` attributes.
+   - Zero-overhead hydration: uses `useSyncExternalStore` for SSR safety without cascading render warnings.
+   - Smooth animation: `animate-in fade-in-50 zoom-in-95` with placement-aware transform origin.
+
+2. **Unified Reusable Component (`CreationCard.tsx`)**:
+   - Shared across both `ImageStudioWorkspace` and `VideoStudioWorkspace`.
+   - Polymorphic media support: supports both `type: "image"` (Layers icon) and `type: "video"` (Play icon, video scanline overlay).
+   - Gradient preview thumbnail with aspect-ratio badge, camera motion / art style badge, and favorite star indicator.
+   - Distinct metadata footer: creation title with inline rename support (`Enter`/`Escape`), prompt description excerpt, model tag, and relative timestamp.
+   - Standardized actions: Rename, Favorite/Unfavorite, Duplicate, Regenerate, Delete.
+
+3. **Workspace Integration**:
+   - Replaced old custom card implementations and state variables (`openMenuId`, `renamingId`, `renameValue`) in both `ImageStudioWorkspace.tsx` and `VideoStudioWorkspace.tsx`.
+   - Unified handlers accepting typed `CreationItem` payloads.
+   - Cleaned up unused imports across both files.
+
+#### Verification
+- `npm run lint` → 0 errors, 0 warnings across all files ✓
+- `npm run build` (`next build --webpack`) → 17 static routes prerendered, 0 errors ✓
+
+#### Files Created / Changed
+- `src/components/dashboard/CreationActionsMenu.tsx` — **NEW** Portal-based viewport-aware action menu
+- `src/components/dashboard/CreationCard.tsx` — **NEW** Unified creation card component
+- `src/components/dashboard/VideoStudioWorkspace.tsx` — Updated to use `CreationCard`, removed old inline menu & unused imports
+- `src/components/dashboard/ImageStudioWorkspace.tsx` — Updated to use `CreationCard`, removed old inline menu & unused imports
+- `ECHOGPT_PROJECT_CONTEXT.md` — Updated
+
+---
+
 ## CURRENT MILESTONE
 
 Current milestone:
-Milestone 4.x — Image Studio UX Polish
+Milestone 4.x — Studio Consistency & Creation Actions Menu Portal Fix
 
 Status:
 Completed ✓
