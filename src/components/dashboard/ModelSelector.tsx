@@ -35,6 +35,7 @@ export interface ModelSelectorProps {
   align?: "left" | "right";
   headerTitle?: string;
   allowProSelection?: boolean;
+  groupByTier?: boolean;
 }
 
 export function ModelSelector({
@@ -52,9 +53,11 @@ export function ModelSelector({
   align = "right",
   headerTitle,
   allowProSelection = false,
+  groupByTier = false,
 }: ModelSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [tierFilter, setTierFilter] = useState<"all" | "free" | "pro">("all");
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -81,6 +84,7 @@ export function ModelSelector({
       ) {
         setIsOpen(false);
         setSearchQuery("");
+        setTierFilter("all");
       }
     }
 
@@ -98,6 +102,7 @@ export function ModelSelector({
       if (event.key === "Escape" && isOpen) {
         setIsOpen(false);
         setSearchQuery("");
+        setTierFilter("all");
       }
     }
 
@@ -109,30 +114,47 @@ export function ModelSelector({
     };
   }, [isOpen]);
 
+  // Check if both free and pro models exist
+  const hasBothTiers = useMemo(() => {
+    const hasFree = models.some((m) => !m.isPro);
+    const hasPro = models.some((m) => m.isPro);
+    return hasFree && hasPro;
+  }, [models]);
+
   // Filtered models
   const filteredModels = useMemo(() => {
-    if (!searchQuery.trim()) return models;
+    let result = models;
+    if (tierFilter === "free") {
+      result = result.filter((m) => !m.isPro);
+    } else if (tierFilter === "pro") {
+      result = result.filter((m) => m.isPro);
+    }
+    if (!searchQuery.trim()) return result;
     const q = searchQuery.toLowerCase();
-    return models.filter(
+    return result.filter(
       (m) =>
         m.name.toLowerCase().includes(q) ||
         m.provider.toLowerCase().includes(q) ||
         m.description.toLowerCase().includes(q)
     );
-  }, [models, searchQuery]);
+  }, [models, searchQuery, tierFilter]);
 
-  // Group by category
+  // Group by category or tier
   const categories = useMemo(() => {
     const map = new Map<string, AIModel[]>();
     for (const model of filteredModels) {
-      const cat = model.category;
+      const cat = groupByTier
+        ? model.isPro
+          ? "Pro Models (Frontier)"
+          : "Free Models (Included)"
+        : model.category;
       if (!map.has(cat)) {
         map.set(cat, []);
       }
       map.get(cat)!.push(model);
     }
     return Array.from(map.entries());
-  }, [filteredModels]);
+  }, [filteredModels, groupByTier]);
 
   const handleItemClick = (model: AIModel) => {
     if (multiSelect) {
@@ -241,6 +263,26 @@ export function ModelSelector({
                 className="w-full pl-8 pr-3 py-1.5 rounded-lg text-xs bg-zinc-50 dark:bg-[#1b1c24] border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-[#713CF4]"
               />
             </div>
+
+            {/* Tier Filter Pills (All / Free / Pro) */}
+            {hasBothTiers && (
+              <div className="flex items-center gap-1 pt-0.5">
+                {(["all", "free", "pro"] as const).map((t) => (
+                  <button
+                    key={t}
+                    type="button"
+                    onClick={() => setTierFilter(t)}
+                    className={`px-2.5 py-0.5 rounded-md text-[10.5px] font-semibold transition-colors cursor-pointer ${
+                      tierFilter === t
+                        ? "bg-[#713CF4] text-white shadow-2xs"
+                        : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200 bg-zinc-100 dark:bg-zinc-800/80"
+                    }`}
+                  >
+                    {t === "all" ? "All Models" : t === "free" ? "Free" : "Pro"}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Model Groups */}
@@ -307,7 +349,10 @@ export function ModelSelector({
                           </div>
 
                           {model.isPro && !allowProSelection ? (
-                            <Lock className="size-3.5 text-zinc-400 dark:text-zinc-500 shrink-0 mt-1" />
+                            <span className="inline-flex items-center gap-1 text-[10px] text-amber-500 dark:text-amber-400 font-medium shrink-0 mt-0.5 px-1.5 py-0.5 rounded bg-amber-500/10 dark:bg-amber-500/20">
+                              <Lock className="size-2.5" />
+                              <span className="hidden sm:inline">Upgrade</span>
+                            </span>
                           ) : isSelected ? (
                             <Check className="size-4 text-[#713CF4] dark:text-[#a78bfa] shrink-0 mt-0.5" />
                           ) : null}
