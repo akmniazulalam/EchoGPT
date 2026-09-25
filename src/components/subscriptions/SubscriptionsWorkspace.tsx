@@ -1110,7 +1110,107 @@ export function SubscriptionsWorkspace() {
         </div>
       </div>
 
-      
+      {/* ── 3. INTERACTIVE MOCK CHECKOUT MODAL ── */}
+      {selectedPlanForModal && (
+        <Modal
+          isOpen={isCheckoutModalOpen}
+          onClose={() => setIsCheckoutModalOpen(false)}
+          title={
+            <div className="flex items-center gap-2">
+              <Crown className="size-5 text-[#713CF4]" />
+              <span>Confirm Subscription</span>
+            </div>
+          }
+          maxWidth="md">
+          <div className="space-y-4">
+            {/* Plan Info Card */}
+            <div className="rounded-xl border border-[#713CF4]/30 bg-[#713CF4]/5 p-4 space-y-2">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="text-base font-bold text-zinc-900 dark:text-zinc-100">
+                    {selectedPlanForModal.name}
+                  </h4>
+                  <span className="text-xs text-zinc-500">
+                    {selectedPlanForModal.billingNote}
+                  </span>
+                </div>
+                <div className="text-right">
+                  <span className="text-xl font-extrabold text-zinc-900 dark:text-zinc-100">
+                    {selectedPlanForModal.price}
+                  </span>
+                  <span className="text-xs text-zinc-400 block">
+                    {selectedPlanForModal.period}
+                  </span>
+                </div>
+              </div>
+
+              <div className="pt-2 border-t border-[#713CF4]/15 flex items-center justify-between text-xs font-semibold text-[#713CF4] dark:text-[#a78bfa]">
+                <span>Effective Rate:</span>
+                <span>{selectedPlanForModal.perMonthEquivalent}</span>
+              </div>
+            </div>
+
+            {/* Included highlights */}
+            <div className="space-y-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-zinc-400 block">
+                What you get immediately:
+              </span>
+              <ul className="space-y-1.5 text-xs text-zinc-700 dark:text-zinc-300">
+                <li className="flex items-center gap-2">
+                  <Check className="size-3.5 text-emerald-500 shrink-0" />
+                  <span>
+                    Unlimited chats across GPT-5, Claude 4, Gemini & DeepSeek R1
+                  </span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="size-3.5 text-emerald-500 shrink-0" />
+                  <span>1,100 high-speed tokens per day allocation</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="size-3.5 text-emerald-500 shrink-0" />
+                  <span>4K image exports & cinematic video synthesis</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="size-3.5 text-emerald-500 shrink-0" />
+                  <span>Side-by-side 4-model comparison workspace</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Demo Notice */}
+            <div className="rounded-lg bg-amber-500/10 border border-amber-500/20 p-3 flex items-start gap-2.5 text-xs text-amber-700 dark:text-amber-300">
+              <Info className="size-4 shrink-0 mt-0.5 text-amber-500" />
+              <p>
+                <strong>Frontend Demo Environment:</strong> No real payment or
+                credit card is processed. Confirming simulates an active PRO
+                subscription for your current session.
+              </p>
+            </div>
+
+            {/* Modal Actions */}
+            <div className="pt-2 flex items-center justify-end gap-2.5">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsCheckoutModalOpen(false)}
+                disabled={isSubscribing}>
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={handleConfirmSubscription}
+                isLoading={isSubscribing}
+                leftIcon={<Sparkles className="size-3.5" />}
+                className="font-bold">
+                {isSubscribing
+                  ? "Activating Pro Access…"
+                  : "Activate Pro Access"}
+              </Button>
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }
