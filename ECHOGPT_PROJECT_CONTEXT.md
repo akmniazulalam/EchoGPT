@@ -893,10 +893,107 @@ All major workspaces updated with:
 
 ---
 
+### Milestone 4.x: Video Studio UX Polish (Full Redesign)
+
+#### PRIORITY 1 — Model Selector Root Cause + Fix
+
+**Root cause**: The ModelSelector was placed INSIDE the prompt card `div` which had `overflow-hidden`. This CSS property clips absolutely-positioned descendants even with `z-index: 50` — the dropdown popover existed in the DOM but was visually clipped by the card boundary.
+
+**Fix**: Moved the ModelSelector OUTSIDE the prompt card entirely, into its own dedicated "Video Engine" row at the top of the controls column. This row has no `overflow-hidden` ancestor, so the dropdown popover opens freely and floats above all surrounding content. No changes to ModelSelector component itself were needed.
+
+#### PRIORITY 2 — Improved Prompt Experience
+- Prompt textarea now has `MAX_PROMPT_LENGTH = 800` character limit enforced on input
+- Character counter in `{current} / {MAX_PROMPT_LENGTH}` format, turns amber at 90% fill
+- Clear placeholder text explaining what to describe
+- **Enhance Prompt** (mock) button: `Wand2` icon, spinner during 900ms mock delay, uses `mockEnhancePrompt()` helper that intelligently appends contextual enhancements based on keywords (city/night, product/glass, nature, or generic cinematic suffix). Shows "Enhancing…" during processing. Toast on completion.
+- Disabled when prompt is empty, currently generating, or already enhancing
+
+#### PRIORITY 3 — Camera Motion
+- 4 primary presets always visible in 2-column grid (Drone Pan, Orbital 360, Kinetic Push, Static Close-up)
+- "More motions" popover trigger shows 6 additional presets (Dolly, Tracking, Crane, Handheld, Zoom, Arc)
+- Active camera shown in Badge above grid when it's a "More" preset
+- Escape closes; click-outside closes (mousedown handler pattern)
+- Both primary and more cameras share `ALL_CAMERAS` array for label lookups
+
+#### PRIORITY 4 — Advanced Settings
+Three grouped sections (collapsed by default):
+- **Motion**: Motion Intensity slider (0–100), Camera Strength slider (0–100) with help text
+- **Output**: FPS segmented (`16fps`/`24fps`/`30fps`), Quality segmented (`Draft`/`High`/`4K ✦`) — 4K PRO-gated → UpgradeProModal
+- **Generation**: Seed number input with help text, Negative Prompt textarea
+
+#### PRIORITY 5 — Professional Generation States
+5-state flow: `idle → queued → generating → processing → complete` (+ `failed`):
+- **queued** (2s): "Your video is queued…"
+- **generating** (until 5s before end): "Creating your scene…" + live countdown
+- **processing** (3s): "Finishing your video…"
+- **complete**: "Your video is ready." + player
+- **failed**: Error state with retry button
+- **Cancel** button: clears all timeouts via `genTimeoutRef`, returns to `idle`
+- `genTimeoutRef` ref tracks all nested `setTimeout` handles for clean cancellation
+
+#### PRIORITY 6 — Video Preview
+- 3-state canvas: IDLE (Film icon empty state), GENERATING (subtle pulse ring + waveform bars + countdown + Cancel), COMPLETE (gradient canvas + player)
+- Player: play/pause button with hover-scale, clickable scrubber (also keyboard: ArrowLeft/Right), time display (`formatTime()`), mute toggle, Export button (PRO-gated)
+- `role="slider"` + `aria-valuemin/max/now` + keyboard on scrubber
+- `aria-label` on play/pause, mute, export
+
+#### PRIORITY 7 — Creation Card Overflow Menu
+Each non-active creation card has a `⋯` icon button (only visible, always accessible):
+- **Rename**: Opens inline input in the card title area; commits on blur/Enter, cancels on Escape
+- **Favorite**: Toggles `isFavorite` state — shows filled amber Star icon
+- **Duplicate**: Creates copy via setState updater (no `Date.now()` in render)
+- **Regenerate**: Restores card prompt to textarea + shows toast
+- **Delete**: Removes from projects list; restores another if deleting active
+- Menu closes on outside click via `data-creation-menu` attribute approach
+- Danger-styled Delete row (red text/icon, red hover bg)
+
+#### PRIORITY 8 — New Scene
+`handleNewScene`: clears all timeouts, resets prompt, duration, ratio, camera, advancedOpen, genState, countdown, playing, progress. Appears as "New Scene" footer button and in empty state.
+
+#### PRIORITY 9 — Visual Polish
+- Removed all `overflow-hidden` from control cards that contain popovers/selectors
+- Consistent `rounded-2xl` cards, `shadow-xs`, `border-zinc-200/80 dark:border-zinc-800`
+- Prompt card footer: thin separator + info text
+- Video canvas: `min-height: 300px` (was 260px), `bg-zinc-950` (not black) for softer dark
+- Generating overlay: subtle single-ring pulse (not aggressive double-ping) for calm animation
+- Player: fade-from-black gradient over bottom controls for readability
+
+#### PRIORITY 10 — Responsive Design
+- Desktop: 5-col controls / 7-col preview
+- Model selector row full-width at top (flex-wrap for mobile)
+- Mobile: single column, all sections stack vertically
+- Camera grid collapses to 2-col (same across all breakpoints since only 4 primary shown)
+- Popovers use `z-50` / `z-40` appropriately with proper offset positioning
+
+#### Accessibility
+- `aria-expanded` on all popover triggers
+- `aria-pressed` on all segmented pill buttons
+- `aria-label` on textarea, all icon buttons (mute, play/pause, new scene, more options)
+- `role="group"` + `aria-label` on duration/ratio/fps segmented controls
+- `role="slider"` + arrow key support on video scrubber
+- Creation menu: `aria-expanded` on `⋯` button
+- Focus-visible rings on all interactive elements
+
+#### Verification
+- `npm run lint` → 0 errors, 0 warnings ✓
+- `npx next build --webpack` → 17 static routes, 0 errors ✓
+
+#### Known Limitations (Intentionally Deferred)
+- No actual video generation (all mocked with setTimeout)
+- No real model API calls
+- No actual audio/playback (player is a simulated scrubber)
+- Image-to-video, storyboard, audio, multi-scene, real download — all deferred to future
+
+#### Files Changed in This Milestone
+- `src/components/dashboard/VideoStudioWorkspace.tsx` — Full redesign
+- `ECHOGPT_PROJECT_CONTEXT.md` — Updated
+
+---
+
 ## CURRENT MILESTONE
 
 Current milestone:
-Milestone 4.x — Video Studio Visual Refinement
+Milestone 4.x — Video Studio UX Polish
 
 Status:
 Completed ✓
