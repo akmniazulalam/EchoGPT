@@ -990,10 +990,95 @@ Each non-active creation card has a `⋯` icon button (only visible, always acce
 
 ---
 
+### Milestone 4.x: Image Studio UX Polish (Full Redesign)
+
+#### PRIORITY 1 — Model Selector UX & Grouping
+- **Root Cause & Fix**: ModelSelector was previously tucked inside the bottom toolbar of the prompt card, which had layout constraints and could awkwardly overlap or clip. Moved ModelSelector to a dedicated "Neural Engine" header row above the prompt card, outside any `overflow-hidden` containers.
+- **Enhanced ModelSelector Component**:
+  - Added `groupByTier?: boolean` prop: When enabled, groups models into `Free Models (Included)` and `Pro Models (Frontier)`.
+  - Added tier filter pills: `[All Models] [Free] [Pro]` right under the search input when both tiers exist.
+  - Clear PRO locked state indicator: Displays an amber lock icon and `Upgrade` badge instead of a plain muted lock.
+  - Clicking a PRO model safely opens the global `UpgradeProModal` without attempting mock generation.
+  - Dropdown uses `z-50`, natural alignment, and cleans up search and tier filter state on close/Escape.
+
+#### PRIORITY 2 — Prompt Experience & Transformation Actions
+- 1000-character limit with a subtle character counter (`prompt.length / 1000`) turning amber at 90% capacity.
+- Comfortable textarea with focused `#713CF4` ring.
+- **3 AI Transformation Mock Actions**:
+  - `Enhance`: Contextual addition of volumetric lighting, ray-traced ambient occlusion, and 8K micro-textures.
+  - `Rewrite`: Reframes prompt into an artistic director composition on Hasselblad camera.
+  - `Expand`: Adds architectural backdrop, foreground layers, and color palette depth.
+  - All actions feature interactive loading spinners (~700ms) and toast notifications.
+
+#### PRIORITY 3 — Explore Prompts
+- Compact popover trigger with `Compass` icon and curated blueprint library.
+- Categorized by `All`, `Product`, `Portrait`, `Landscape`, `Architecture`, `Illustration`, `Marketing`, `Creative`.
+- Real-time search filter inside popover.
+- 1-click prompt loading into editor with clean toast feedback and popover auto-close.
+
+#### PRIORITY 4 — Style Selector
+- 6 high-value artistic styles: `3D Isometric`, `Photorealistic`, `Cinematic`, `Product Studio`, `Digital Anime`, `Illustration`.
+- Rendered as a compact 3-column visual card selector with style-specific Lucide icons and descriptions.
+- Clear active state with `#713CF4` border, background tint, and focus ring.
+
+#### PRIORITY 5 — Essential Options
+- **Aspect Ratio**: Segmented pill group (`1:1 Square`, `16:9 Cinema`, `9:16 Story`, `4:3 Classic`).
+- **Batch Count**: Segmented control (`1 Image`, `2 Images`, `4 Images`).
+
+#### PRIORITY 6 — Advanced Options Collapsible
+- Grouped logically and collapsed by default:
+  - **Generation Controls**: Guidance Scale (CFG slider 1.0–20.0 with live display), Diffusion Steps (20/30/50), Random Seed input with help text.
+  - **Quality & Lighting**: Detail Level dropdown (Draft, High, Ultra), Lighting Mode dropdown (Studio Softbox, Natural, Dramatic, Ambient).
+  - **Prompt Control**: Negative Prompt textarea to exclude unwanted visual elements.
+
+#### PRIORITY 7 & 8 — Generation Workflow & Error UX
+- 5-state generation flow: `IDLE → GENERATING → PROCESSING → COMPLETE` (+ `ERROR`).
+- Animated neural synthesis state with ping/pulse rings and realistic progress bar.
+- State messages: "Synthesizing latent neural space…" → "Refining micro-textures & upscaling…" → "Your image is ready."
+- Interactive `Cancel` action to abort back to clean `IDLE` state.
+- Dedicated `Error` state with clear status, retry instructions, and a `Retry Generation` button.
+
+#### PRIORITY 9 & 10 — Dominant Preview Canvas & Export
+- Large, prominent artwork canvas (7 columns on desktop) with aspect-ratio-accurate container and subtle grid overlay.
+- Idle state with clean empty illustration.
+- Interactive **Zoom Controls**: Fit, 100%, Zoom In (up to 150%), Zoom Out (down to 75%).
+- **Fullscreen Mode**: Dedicated fullscreen toggle with floating exit button.
+- **Batch Variants Selector**: When batch count > 1, variant switcher buttons appear (`#1`, `#2`, etc.) to review all generated variations.
+- **Export Menu**: Dropdown supporting `PNG (Lossless)`, `JPEG (Web Standard)`, `WebP (Compressed)`, and `4K Master [PRO]` (gated to `UpgradeProModal`).
+- Metadata strip: Model, Ratio, CFG, Latency (`1.1s`), Resolution.
+- `New Artwork` button in canvas footer to start fresh.
+
+#### PRIORITY 11 & 12 — Your Creations Gallery & Empty State
+- Gallery grid with aspect-ratio previews, style badges, and timestamps.
+- Card overflow menu (`⋯`) on each creation:
+  - `Rename`: Inline prompt editing with Enter/Escape handlers.
+  - `Favorite`: Toggles filled amber star indicator.
+  - `Duplicate`: Generates local clone of the artwork card.
+  - `Regenerate`: Restores prompt, style, and aspect ratio into the creation workspace.
+  - `Delete`: Removes artwork with confirmation toast.
+- Dedicated empty state when gallery is empty with icon, guidance, and "Generate your first image" CTA.
+
+#### Responsive & Accessibility
+- Responsive layout: 5/7 split on desktop, clean single-column flow on tablet/mobile.
+- Zero `overflow-hidden` on parent containers holding popovers or dropdowns.
+- Full keyboard accessibility: Escape closes popovers/menus, arrow keys for sliders, visible focus rings.
+- Semantic HTML and ARIA labels throughout.
+
+#### Verification
+- `npm run lint` → 0 errors, 0 warnings ✓
+- `npx next build --webpack` → 17 static routes prerendered, 0 errors ✓
+
+#### Files Changed in This Milestone
+- `src/components/dashboard/ModelSelector.tsx` — Added `groupByTier`, tier filter pills, and PRO upgrade indicator
+- `src/components/dashboard/ImageStudioWorkspace.tsx` — Complete redesign
+- `ECHOGPT_PROJECT_CONTEXT.md` — Updated
+
+---
+
 ## CURRENT MILESTONE
 
 Current milestone:
-Milestone 4.x — Video Studio UX Polish
+Milestone 4.x — Image Studio UX Polish
 
 Status:
 Completed ✓
