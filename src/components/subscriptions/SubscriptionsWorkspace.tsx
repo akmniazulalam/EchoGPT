@@ -513,6 +513,603 @@ export function SubscriptionsWorkspace() {
         }
       />
 
+      {/* ── 2. SCROLLABLE PAGE BODY ── */}
+      <div className="flex-1 overflow-y-auto custom-scrollbar p-4 sm:p-6 lg:p-8">
+        <div className="max-w-7xl mx-auto space-y-12 sm:space-y-16">
+          {/* ════════════ SECTION 1: HERO & PLAN OVERVIEW ════════════ */}
+          <section className="text-center space-y-4 pt-2 sm:pt-4 max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#713CF4]/10 dark:bg-[#713CF4]/20 border border-[#713CF4]/25 text-[#713CF4] dark:text-[#a78bfa] text-xs font-semibold tracking-wide">
+              <Sparkles className="size-3.5" />
+              <span>Affordable Plans for Every Need</span>
+            </div>
+
+            <h1 className="text-2xl sm:text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+              Supercharge your creative workflow with EchoGPT Pro
+            </h1>
+
+            <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-2xl mx-auto">
+              Want to get more out of EchoGPT? Unlock frontier reasoning models,
+              4K Image Studio synthesis, cinematic video engines, and
+              high-throughput server priority.
+            </p>
+
+            {/* ── Billing Segmented Control ── */}
+            <div className="pt-3 flex items-center justify-center">
+              <div
+                role="radiogroup"
+                aria-label="Billing frequency selection"
+                className="inline-flex items-center p-1 rounded-xl bg-zinc-100 dark:bg-[#713CF4]/20 border border-zinc-200/80 dark:border-zinc-800 shadow-2xs">
+                <button
+                  type="button"
+                  role="radio"
+                  aria-checked={billingCycle === "all"}
+                  onClick={() => setBillingCycle("all")}
+                  className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all cursor-pointer ${
+                    billingCycle === "all"
+                      ? "bg-white dark:bg-[#1b1725] text-zinc-900 dark:text-zinc-100 shadow-xs"
+                      : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200"
+                  }`}>
+                  All Durations
+                </button>
+
+                <button
+                  type="button"
+                  role="radio"
+                  aria-checked={billingCycle === "monthly"}
+                  onClick={() => setBillingCycle("monthly")}
+                  className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all cursor-pointer ${
+                    billingCycle === "monthly"
+                      ? "bg-white dark:bg-[#1b1725] text-zinc-900 dark:text-zinc-100 shadow-xs"
+                      : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200"
+                  }`}>
+                  Monthly ($9.99/mo)
+                </button>
+
+                <button
+                  type="button"
+                  role="radio"
+                  aria-checked={billingCycle === "annual"}
+                  onClick={() => setBillingCycle("annual")}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-all cursor-pointer ${
+                    billingCycle === "annual"
+                      ? "bg-white dark:bg-[#1b1725] text-zinc-900 dark:text-zinc-100 shadow-xs"
+                      : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200"
+                  }`}>
+                  <span>Annual ($99.99/yr)</span>
+                  <span className="px-1.5 py-0.2 rounded text-[10px] font-bold bg-[#713CF4] text-white">
+                    Save 17%
+                  </span>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          {/* ════════════ SECTION 2: SUBSCRIPTION PLAN CARDS ════════════ */}
+          <section className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100">
+                  Select a subscription plan
+                </h2>
+                <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">
+                  All plans include complete frontier intelligence, image
+                  rendering, and video features.
+                </p>
+              </div>
+
+              {billingCycle !== "all" && (
+                <Button
+                  variant="ghost"
+                  size="xs"
+                  onClick={() => setBillingCycle("all")}
+                  className="text-xs text-[#713CF4]">
+                  Show all 4 durations
+                </Button>
+              )}
+            </div>
+
+            {/* Grid of Plan Cards */}
+            <div
+              className={`grid gap-4.5 sm:gap-6 ${
+                visiblePlans.length === 1
+                  ? "max-w-md mx-auto grid-cols-1"
+                  : visiblePlans.length === 2
+                    ? "max-w-3xl mx-auto grid-cols-1 sm:grid-cols-2"
+                    : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+              }`}>
+              {visiblePlans.map((plan) => {
+                const isSelected = activePlanId === plan.id;
+                const isRec = plan.isRecommended;
+
+                return (
+                  <div
+                    key={plan.id}
+                    className={`relative rounded-2xl border transition-all duration-200 flex flex-col justify-between p-5 sm:p-6 ${
+                      isRec
+                        ? "border-[#713CF4] dark:border-[#713CF4]/80 bg-white dark:bg-[#161224] shadow-lg shadow-[#713CF4]/5 ring-2 ring-[#713CF4]/20"
+                        : "border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-[#121319] hover:border-zinc-300 dark:hover:border-zinc-700 shadow-xs"
+                    }`}>
+                    {/* Top: Recommended Badge */}
+                    {isRec && (
+                      <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-20">
+                        <div className="flex items-center gap-1.5 whitespace-nowrap rounded-full bg-[#713CF4] px-5 py-1.5 text-[11px] font-bold uppercase tracking-wide text-white shadow-[0_4px_16px_rgba(113,60,244,0.4)] ring-1 ring-[#8B5CF6]">
+                          <Crown
+                            className="size-3.5 shrink-0"
+                            strokeWidth={2.5}
+                          />
+                          <span className="leading-none">
+                            {plan.badge || "Recommended"}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Card Header */}
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-base sm:text-lg font-bold text-zinc-900 dark:text-zinc-100">
+                          {plan.name}
+                        </h3>
+                        {isSelected && (
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                            Current Plan
+                          </span>
+                        )}
+                      </div>
+
+                      <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed min-h-[36px]">
+                        {plan.description}
+                      </p>
+
+                      {/* Pricing block */}
+                      <div className="pt-2 pb-1 border-t border-zinc-100 dark:border-zinc-800/80">
+                        <div className="flex items-baseline gap-1.5">
+                          <span className="text-2xl sm:text-3xl font-extrabold text-zinc-900 dark:text-zinc-100 tracking-tight">
+                            {plan.price}
+                          </span>
+                          <span className="text-xs text-zinc-400 font-medium">
+                            {plan.period}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center justify-between text-[11px] text-zinc-400 mt-0.5">
+                          <span>{plan.perMonthEquivalent}</span>
+                          <span className="font-semibold text-emerald-600 dark:text-emerald-400">
+                            {plan.highlightBenefit}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Primary Action Button */}
+                      <Button
+                        variant={isRec ? "primary" : "outline"}
+                        size="md"
+                        onClick={() => handleOpenPlanModal(plan)}
+                        className={`w-full font-semibold ${
+                          isRec
+                            ? "bg-[#713CF4] hover:bg-[#602ee0] text-white shadow-xs"
+                            : ""
+                        }`}
+                        leftIcon={
+                          isSelected ? (
+                            <CheckCircle2 className="size-4 text-emerald-500" />
+                          ) : (
+                            <CreditCard className="size-4" />
+                          )
+                        }>
+                        {isSelected ? "Renew Subscription" : plan.ctaLabel}
+                      </Button>
+
+                      <p className="text-[10px] text-center text-zinc-400">
+                        {plan.billingNote}
+                      </p>
+
+                      {/* Feature Bullet List */}
+                      <div className="pt-3 border-t border-zinc-100 dark:border-zinc-800/80 space-y-2.5">
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-400 block">
+                          Included Capabilities:
+                        </span>
+                        <ul className="space-y-2">
+                          {plan.features.map((feat, idx) => (
+                            <li
+                              key={idx}
+                              className="flex items-start gap-2 text-xs text-zinc-700 dark:text-zinc-300">
+                              <Check className="size-3.5 text-[#713CF4] dark:text-[#a78bfa] shrink-0 mt-0.5" />
+                              <span className="leading-snug">{feat}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+
+                    {/* Card Footer Badge */}
+                    <div className="mt-5 pt-3 border-t border-zinc-100 dark:border-zinc-850 flex items-center justify-between text-[10.5px] text-zinc-400">
+                      <span className="flex items-center gap-1 font-medium">
+                        <ShieldCheck className="size-3 text-emerald-500" />
+                        Cancel anytime
+                      </span>
+                      <span>No setup fees</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+
+          {/* ════════════ SECTION 3: AI MODEL AVAILABILITY CATALOG ════════════ */}
+          <section className="space-y-5 rounded-2xl border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-[#121319] p-5 sm:p-7 shadow-xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-zinc-100 dark:border-zinc-800/80">
+              <div>
+                <div className="flex items-center gap-2">
+                  <Bot className="size-5 text-[#713CF4]" />
+                  <h2 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100">
+                    Included AI Neural Engines
+                  </h2>
+                </div>
+                <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">
+                  Your EchoGPT subscription grants multi-engine access across
+                  text, reasoning, image, and video synthesis.
+                </p>
+              </div>
+
+              {/* Search Bar */}
+              <div className="relative min-w-56 sm:min-w-64">
+                <Search className="size-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none" />
+                <input
+                  type="text"
+                  value={modelSearch}
+                  onChange={(e) => setModelSearch(e.target.value)}
+                  placeholder="Search model or provider…"
+                  className="w-full pl-8.5 pr-3 py-1.5 text-xs rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-[#121319] text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 outline-none focus:ring-1 focus:ring-[#713CF4] transition-all"
+                />
+                {modelSearch && (
+                  <button
+                    type="button"
+                    onClick={() => setModelSearch("")}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 text-xs">
+                    ×
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Category Filter Pills */}
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
+              {[
+                { id: "all", label: `All Models (${allModelsList.length})` },
+                { id: "frontier", label: "Frontier Flagship" },
+                { id: "reasoning", label: "Deep Reasoning" },
+                { id: "image", label: "Image Engines" },
+                { id: "video", label: "Video Studios" },
+                { id: "free", label: "Free Baseline" },
+              ].map((cat) => (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => setModelCategory(cat.id as ModelCategoryType)}
+                  className={`px-3 py-1 rounded-lg text-xs font-medium whitespace-nowrap transition-all cursor-pointer ${
+                    modelCategory === cat.id
+                      ? "bg-[#713CF4] text-white shadow-xs"
+                      : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200/80 dark:hover:bg-[#713CF4]/20"
+                  }`}>
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Models Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 pt-1">
+              {filteredModels.map((model) => (
+                <div
+                  key={model.id}
+                  className="rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 bg-zinc-50/50 dark:bg-[#161720]/80 p-3.5 flex flex-col justify-between hover:border-zinc-300 dark:hover:border-zinc-700 transition-all hover:shadow-xs group">
+                  <div className="space-y-2">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        {/* Domain Icon */}
+                        <div className="size-7 rounded-lg bg-white dark:bg-zinc-800 border border-zinc-200/80 dark:border-zinc-700/80 flex items-center justify-center text-[#713CF4] shrink-0 shadow-2xs">
+                          {model.domain === "image" ? (
+                            <ImageIcon className="size-3.5" />
+                          ) : model.domain === "video" ? (
+                            <Film className="size-3.5" />
+                          ) : model.category === "Reasoning" ? (
+                            <Cpu className="size-3.5" />
+                          ) : (
+                            <Bot className="size-3.5" />
+                          )}
+                        </div>
+
+                        <div>
+                          <h4 className="text-[12.5px] font-semibold text-zinc-900 dark:text-zinc-100 group-hover:text-[#713CF4] transition-colors leading-tight">
+                            {model.name}
+                          </h4>
+                          <span className="text-[10px] text-zinc-400 block font-medium">
+                            {model.provider}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Tier Badge */}
+                      {model.isPro ? (
+                        <span className="inline-flex items-center gap-1 text-[9.5px] font-bold px-1.5 py-0.5 rounded bg-amber-500/10 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/25 shrink-0">
+                          <Lock className="size-2.5" />
+                          PRO
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-[9.5px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/25 shrink-0">
+                          <Check className="size-2.5" />
+                          Free
+                        </span>
+                      )}
+                    </div>
+
+                    <p className="text-[11px] text-zinc-500 dark:text-zinc-400 line-clamp-2 leading-relaxed">
+                      {model.description}
+                    </p>
+                  </div>
+
+                  {/* Footer metadata */}
+                  <div className="mt-3 pt-2 border-t border-zinc-200/60 dark:border-zinc-800/60 flex items-center justify-between text-[10px] text-zinc-400">
+                    <span className="capitalize">{model.category}</span>
+                    {model.contextWindow && (
+                      <span className="font-mono bg-zinc-200/60 dark:bg-zinc-800 px-1 py-0.2 rounded text-[9px]">
+                        {model.contextWindow}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {filteredModels.length === 0 && (
+              <div className="py-8 text-center text-zinc-400 text-xs">
+                No AI models found matching &quot;{modelSearch}&quot;.
+              </div>
+            )}
+          </section>
+
+          {/* ════════════ SECTION 4: FEATURE COMPARISON TABLE ════════════ */}
+          <section className="space-y-5 rounded-2xl border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-[#121319] p-5 sm:p-7 shadow-xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-zinc-100 dark:border-zinc-800/80">
+              <div>
+                <div className="flex items-center gap-2">
+                  <SlidersHorizontal className="size-5 text-[#713CF4]" />
+                  <h2 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100">
+                    Feature Comparison: Free vs. Pro
+                  </h2>
+                </div>
+                <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">
+                  See how an active EchoGPT subscription transforms your
+                  everyday capabilities.
+                </p>
+              </div>
+
+              <span className="text-[11px] text-zinc-400">
+                Transparent feature breakdown
+              </span>
+            </div>
+
+            {/* Comparison Matrix Table */}
+            <div className="overflow-x-auto -mx-5 sm:mx-0 px-5 sm:px-0">
+              <table className="w-full text-left border-collapse min-w-[580px]">
+                <thead>
+                  <tr className="border-b border-zinc-200 dark:border-zinc-800 text-[11px] uppercase tracking-wider text-zinc-400">
+                    <th className="py-3 px-3 w-1/2">Capability</th>
+                    <th className="py-3 px-3 w-1/4">Free Tier</th>
+                    <th className="py-3 px-3 w-1/4 text-[#713CF4] dark:text-[#a78bfa] font-bold">
+                      EchoGPT Pro
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-zinc-100 dark:divide-zinc-850 text-xs">
+                  {COMPARISON_DATA.map((cat, catIdx) => (
+                    <React.Fragment key={catIdx}>
+                      {/* Category Header Row */}
+                      <tr className="bg-zinc-50/75 dark:bg-zinc-900/40">
+                        <td
+                          colSpan={3}
+                          className="py-2.5 px-3 font-bold text-[11px] uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                          {cat.name}
+                        </td>
+                      </tr>
+
+                      {/* Items */}
+                      {cat.items.map((item, itemIdx) => (
+                        <tr
+                          key={itemIdx}
+                          className="hover:bg-zinc-50/50 dark:hover:bg-zinc-800/30 transition-colors">
+                          <td className="py-3 px-3">
+                            <span className="font-semibold text-zinc-900 dark:text-zinc-100 block">
+                              {item.feature}
+                            </span>
+                            <span className="text-[11px] text-zinc-400 block mt-0.5">
+                              {item.description}
+                            </span>
+                          </td>
+
+                          {/* Free column */}
+                          <td className="py-3 px-3 text-zinc-600 dark:text-zinc-400">
+                            {typeof item.free === "boolean" ? (
+                              item.free ? (
+                                <Check className="size-4 text-emerald-500" />
+                              ) : (
+                                <span className="text-zinc-300 dark:text-zinc-600 font-mono text-sm">
+                                  —
+                                </span>
+                              )
+                            ) : (
+                              <span>{item.free}</span>
+                            )}
+                          </td>
+
+                          {/* Pro column */}
+                          <td className="py-3 px-3 font-medium text-zinc-900 dark:text-zinc-100 bg-[#713CF4]/5 dark:bg-[#713CF4]/10 rounded-lg">
+                            {typeof item.pro === "boolean" ? (
+                              item.pro ? (
+                                <Check className="size-4 text-[#713CF4] dark:text-[#a78bfa]" />
+                              ) : (
+                                <span className="text-zinc-300 dark:text-zinc-600 font-mono text-sm">
+                                  —
+                                </span>
+                              )
+                            ) : (
+                              <span className="text-[#713CF4] dark:text-[#a78bfa] font-semibold">
+                                {item.pro}
+                              </span>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </React.Fragment>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          {/* ════════════ SECTION 5: CUSTOMER SUPPORT CTA ════════════ */}
+          <section className="relative overflow-hidden rounded-2xl border border-zinc-200/80 dark:border-zinc-800 bg-gradient-to-r from-zinc-50 via-purple-50/20 to-zinc-50 dark:from-[#13111c] dark:via-[#191428] dark:to-[#13111c] p-6 sm:p-8 shadow-xs">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+              <div className="space-y-2 max-w-xl">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-[#713CF4]/10 text-[#713CF4] dark:text-[#a78bfa] text-xs font-semibold">
+                  <LifeBuoy className="size-3.5" />
+                  <span>Customer Support</span>
+                </div>
+
+                <h3 className="text-xl sm:text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+                  Need help choosing the right plan?
+                </h3>
+
+                <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                  Have questions about model availability, token allocations, or
+                  billing invoices? Our customer support specialists are ready
+                  to guide your team.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-3 shrink-0 flex-wrap">
+                <Link href="/support">
+                  <Button
+                    variant="primary"
+                    size="md"
+                    rightIcon={<ArrowRight className="size-4" />}
+                    className="font-semibold shadow-xs">
+                    Contact Support
+                  </Button>
+                </Link>
+
+                <a href="#faq">
+                  <Button variant="outline" size="md">
+                    Read FAQ Below
+                  </Button>
+                </a>
+              </div>
+            </div>
+          </section>
+
+          {/* ════════════ SECTION 6: FREQUENTLY ASKED QUESTIONS ════════════ */}
+          <section id="faq" className="space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h2 className="text-lg sm:text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+                  Frequently Asked Questions
+                </h2>
+                <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">
+                  Everything you need to know about EchoGPT plans, billing, and
+                  frontier model availability.
+                </p>
+              </div>
+
+              {/* FAQ Search */}
+              <div className="relative min-w-56 sm:min-w-64">
+                <Search className="size-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none" />
+                <input
+                  type="text"
+                  value={faqSearch}
+                  onChange={(e) => setFaqSearch(e.target.value)}
+                  placeholder="Search questions…"
+                  className="w-full pl-8.5 pr-3 py-1.5 text-xs rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-[#121319] text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 outline-none focus:ring-1 focus:ring-[#713CF4] transition-all"
+                />
+              </div>
+            </div>
+
+            {/* Accordion List */}
+            <div className="space-y-3">
+              {filteredFaqs.map((faq) => {
+                const isOpen = openFaqIds.includes(faq.id);
+
+                return (
+                  <div
+                    key={faq.id}
+                    className="rounded-xl border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-[#121319] overflow-hidden transition-all shadow-2xs">
+                    <button
+                      type="button"
+                      onClick={() => toggleFaq(faq.id)}
+                      aria-expanded={isOpen}
+                      aria-controls={`faq-answer-${faq.id}`}
+                      className="w-full text-left p-4 sm:p-5 flex items-center justify-between gap-4 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#713CF4]">
+                      <div className="flex items-center gap-3">
+                        <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-500 shrink-0 hidden sm:inline-block">
+                          {faq.category}
+                        </span>
+                        <h4 className="text-sm sm:text-base font-semibold text-zinc-900 dark:text-zinc-100 leading-snug">
+                          {faq.question}
+                        </h4>
+                      </div>
+
+                      <div
+                        className={`size-7 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-500 transition-transform duration-200 shrink-0 ${
+                          isOpen
+                            ? "rotate-180 bg-[#713CF4]/10 text-[#713CF4]"
+                            : ""
+                        }`}>
+                        <ChevronDown className="size-4" />
+                      </div>
+                    </button>
+
+                    {isOpen && (
+                      <div
+                        id={`faq-answer-${faq.id}`}
+                        className="px-4 pb-4 sm:px-5 sm:pb-5 pt-0 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed border-t border-zinc-100 dark:border-zinc-850 animate-in fade-in-50 duration-150">
+                        <p className="pt-3">{faq.answer}</p>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+
+          {/* ════════════ SECTION 7: FINAL CONVERSION CTA ════════════ */}
+          <section className="rounded-2xl border border-[#713CF4]/30 bg-gradient-to-br from-[#713CF4]/10 via-purple-900/10 to-transparent p-6 sm:p-10 text-center space-y-4">
+            <h3 className="text-xl sm:text-3xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">
+              Ready to unlock frontier AI capability?
+            </h3>
+            <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 max-w-xl mx-auto leading-relaxed">
+              Start with the Annual Plan for maximum savings, or choose Monthly
+              for complete flexibility. Cancel anytime in one click.
+            </p>
+            <div className="pt-2 flex items-center justify-center gap-3 flex-wrap">
+              <Button
+                variant="primary"
+                size="lg"
+                onClick={() => handleOpenPlanModal(PRICING_PLANS[3])} // Annual Plan
+                leftIcon={<Crown className="size-4" />}
+                className="font-bold px-6 shadow-xs">
+                Upgrade to Pro Annually ($8.33/mo)
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => handleOpenPlanModal(PRICING_PLANS[0])} // Monthly Plan
+              >
+                Subscribe Monthly ($9.99/mo)
+              </Button>
+            </div>
+          </section>
+        </div>
+      </div>
+
       
     </div>
   );
