@@ -158,5 +158,45 @@ export const IMAGE_MODELS: AIModel[] = [
   },
 ];
 
+export const VIDEO_MODELS: AIModel[] = [
+  {
+    id: "veo-3-fast",
+    name: "Veo 3.1 fast",
+    provider: "EchoGPT",
+    category: "Fast",
+    description: "EchoGPT's built-in video engine — fast, reliable, ready for everyday scenes",
+    isPro: false,
+    badge: "Default",
+  },
+  {
+    id: "sora",
+    name: "Sora",
+    provider: "OpenAI",
+    category: "Flagship",
+    description: "World-class cinematic quality with highly realistic physics simulation",
+    isPro: true,
+    badge: "Frontier",
+  },
+  {
+    id: "kling-v1-5",
+    name: "Kling v1.5",
+    provider: "EchoGPT",
+    category: "Flagship",
+    description: "High-fidelity motion coherence with exceptional character consistency",
+    isPro: true,
+    badge: "Cinematic",
+  },
+  {
+    id: "runway-gen3",
+    name: "Runway Gen-3",
+    provider: "EchoGPT",
+    category: "Flagship",
+    description: "Professional-grade video generation with precise camera motion control",
+    isPro: true,
+    badge: "Control",
+  },
+];
+
 export const DEFAULT_MODEL_ID = "echogpt";
 export const DEFAULT_IMAGE_MODEL_ID = "flux-pro";
+export const DEFAULT_VIDEO_MODEL_ID = "veo-3-fast";
