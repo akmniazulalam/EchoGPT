@@ -1,16 +1,11 @@
 import type { Metadata } from "next";
-import { PlaceholderPage } from "@/components/dashboard/PlaceholderPage";
+import { SubscriptionsWorkspace } from "@/components/subscriptions/SubscriptionsWorkspace";
 
 export const metadata: Metadata = {
-  title: "Subscriptions",
-  description: "Manage your EchoGPT subscription tier, usage quotas, and billing settings.",
+  title: "Subscriptions & Plans",
+  description: "Affordable plans for every need. Unlock frontier neural reasoning, 4K image synthesis, and cinematic video tools with EchoGPT Pro.",
 };
 
 export default function SubscriptionsPage() {
-  return (
-    <PlaceholderPage
-      title="Subscriptions"
-      description="Manage your EchoGPT subscription plans, billing cycle, invoice history, and PRO feature access."
-    />
-  );
+  return <SubscriptionsWorkspace />;
 }
