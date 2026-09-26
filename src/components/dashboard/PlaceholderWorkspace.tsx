@@ -264,7 +264,7 @@ export function PlaceholderWorkspace({
 
     // showToast(`New chat started with ${selectedModel.name}`, "info");
     onNewChat?.();
-  }, [onNewChat, selectedModel.name]);
+  }, [onNewChat]);
 
   // ── Model Selection Handler (MUST START A NEW CONVERSATION) ──────────────
   const handleSelectModel = useCallback((model: AIModel) => {
