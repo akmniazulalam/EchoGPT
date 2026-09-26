@@ -25,7 +25,7 @@ export function TaskCard({ task, onSelect }: TaskCardProps) {
       tabIndex={0}
       onClick={() => onSelect(task)}
       onKeyDown={handleKeyDown}
-      className="group relative flex flex-col justify-between p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#161322] border border-zinc-200/90 dark:border-white/[0.08] hover:border-[#713CF4]/60 dark:hover:border-[#713CF4]/60 shadow-xs hover:shadow-xl hover:shadow-[#713CF4]/5 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-950 text-left select-none"
+      className="group relative flex flex-col justify-between p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#161322] border border-zinc-200/90 dark:border-white/8 hover:border-[#713CF4]/60 dark:hover:border-[#713CF4]/60 shadow-xs hover:shadow-xl hover:shadow-[#713CF4]/5 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-950 text-left select-none"
     >
       {/* Top Header: Icon & Badges */}
       <div>
@@ -47,7 +47,7 @@ export function TaskCard({ task, onSelect }: TaskCardProps) {
               </Badge>
             )}
             {!task.isPro && task.badge && (
-              <span className="text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-white/[0.06] text-zinc-600 dark:text-zinc-300 border border-zinc-200 dark:border-white/[0.06]">
+              <span className="text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-white/6 text-zinc-600 dark:text-zinc-300 border border-zinc-200 dark:border-white/6">
                 {task.badge}
               </span>
             )}
@@ -66,7 +66,7 @@ export function TaskCard({ task, onSelect }: TaskCardProps) {
       </div>
 
       {/* Footer / Meta info */}
-      <div className="mt-5 pt-3.5 border-t border-zinc-100 dark:border-white/[0.06] flex items-center justify-between text-xs">
+      <div className="mt-5 pt-3.5 border-t border-zinc-100 dark:border-white/6 flex items-center justify-between text-xs">
         <span className="text-[11px] font-medium text-zinc-400 dark:text-zinc-500 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors">
           {task.recommendedModel}
         </span>
