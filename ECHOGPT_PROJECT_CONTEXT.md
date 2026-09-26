@@ -1695,6 +1695,85 @@ Pending mentor instructions (Do NOT proceed to Landing Page or README until requ
 
 ---
 
+## Milestone 4.zg - Connectors (MCP) Experience (`/connectors` & Chat Integration)
+
+### Overview
+A full SaaS-grade MCP (Model Context Protocol) Connector management experience. Users can connect external MCP servers, discover their tools, and activate those connectors directly inside the Chat composer. A shared React context powers both `/connectors` and `/chat`, guaranteeing a single source of truth.
+
+### New Files Created
+
+| File | Purpose |
+|------|---------|
+| `src/types/connector.ts` | TypeScript types: `ConnectorStatus`, `MCPTool`, `Connector`, `AddConnectorInput` |
+| `src/lib/mockMcpService.ts` | `DEMO_PRESETS` (GitHub, PostgreSQL, Slack, Linear) + `simulateMcpHandshake()` (650ms latency, preset matching, failure detection, generic fallback) |
+| `src/lib/connectorStorage.ts` | `localStorage` helpers: `loadStoredConnectors`, `saveStoredConnectors`, `loadActiveChatConnectorIds`, `saveActiveChatConnectorIds`, `getSampleDemoConnectors` |
+| `src/context/ConnectorContext.tsx` | `ConnectorProvider` + `useConnectors()` hook with full state: connectors, activeConnectorIds, quota (1 free / unlimited Pro), add/remove/toggle/retry/loadSamples/clearAll |
+| `src/components/dashboard/connectors/ConnectorIcons.tsx` | `McpBranchIcon` (SVG), `ConnectorServerIcon` (GitHub/DB/Slack/fallback) |
+| `src/components/dashboard/connectors/ConnectorEmptyState.tsx` | Empty state with Add + Load Demo Connectors CTA |
+| `src/components/dashboard/connectors/ConnectorCard.tsx` | Connector management card: status badge, overflow menu, tool chips, enable toggle, use-in-chat |
+| `src/components/dashboard/connectors/ConnectorSetupModal.tsx` | Add connector modal: URL input, validation, quick preset buttons, 2-phase loading, security note, quota alert |
+| `src/components/dashboard/connectors/ConnectorDetailsModal.tsx` | Details modal with discovered tools list, enable/disable, use in chat, remove |
+| `src/components/dashboard/connectors/RemoveConnectorDialog.tsx` | Confirmation dialog before destructive removal |
+| `src/components/dashboard/connectors/ConnectorsWorkspace.tsx` | Full SaaS management workspace: How MCP Works explainer panel, search, grid of ConnectorCards, all modals wired |
+| `src/components/dashboard/connectors/ChatConnectorPopover.tsx` | Chat composer popover: list of connectors with checkbox selection, Add connector shortcut, Manage link |
+| `src/app/(app)/connectors/page.tsx` | Updated to render `ConnectorsWorkspace` |
+
+### Modified Files
+
+| File | What Changed |
+|------|-------------|
+| `src/components/layout/AppShell.tsx` | Added `ConnectorProvider` nested inside `UpgradeModalProvider` to wrap all app routes |
+| `src/components/dashboard/PlaceholderWorkspace.tsx` | Added `useConnectors()`, active connector chips above composer toolbar, replaced `GitBranch` button with `McpBranchIcon` + `ChatConnectorPopover`, updated `generateMockResponse` to reference active MCP tools in response |
+
+### Architecture
+
+```
+ConnectorProvider (AppShell.tsx)
+  └─ useConnectors() hook
+       ├─ /connectors → ConnectorsWorkspace (manage all connectors)
+       └─ /chat → ChatConnectorPopover (select active connectors per session)
+```
+
+**State flow:**
+- `ConnectorProvider` in `AppShell.tsx` wraps ALL app routes
+- `useConnectors()` is the single source of truth for both pages
+- `localStorage` keys: `echogpt:connectors` (connector list), `echogpt:active-chat-connectors` (active chat selections)
+- Storage events dispatched: `echogpt:connectors-updated`, `echogpt:active-chat-connectors-updated`
+
+**Pro quota:**
+- Free users: 1 connected connector max
+- Pro users: unlimited connectors
+- Quota checked in `ConnectorContext.tsx` via `useUpgradeModal()` → `isProUser`
+- `ConnectorProvider` MUST be INSIDE `UpgradeModalProvider` (dependency order)
+
+**MCP handshake simulation (`simulateMcpHandshake`):**
+- Waits 650ms to simulate real network latency
+- If URL or name contains "fail"/"error" → returns `{ success: false }` (Test Failure preset)
+- Else matches against 4 `DEMO_PRESETS`: github.com → GitHub, postgres → PostgreSQL, slack.com → Slack, linear.app → Linear
+- Else generates 3 generic tools from the URL hostname
+
+**Chat integration:**
+- `McpBranchIcon` button in composer toolbar opens `ChatConnectorPopover`
+- Purple dot badge appears on button when ≥1 connector is active
+- Active connectors shown as purple chips above the toolbar
+- `generateMockResponse()` mentions active MCP tool names in the demo response
+
+**Future real MCP integration boundary:**
+- Replace `simulateMcpHandshake()` in `src/lib/mockMcpService.ts` with a real `fetch()` call to an MCP gateway
+- The rest of the architecture (context, storage, UI) is production-ready as-is
+
+### Lint & Build
+- Lint: 0 errors, 0 warnings ✓
+- Build: exit 0, 19 static routes prerendered ✓
+
+Status:
+Completed ✓
+
+Next milestone:
+Pending mentor instructions
+
+---
+
 
 
 # 24. MY WORKING PREFERENCE
