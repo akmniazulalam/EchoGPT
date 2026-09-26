@@ -8,18 +8,15 @@ import {
   Trash2,
   ExternalLink,
   Plus,
-  Cpu,
-  Brain,
-  Palette,
 } from "lucide-react";
 import { WorkspaceHeader } from "@/components/workspace/WorkspaceHeader";
+import { ModelLogo } from "@/components/ui/ModelLogo";
 import {
   type ConversationHistoryItem,
   CHAT_HISTORY_KEY,
   loadHistory,
   deleteHistoryItem,
   clearAllHistory,
-  updateCurrentChatMessages,
   saveSelectedModel,
 } from "@/lib/chatStorage";
 import { showToast } from "@/components/ui/Toast";
@@ -91,11 +88,10 @@ export function HistoryWorkspace() {
   });
 
   const handleOpenConversation = (item: ConversationHistoryItem) => {
-    // Restore saved messages to current chat in localStorage
-    updateCurrentChatMessages(item.messages, item.modelId);
     saveSelectedModel(item.modelId);
-    showToast(`Restored "${item.title.slice(0, 30)}..." to Chat`, "success");
-    router.push("/chat");
+    showToast(`Reopened "${item.title.slice(0, 30)}..."`, "info");
+    // Explicitly restore this specific historical conversation by ID
+    router.push(`/chat?c=${item.id}`);
   };
 
   const handleDeleteItem = (e: React.MouseEvent, id: string) => {
@@ -113,12 +109,6 @@ export function HistoryWorkspace() {
     clearAllHistory();
     setConfirmClearAll(false);
     showToast("All conversation history cleared", "info");
-  };
-
-  const getModelIcon = (modelId: string) => {
-    if (modelId.includes("r1") || modelId.includes("analytical")) return Brain;
-    if (modelId.includes("image") || modelId.includes("creative")) return Palette;
-    return Cpu;
   };
 
   return (
@@ -213,7 +203,6 @@ export function HistoryWorkspace() {
 
             <div className="grid grid-cols-1 gap-2.5">
               {filteredHistory.map((item) => {
-                const ModelIcon = getModelIcon(item.modelId);
                 return (
                   <div
                     key={item.id}
@@ -221,9 +210,14 @@ export function HistoryWorkspace() {
                     className="group relative flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-[#111217] hover:border-[#713CF4]/40 hover:bg-zinc-50/50 dark:hover:bg-zinc-800/30 transition-all duration-150 cursor-pointer shadow-2xs"
                   >
                     <div className="flex items-start gap-3.5 min-w-0 pr-3">
-                      <div className="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 group-hover:text-[#713CF4] group-hover:bg-[#713CF4]/10 transition-colors shrink-0 mt-0.5 sm:mt-0">
-                        <ModelIcon className="size-4" />
-                      </div>
+                      {/* Accurate brand logo belonging to this specific conversation's stored modelId */}
+                      <ModelLogo
+                        modelId={item.modelId}
+                        provider={item.modelName}
+                        name={item.modelName}
+                        size="md"
+                        className="shrink-0 mt-0.5 sm:mt-0 shadow-2xs"
+                      />
 
                       <div className="min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
@@ -277,18 +271,17 @@ export function HistoryWorkspace() {
             </div>
           </div>
         ) : (
-          /* Empty Search / Empty Archive */
           <div className="py-16 text-center space-y-3">
             <div className="size-12 rounded-2xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mx-auto text-zinc-400">
               <HistoryIcon className="size-6" />
             </div>
-            <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
-              {searchQuery ? "No matching conversations" : "No conversation history yet"}
+            <h3 className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+              No conversations found
             </h3>
-            <p className="text-xs text-zinc-500 max-w-sm mx-auto">
+            <p className="text-xs text-zinc-400 max-w-sm mx-auto">
               {searchQuery
-                ? "Try searching for a different keyword or change model category filter."
-                : "Start a conversation in Chat and archive it anytime to reference it here."}
+                ? `No sessions matching "${searchQuery}". Try a different keyword.`
+                : "Your completed multi-turn conversations will appear here."}
             </p>
           </div>
         )}
