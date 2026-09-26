@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Sidebar } from "./Sidebar";
 import { MobileNav } from "./MobileNav";
 import { UpgradeModalProvider } from "@/context/UpgradeModalContext";
+import { ConnectorProvider } from "@/context/ConnectorContext";
 import { UpgradeProModal } from "@/components/billing/UpgradeProModal";
 import { ToastContainer } from "@/components/ui/Toast";
 
@@ -66,37 +67,39 @@ export function AppShell({ children }: AppShellProps) {
 
   return (
     <UpgradeModalProvider>
-      <div className="flex flex-col md:flex-row h-screen w-full overflow-hidden bg-[#FAFAFC] dark:bg-[#090A0F] font-lexend antialiased">
-        {/* 1. Mobile Top Bar & Drawer (visible on < md screens) */}
-        <MobileNav
-          isOpen={isMobileDrawerOpen}
-          onOpen={handleOpenDrawer}
-          onClose={handleCloseDrawer}
-          onNewChat={handleNewChat}
-        />
-
-        {/* 2. Persistent Sidebar (visible on >= md screens) */}
-        <div className="hidden md:flex shrink-0 h-full">
-          <Sidebar
+      <ConnectorProvider>
+        <div className="flex flex-col md:flex-row h-screen w-full overflow-hidden bg-[#FAFAFC] dark:bg-[#090A0F] font-lexend antialiased">
+          {/* 1. Mobile Top Bar & Drawer (visible on < md screens) */}
+          <MobileNav
+            isOpen={isMobileDrawerOpen}
+            onOpen={handleOpenDrawer}
+            onClose={handleCloseDrawer}
             onNewChat={handleNewChat}
-            isCollapsed={isCollapsed}
-            onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
           />
+
+          {/* 2. Persistent Sidebar (visible on >= md screens) */}
+          <div className="hidden md:flex shrink-0 h-full">
+            <Sidebar
+              onNewChat={handleNewChat}
+              isCollapsed={isCollapsed}
+              onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
+            />
+          </div>
+
+          {/* 3. Main Application Content Area */}
+          <main
+            className="flex-1 flex flex-col h-full min-w-0 overflow-hidden"
+            role="main"
+            aria-label="Application Workspace"
+          >
+            {children}
+          </main>
+
+          {/* 4. Global Modals & Notifications */}
+          <UpgradeProModal />
+          <ToastContainer />
         </div>
-
-        {/* 3. Main Application Content Area */}
-        <main
-          className="flex-1 flex flex-col h-full min-w-0 overflow-hidden"
-          role="main"
-          aria-label="Application Workspace"
-        >
-          {children}
-        </main>
-
-        {/* 4. Global Modals & Notifications */}
-        <UpgradeProModal />
-        <ToastContainer />
-      </div>
+      </ConnectorProvider>
     </UpgradeModalProvider>
   );
 }
