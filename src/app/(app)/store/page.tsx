@@ -1,16 +1,12 @@
 import type { Metadata } from "next";
-import { PlaceholderPage } from "@/components/dashboard/PlaceholderPage";
+import { StoreWorkspace } from "@/components/dashboard/StoreWorkspace";
 
 export const metadata: Metadata = {
-  title: "Store",
-  description: "Browse AI extensions, prompt templates, and community tools for EchoGPT.",
+  title: "EchoGPT Store",
+  description:
+    "Discover and create customized versions of EchoGPT that combine instructions, extra knowledge, and any combination of skills.",
 };
 
 export default function StorePage() {
-  return (
-    <PlaceholderPage
-      title="Store"
-      description="Browse and install specialized AI extensions, prompt templates, and community tools."
-    />
-  );
+  return <StoreWorkspace />;
 }
