@@ -511,7 +511,7 @@ Potential routes based on the existing sidebar:
 /history
 /store
 /ai-tasks
-/ai-job-analysis
+/resume
 /ai-sop-builder
 /support
 /newsletter
@@ -1169,18 +1169,85 @@ Each non-active creation card has a `⋯` icon button (only visible, always acce
 
 ---
 
+### Milestone 4.y — Support, Newsletter, and AI Job Analysis Pages
+
+#### Status: Complete ✓
+
+**Support Page** (`/support`):
+- Created `src/components/support/SupportWorkspace.tsx`
+- Email card (`mailto:appifydevs@gmail.com`) as primary/recommended channel with hover glow, response time badge, and arrow animation.
+- Social cards (Facebook, Instagram, LinkedIn) with official URLs and `target="_blank" rel="noopener noreferrer"`.
+- Inline SVG brand icons (Facebook/Instagram/LinkedIn not in this lucide-react version).
+- Updated `src/app/(app)/support/page.tsx` to mount `SupportWorkspace`.
+
+**Newsletter Page** (`/newsletter`):
+- Created `src/components/newsletter/NewsletterWorkspace.tsx`
+- Email validation (regex), loading spinner, and success confirmation state.
+- Frontend mock only — no real API. Demo notice in footer.
+- 4 topic cards: Industry Trends, Power Usage Tips, Early Access, Productivity Guides.
+- Updated `src/app/(app)/newsletter/page.tsx` to mount `NewsletterWorkspace`.
+
+**AI Job Analysis Page** (`/resume`):
+- `src/components/dashboard/JobAnalysisWorkspace.tsx` already complete from prior session. No changes needed.
+
+#### Verification
+- `npm run lint` → 0 errors, 0 warnings ✓
+- `npm run build` → 17 static routes prerendered, 0 errors ✓
+
+---
+
+### Milestone 5 — EchoGPT Landing Page
+
+#### Status: Complete ✓
+
+**Landing Page** (`/`):
+- Created `src/components/landing/LandingPage.tsx` — fully standalone marketing page (no AppShell/Sidebar).
+- Created `src/app/(landing)/layout.tsx` — minimal layout group (no AppShell) for landing routes.
+- Updated `src/app/page.tsx` — mounts `LandingPage` directly (replaced old redirect to /chat).
+
+**Sections built (all self-contained sub-components):**
+1. **Navbar** — sticky, scroll-aware, responsive with mobile hamburger menu and smooth anchor scrolling.
+2. **Hero** — animated gradient blob background, headline, subheadline, two CTA buttons (Start free / View pricing), trust line, and an app mockup preview card with fake browser chrome.
+3. **Stats bar** — 50K+ users, 11+ models, 4 studios, 99.9% uptime.
+4. **Features grid** (6 cards) — Chat, Image Studio, Video Studio, Compare, AI Job Analysis, AI SOP Builder. Each links to the correct app route.
+5. **Models showcase** (8 cards) — EchoGPT, GPT-5, Claude 4, Gemini Advanced, Grok 4, DeepSeek R1, FLUX Pro, Sora.
+6. **Why EchoGPT** (4 pillars) — one subscription, no training, compare built-in, always updated.
+7. **Testimonials** (3 cards) — with star ratings and avatar initials.
+8. **Pricing** (2 plans) — Free vs Pro side-by-side with feature lists and CTAs.
+9. **FAQ accordion** (5 items) — CSS `grid-template-rows` transition (no ref-during-render, lint-safe).
+10. **CTA banner** — purple gradient section with Start free + See Pro plans buttons.
+11. **Footer** — logo, nav links, social links (Facebook, Instagram, LinkedIn).
+
+**Technical decisions:**
+- FAQ accordion uses CSS `grid-template-rows: 0fr → 1fr` transition — avoids `ref.current` read during render (which is forbidden by this project's ESLint config).
+- `(landing)` route group layout isolates the landing page from AppShell — no sidebar rendered.
+- Page is `"use client"` due to Navbar scroll detection and FAQ state.
+
+#### Verification
+- `npm run lint` → 0 errors, 0 warnings ✓
+- `npm run build` → 17 static routes prerendered including `/`, 0 errors ✓
+
+#### Files Created / Changed
+- `src/components/landing/LandingPage.tsx` — **NEW** (~930 lines)
+- `src/app/(landing)/layout.tsx` — **NEW** (minimal layout group)
+- `src/app/page.tsx` — Updated (removed redirect, mounts LandingPage)
+- `ECHOGPT_PROJECT_CONTEXT.md` — Updated
+
+---
+
 ## CURRENT MILESTONE
 
 Current milestone:
-Milestone 4.x — Subscriptions & Plans Experience Redesign
+Milestone 5 — EchoGPT Landing Page
 
 Status:
 Completed ✓
 
 Next milestone:
-EchoGPT Landing Page (Single-page marketing website at /)
+README, deployment prep, and final submission review
 
 ---
+
 
 # 24. MY WORKING PREFERENCE
 
