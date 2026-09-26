@@ -1564,10 +1564,62 @@ The original EchoGPT reference screenshots (`media_1790417263993.png` and `media
 
 ---
 
+## Milestone 4.ze — Critical Bug-Fix Pass: First-Message Response & Pro Model Access Control
+
+### Completed: 2026-09-26 ✓
+
+#### What Was Fixed & Implemented
+
+**1. Root Cause & Solution for BUG #1 (First Message Missing Response)**
+- **Root Cause**: In `ChatClient.tsx`, `<PlaceholderWorkspace>` was rendered with a dynamic `mountKey` (`conversationId ? c-${conversationId} : new-${sessionKey}-${modelId}`). When a user sent the very first message on `/chat`, `window.history.replaceState(null, "", '/chat?c=' + targetConvId)` ran to sync the URL. Next.js 16's `useSearchParams()` detected the query change, flipping `mountKey` from `new-default-default` to `c-${targetConvId}`. This forced React to unmount `PlaceholderWorkspace` right after the user sent their first prompt. The pending `setTimeout` assistant generator was aborted on the dead instance, and the newly mounted component had no active generation running, leaving the first message without a response. Subsequent messages worked because `mountKey` did not change again.
+- **Solution**: Removed destructive unmount-triggering `replaceState` during active chatting. `ChatClient` mounts cleanly using route entry parameters, preserving component lifecycle. Captured `targetConvId` and `targetModel` in local scope, immediately persisting user message to History, generating response via `setTimeout`, and safely updating UI and History. First message now reliably generates an assistant response across all 7 entry points.
+
+**2. Store → PRO Model Access Control (BUG #2)**
+- **Fixed**: In `StoreWorkspace.tsx`, clicking "Try App" on any PRO model now validates `isProUser` via `useUpgradeModal()`.
+  - If user is FREE: `openUpgradeModal(...)` is displayed immediately. User remains in Store. No PRO conversation is created and no PRO model is activated.
+  - If user is PRO (Demo Pro active): Navigates to `/chat` and creates fresh PRO chat session.
+  - If model is FREE: Navigates to `/chat` and starts fresh conversation immediately.
+  - Clicking "Try App" never silently upgrades user to Pro.
+
+**3. Pro → Free Model Switching & Identity Updates (BUG #3)**
+- **Fixed**: In `PlaceholderWorkspace.tsx`, selecting a FREE model completely updates `selectedModelId`, `selectedModel`, `ModelLogo`, header subtitles, composer title, and message avatars. All visual and engine identities update to the FREE model. No stale PRO model state remains.
+
+**4. Reset Demo to Free Tier Safety (Section 14)**
+- **Fixed**: Added an active listener for `echogpt:pro-status-updated`. If a user resets Demo Pro to Free Tier while an active PRO model is selected, the workspace automatically falls back safely to `"echogpt"` (Free model), starts a fresh session, and alerts the user with a toast.
+
+**5. Send-Time Pro Validation (Section 15)**
+- **Fixed**: In `handleSendMessage`, before starting any generation, the handler checks `if (selectedModel.isPro && !isProUser)`. If an unauthorized PRO model is active, message generation is blocked, no simulated assistant reply is produced, and `openUpgradeModal` is displayed.
+
+#### Verification Results (All Test Matrices Passed)
+
+**First-Message Response Matrix (Section 18):**
+- **TEST A (Fresh /chat → EchoGPT)**: First message sent → user bubble appears → assistant response generates smoothly ✓
+- **TEST B (Fresh /chat → Claude)**: First message sent → user bubble appears → assistant response generates smoothly ✓
+- **TEST C (Store → Try App Gemini)**: Store navigates → fresh chat → first message gets response ✓
+- **TEST D (Store → Try App Free model)**: Store navigates → fresh chat → first message gets response ✓
+- **TEST E (History → Reopen conversation)**: Reopened conversation → new message sent → assistant response appended ✓
+- **TEST F (Sidebar New Chat)**: Creates fresh conversation → first message gets response ✓
+- **TEST G (Composer + New Chat)**: Resets conversation → first message gets response ✓
+
+**Pro Access Test Matrix (Section 19):**
+- **TEST P1 (Free user → ModelSelector PRO model)**: Opens UpgradeProModal ✓
+- **TEST P2 (Free user → Store Try App on PRO model)**: Opens UpgradeProModal; user stays on Store; no chat created ✓
+- **TEST P3 (Free user → Store Try App on FREE model)**: Fresh chat created; first message gets response ✓
+- **TEST P4 (Demo Pro active → Store Try App on PRO model)**: Fresh PRO chat created; first message gets response ✓
+- **TEST P5 (Demo Pro active → PRO to FREE model switch)**: FREE model becomes active; fresh conversation; first message gets response from FREE model ✓
+- **TEST P6 (Demo Pro active → Reset to Free Tier)**: Automatically downgrades from PRO model to EchoGPT standard; shows notice toast ✓
+- **TEST P7 (Send-time Pro check)**: If PRO model is somehow selected while Free, clicking Send blocks generation and opens UpgradeProModal ✓
+
+#### Build Verification
+- `npm run lint` → 0 errors, 0 warnings ✓
+- `npm run build` → 18/18 static routes prerendered, exit code 0 ✓
+
+---
+
 ## CURRENT MILESTONE
 
 Current milestone:
-Milestone 4.zd — Conversation Architecture, Model Isolation, History & Pro Upgrade Flow
+Milestone 4.ze — Critical Bug-Fix Pass: First-Message Response & Pro Model Access Control
 
 Status:
 Completed ✓
