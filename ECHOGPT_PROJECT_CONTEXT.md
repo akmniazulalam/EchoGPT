@@ -1370,10 +1370,60 @@ The original EchoGPT reference screenshot (`media_1790403341692.jpg`) revealed t
 
 ---
 
+---
+
+### Milestone 4.zb — Store Page Redesign & Connected New Chat Experience (`/store` & `/chat`)
+
+#### Status: Complete ✓
+
+> **Important Note:** The Landing Page at `/`, the Resume page at `/resume`, and the SOP Builder at `/sop` were **intentionally left completely untouched** during this milestone.
+
+#### Context & Objectives
+The original EchoGPT reference screenshots (`media_1790417263993.png` and `media_1790417313735.png`) revealed that the **Store** and **New Chat** operate as a single connected product flow:
+1. **EchoGPT Store (`/store`)**:
+   - A clean model marketplace featuring a centered hero ("EchoGPT Store"), subtitle, responsive search bar ("Search for the Apps"), category filter chips (`All Apps`, `Fast`, `Flagship`, `Reasoning`, `Open Source`), and a 3-column responsive card grid.
+   - Each model card features an authentic, official vector `ModelLogo`, model name, PRO and context badges, concise description, and an actionable **`Try App`** button.
+   - Clicking `Try App` immediately sets the selected model as the active conversational engine, persists the selection, and seamlessly routes to `/chat`.
+2. **Dynamic New Chat Experience (`/chat`)**:
+   - The New Chat canvas dynamically reflects the active model's identity in real time:
+     - **Centered Hero Canvas**: Prominent `ModelLogo` (`size="xl"` / 56px), bold model name (e.g. `GLM-5.3 Flash`, `Claude 3.5 Sonnet`, `EchoGPT`), and factual model description.
+     - **4 Suggestion Cards (2x2 Grid)**: "Unlock Your Creative Flow", "Build a Resume That Shines", "Set a Challenge That Transforms You", and "Write Irresistible Social Content".
+     - **Message Quota / Window Strip**: Status indicator matching the reference screenshot with an upgrade trigger to `UpgradeProModal`.
+     - **Grounded Dynamic Composer**:
+       - Top toolbar: Integrated `ModelSelector` trigger (`[Logo] [Name] [⌄]`), separator `|`, connected tools icon, and rocket icon (opens `UpgradeProModal`). On the right: `+` New Chat button (archives/clears messages **while preserving active model**) and clock icon (navigates to `/history`).
+       - Bottom input row: Attachment icon, dynamic auto-expanding textarea with placeholder (`"Ask [Model Name] anything..."`), microphone dictation simulation, and circular purple send button `[ ✈ ]`.
+
+#### Model Catalog & Brand Logo System
+- **Single Source of Truth**: Extended `AI_MODELS` in `src/config/models.ts` with models from the reference screenshots (including `glm-5-3-flash`, `claude-3-5-sonnet`, `qwen-2-5-plus`, `kimi-k2-code`).
+- **Reusable `ModelLogo` (`src/components/ui/ModelLogo.tsx`)**:
+  - Official vector marks for **EchoGPT** (native purple spark), **GLM / Zhipu** (iconic black square with white bold `Z`), **OpenAI** (spiral mark), **Anthropic / Claude** (star mark), **Google / Gemini** (4-point star), **DeepSeek** (whale wave), **xAI / Grok** (𝕏 mark), **Mistral** (orange chevron blocks), **Qwen** (polygon mark), **Kimi** (letter mark), and tasteful typographic fallbacks.
+  - Sized cleanly across `xs`, `sm`, `md`, `lg`, and `xl` viewports.
+  - Reused consistently across Store cards, ModelSelector triggers, dropdown rows, chat hero, and message avatars.
+
+#### Model Persistence Architecture
+- Model choice is stored in `localStorage` (`echogpt:selected-model`) via `saveSelectedModel(id)`.
+- Validates model existence against `AI_MODELS`, safely falling back to `DEFAULT_MODEL_ID` (`"echogpt"`).
+- Emits and listens to `window.addEventListener("echogpt:selected-model-updated")` and `storage` events for instant synchronization across tabs and route changes without page reloads.
+
+#### Verification
+- `npm run lint` → 0 errors, 0 warnings across all files ✓
+- `npm run build` (`next build --webpack`) → 18 static routes prerendered cleanly (including `/`, `/store`, `/chat`, `/resume`, `/sop`), 0 errors ✓
+
+#### Files Created / Changed
+- `src/components/ui/ModelLogo.tsx` — **NEW** reusable official brand logo component
+- `src/components/dashboard/StoreWorkspace.tsx` — **NEW** complete Store marketplace component
+- `src/app/(app)/store/page.tsx` — Updated to render `StoreWorkspace`
+- `src/config/models.ts` — Extended `AIModel` provider type and added GLM-5.3 Flash, Claude 3.5 Sonnet, etc.
+- `src/components/dashboard/ModelSelector.tsx` — Updated to render `ModelLogo` in trigger and dropdown items
+- `src/components/dashboard/PlaceholderWorkspace.tsx` — Complete redesign matching New Chat screenshot
+- `ECHOGPT_PROJECT_CONTEXT.md` — Updated
+
+---
+
 ## CURRENT MILESTONE
 
 Current milestone:
-Milestone 4.za — AI SOP Builder Workspace Redesign (`/sop`)
+Milestone 4.zb — Store Page Redesign & Connected New Chat Experience (`/store` & `/chat`)
 
 Status:
 Completed ✓
