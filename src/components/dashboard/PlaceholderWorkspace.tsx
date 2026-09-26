@@ -146,7 +146,7 @@ export function PlaceholderWorkspace({
       icon: Columns2,
     },
     {
-      id: "ai-job-analysis",
+      id: "resume",
       title: "Analyze Job Requirements",
       description: "Break down role competencies, ATS keywords, and gap matrix",
       prompt: "Analyze requirements for a Senior Frontend Engineer role specializing in Next.js, React 19, and design systems.",

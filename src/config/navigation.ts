@@ -68,9 +68,9 @@ export const ENGAGEMENT_ITEMS: NavItem[] = [
     icon: ListCheck,
   },
   {
-    id: "ai-job-analysis",
+    id: "resume",
     label: "AI Job Analysis",
-    href: "/ai-job-analysis",
+    href: "/resume",
     icon: Briefcase,
   },
   {
