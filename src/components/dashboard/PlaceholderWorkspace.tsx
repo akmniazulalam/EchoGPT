@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect, useMemo, useSyncExternalStore } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import {
   Sparkles,
@@ -26,52 +26,22 @@ import { ModelLogo } from "@/components/ui/ModelLogo";
 import { AI_MODELS, AIModel } from "@/config/models";
 import {
   type ChatMessage,
-  type CurrentChatData,
-  CURRENT_CHAT_KEY,
-  updateCurrentChatMessages,
-  archiveCurrentChat,
-  clearCurrentChat,
+  generateConversationId,
+  deriveConversationTitle,
+  getConversationById,
+  upsertHistoryConversation,
   loadSelectedModel,
   saveSelectedModel,
 } from "@/lib/chatStorage";
 import { useUpgradeModal } from "@/context/UpgradeModalContext";
 import { showToast } from "@/components/ui/Toast";
 
-// ─── External store for cached current chat ────────────────────────────────
-let cachedRaw: string | null = null;
-let cachedChat: CurrentChatData | null = null;
-
-function subscribeChat(callback: () => void) {
-  if (typeof window === "undefined") return () => {};
-  window.addEventListener("echogpt:current-chat-updated", callback);
-  window.addEventListener("storage", callback);
-  return () => {
-    window.removeEventListener("echogpt:current-chat-updated", callback);
-    window.removeEventListener("storage", callback);
-  };
-}
-
-function getChatSnapshot(): CurrentChatData | null {
-  if (typeof window === "undefined") return null;
-  try {
-    const raw = localStorage.getItem(CURRENT_CHAT_KEY);
-    if (raw === cachedRaw) return cachedChat;
-    cachedRaw = raw;
-    cachedChat = raw ? JSON.parse(raw) : null;
-    return cachedChat;
-  } catch {
-    return null;
-  }
-}
-
-function getServerChatSnapshot(): CurrentChatData | null {
-  return null;
-}
-
 // ─── Types ────────────────────────────────────────────────────────────────
 interface PlaceholderWorkspaceProps {
+  conversationId?: string; // If provided, load this existing conversation
+  initialModelId?: string; // If provided, start with this model
+  initialPrompt?: string; // If provided, prefill prompt
   onNewChat?: () => void;
-  initialPrompt?: string;
 }
 
 interface AttachmentFile {
@@ -84,8 +54,6 @@ interface AttachmentFile {
 type VoiceState = "idle" | "requesting" | "listening" | "unsupported" | "denied" | "error";
 
 // ─── Web Speech API – self-contained type shim ───────────────────────────
-// We define our own minimal interfaces so the component compiles cleanly
-// regardless of whether @types/dom-speech-api is installed.
 interface ISpeechRecognitionResult {
   readonly transcript: string;
   readonly confidence: number;
@@ -169,22 +137,29 @@ const PROMPT_SUGGESTIONS = [
 const ACCEPTED_FILE_TYPES = ".pdf,.doc,.docx,.txt,.md,.png,.jpg,.jpeg,.webp,.csv";
 
 export function PlaceholderWorkspace({
-  onNewChat,
+  conversationId,
+  initialModelId,
   initialPrompt,
+  onNewChat,
 }: PlaceholderWorkspaceProps) {
   const router = useRouter();
-  const [promptText, setPromptText] = useState(initialPrompt || "");
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
-  const [attachment, setAttachment] = useState<AttachmentFile | null>(null);
-  const [voiceState, setVoiceState] = useState<VoiceState>("idle");
-  const { openUpgradeModal } = useUpgradeModal();
+  const { openUpgradeModal, isProUser } = useUpgradeModal();
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const recognitionRef = useRef<ISpeechRecognition | null>(null);
+  // ── 1. Conversation & Model Session Initialization ──────────────────────
+  // If conversationId is supplied, attempt to restore it from history
+  const restoredConv = useMemo(() => {
+    if (!conversationId) return null;
+    return getConversationById(conversationId);
+  }, [conversationId]);
 
-  // ── Model selection with lazy init + validation ─────────────────────────
+  // Model ID derivation: restored > initial prop > localStorage > default
   const [selectedModelId, setSelectedModelId] = useState<string>(() => {
+    if (restoredConv?.modelId && AI_MODELS.some((m) => m.id === restoredConv.modelId)) {
+      return restoredConv.modelId;
+    }
+    if (initialModelId && AI_MODELS.some((m) => m.id === initialModelId)) {
+      return initialModelId;
+    }
     if (typeof window !== "undefined") {
       const stored = loadSelectedModel();
       if (stored && AI_MODELS.some((m) => m.id === stored)) return stored;
@@ -192,48 +167,50 @@ export function PlaceholderWorkspace({
     return "echogpt";
   });
 
-  // Listen to external model updates (e.g. from Store "Try App")
-  useEffect(() => {
-    const handleModelUpdated = () => {
-      const stored = loadSelectedModel();
-      if (stored && AI_MODELS.some((m) => m.id === stored)) {
-        setSelectedModelId(stored);
-      }
-    };
-    window.addEventListener("echogpt:selected-model-updated", handleModelUpdated);
-    window.addEventListener("storage", handleModelUpdated);
-    return () => {
-      window.removeEventListener("echogpt:selected-model-updated", handleModelUpdated);
-      window.removeEventListener("storage", handleModelUpdated);
-    };
-  }, []);
+  // Active conversation ID
+  const [activeConversationId, setActiveConversationId] = useState<string>(() => {
+    return restoredConv?.id || generateConversationId();
+  });
 
+  // Active messages
+  const [messages, setMessages] = useState<ChatMessage[]>(() => {
+    return restoredConv?.messages || [];
+  });
+
+  // Track conversation metadata refs for safe async resolution
+  const activeConversationIdRef = useRef<string>(activeConversationId);
+  const existingTitleRef = useRef<string>(restoredConv?.title || "");
+  const createdAtRef = useRef<string>(restoredConv?.createdAt || "");
+
+  useEffect(() => {
+    activeConversationIdRef.current = activeConversationId;
+  }, [activeConversationId]);
+
+  // ── UI States ────────────────────────────────────────────────────────────
+  const [promptText, setPromptText] = useState(initialPrompt || "");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
+  const [attachment, setAttachment] = useState<AttachmentFile | null>(null);
+  const [voiceState, setVoiceState] = useState<VoiceState>("idle");
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const recognitionRef = useRef<ISpeechRecognition | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Active Model object
   const selectedModel = useMemo(() => {
     return AI_MODELS.find((m) => m.id === selectedModelId) || AI_MODELS[0];
   }, [selectedModelId]);
 
-  // ── Synchronized chat from localStorage ─────────────────────────────────
-  const currentChat = useSyncExternalStore(
-    subscribeChat,
-    getChatSnapshot,
-    getServerChatSnapshot
-  );
-  const messages: ChatMessage[] = useMemo(
-    () => currentChat?.messages || [],
-    [currentChat]
-  );
-
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  // Auto-scroll to latest message
+  // Auto-scroll on new messages
   useEffect(() => {
     if (messages.length > 0) {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages, isGenerating]);
 
-  // Focus textarea shortcut
+  // Global focus shortcut listener
   useEffect(() => {
     const handleFocus = () => textareaRef.current?.focus();
     window.addEventListener("echogpt:focus-chat-input", handleFocus);
@@ -253,14 +230,70 @@ export function PlaceholderWorkspace({
     };
   }, []);
 
-  // ── Handlers ─────────────────────────────────────────────────────────────
-
+  // ── Model Selection Handler (MUST START A NEW CONVERSATION) ──────────────
   const handleSelectModel = (model: AIModel) => {
-    setSelectedModelId(model.id);
+    // If the user selects the same model and hasn't started typing/messaging, no-op
+    if (model.id === selectedModelId && messages.length === 0) return;
+
+    // Save preferred model for future new sessions
     saveSelectedModel(model.id);
-    showToast(`Switched to ${model.name}`, "info");
+    setSelectedModelId(model.id);
+
+    // CRITICAL: Switching model MUST create a brand new conversation session
+    // and clear all visible messages. The old conversation remains intact in History.
+    const newId = generateConversationId();
+    setActiveConversationId(newId);
+    activeConversationIdRef.current = newId;
+    existingTitleRef.current = "";
+    createdAtRef.current = new Date().toISOString();
+
+    setMessages([]);
+    setPromptText("");
+    setAttachment(null);
+    setIsGenerating(false);
+
+    // Clean URL so it no longer points to a historical ?c=...
+    if (typeof window !== "undefined" && window.location.search) {
+      router.replace("/chat");
+    }
+
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.focus();
+    }
+
+    showToast(`Started new chat with ${model.name}`, "info");
   };
 
+  // ── New Chat Action (CREATES A NEW CONVERSATION SESSION) ──────────────────
+  const handleStartNewChat = () => {
+    // CRITICAL: Generates fresh conversationId, empty messages, preserves active model
+    const newId = generateConversationId();
+    setActiveConversationId(newId);
+    activeConversationIdRef.current = newId;
+    existingTitleRef.current = "";
+    createdAtRef.current = new Date().toISOString();
+
+    setMessages([]);
+    setPromptText("");
+    setAttachment(null);
+    setIsGenerating(false);
+
+    // Clean URL
+    if (typeof window !== "undefined" && window.location.search) {
+      router.replace("/chat");
+    }
+
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.focus();
+    }
+
+    showToast(`New chat started with ${selectedModel.name}`, "info");
+    onNewChat?.();
+  };
+
+  // ── Input & Prompt Handlers ──────────────────────────────────────────────
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setPromptText(e.target.value);
     e.target.style.height = "auto";
@@ -285,32 +318,31 @@ export function PlaceholderWorkspace({
     }
   };
 
-  // ── File Attachment ──────────────────────────────────────────────────────
-
+  // ── File Attachment Handlers (Pro-Gated) ──────────────────────────────────
   const handleAttachClick = () => {
-    // Pro gate: show upgrade modal for non-Pro flows
-    openUpgradeModal(
-      "File attachments are an EchoGPT Pro feature. Upgrade to attach PDFs, images, and documents directly in your conversations."
-    );
+    if (isProUser) {
+      // Pro user: trigger real file selector
+      fileInputRef.current?.click();
+    } else {
+      // Free user: show upgrade modal with feature explanation
+      openUpgradeModal(
+        "File attachments are an EchoGPT Pro feature. Upgrade to attach PDFs, code files, and images directly in your conversations."
+      );
+    }
   };
 
   const handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Max 10MB safety check
     if (file.size > 10 * 1024 * 1024) {
       showToast("File too large. Maximum attachment size is 10 MB.", "error");
       return;
     }
 
-    const objectUrl =
-      file.type.startsWith("image/") ? URL.createObjectURL(file) : undefined;
-
+    const objectUrl = file.type.startsWith("image/") ? URL.createObjectURL(file) : undefined;
     setAttachment({ name: file.name, size: file.size, type: file.type, objectUrl });
     showToast(`Attached: ${file.name}`, "success");
-
-    // reset input so same file can be re-selected
     e.target.value = "";
   };
 
@@ -325,8 +357,7 @@ export function PlaceholderWorkspace({
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
 
-  // ── Voice Input ──────────────────────────────────────────────────────────
-
+  // ── Voice Input (Web Speech API) ─────────────────────────────────────────
   const getSpeechRecognition = () => {
     if (typeof window === "undefined") return null;
     const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -334,7 +365,6 @@ export function PlaceholderWorkspace({
   };
 
   const handleVoiceClick = () => {
-    // Already listening — stop it
     if (voiceState === "listening") {
       recognitionRef.current?.stop();
       setVoiceState("idle");
@@ -345,10 +375,7 @@ export function PlaceholderWorkspace({
 
     if (!recognition) {
       setVoiceState("unsupported");
-      showToast(
-        "Voice input isn't supported in this browser. Try Chrome or Edge.",
-        "error"
-      );
+      showToast("Voice input isn't supported in this browser. Try Chrome or Edge.", "error");
       setTimeout(() => setVoiceState("idle"), 3000);
       return;
     }
@@ -370,10 +397,7 @@ export function PlaceholderWorkspace({
         setPromptText((prev) => (prev ? `${prev} ${transcript}` : transcript));
         if (textareaRef.current) {
           textareaRef.current.style.height = "auto";
-          textareaRef.current.style.height = `${Math.min(
-            textareaRef.current.scrollHeight,
-            160
-          )}px`;
+          textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 160)}px`;
           textareaRef.current.focus();
         }
         showToast("Voice transcription complete.", "success");
@@ -384,10 +408,7 @@ export function PlaceholderWorkspace({
     recognition.onerror = (event: ISpeechRecognitionErrorEvent) => {
       if (event.error === "not-allowed" || event.error === "permission-denied") {
         setVoiceState("denied");
-        showToast(
-          "Microphone permission denied. Allow access in your browser settings.",
-          "error"
-        );
+        showToast("Microphone permission denied. Allow access in your browser settings.", "error");
       } else if (event.error === "no-speech") {
         showToast("No speech detected. Please try again.", "info");
         setVoiceState("idle");
@@ -398,7 +419,6 @@ export function PlaceholderWorkspace({
       setTimeout(() => setVoiceState("idle"), 3000);
     };
 
-    // Use functional update to avoid stale closure over voiceState
     recognition.onend = () => {
       setVoiceState((prev) => (prev === "listening" ? "idle" : prev));
     };
@@ -446,7 +466,6 @@ export function PlaceholderWorkspace({
   };
 
   // ── Share Chat ───────────────────────────────────────────────────────────
-
   const handleShareChat = async () => {
     if (messages.length === 0) return;
 
@@ -460,14 +479,12 @@ export function PlaceholderWorkspace({
       try {
         await navigator.share({ title: shareTitle, text: shareText });
       } catch (e) {
-        // User dismissed — no toast needed
         const err = e as Error;
         if (err.name !== "AbortError") {
           showToast("Share failed. Try copying instead.", "error");
         }
       }
     } else {
-      // Clipboard fallback
       const clipboardText = `${shareTitle}\n\n${shareText}\n\n— Shared from EchoGPT`;
       try {
         await navigator.clipboard.writeText(clipboardText);
@@ -478,51 +495,103 @@ export function PlaceholderWorkspace({
     }
   };
 
-  // ── Chat Send Handler ────────────────────────────────────────────────────
-
-  const generateMockResponse = (userPrompt: string): string => {
+  // ── Mock AI Response Generator ───────────────────────────────────────────
+  const generateMockResponse = (userPrompt: string, model: AIModel): string => {
     const lower = userPrompt.toLowerCase();
 
     if (lower.includes("sop") || lower.includes("procedure")) {
-      return `### Standard Operating Procedure (Draft)\n\n**Title:** Process Execution & Verification Protocol\n**Target Engine:** ${selectedModel.name}\n\n1. **Phase 1: Requirements Intake & Scoping**\n   - Confirm verified project parameters and architectural boundary.\n   - Validate design tokens (Typography: Lexend, Brand: #713CF4).\n\n2. **Phase 2: Execution & Component Assembly**\n   - Implement modular presentation logic without tight backend coupling.\n   - Maintain accessible states and keyboard event listeners.\n\n3. **Phase 3: Verification & Review**\n   - Execute linter checks and multi-viewport responsive testing.\n   - Document changes in master project context.\n\n*Note: Simulated frontend demonstration response generated with ${selectedModel.name}.*`;
+      return `### Standard Operating Procedure (Draft)\n\n**Title:** Process Execution & Verification Protocol\n**Target Engine:** ${model.name}\n\n1. **Phase 1: Requirements Intake & Scoping**\n   - Confirm verified project parameters and architectural boundaries.\n   - Validate design tokens (Typography: Lexend, Brand: #713CF4).\n\n2. **Phase 2: Execution & Component Assembly**\n   - Implement modular presentation logic without tight backend coupling.\n   - Maintain accessible states and keyboard event listeners.\n\n3. **Phase 3: Verification & Review**\n   - Execute linter checks and multi-viewport responsive testing.\n   - Document changes in master project context.\n\n*Note: Simulated response generated with ${model.name} (${model.provider}).*`;
     }
 
     if (lower.includes("resume") || lower.includes("cv") || lower.includes("experience")) {
-      return `### Targeted Resume Recommendations\n\nSynthesized via **${selectedModel.name}**:\n\n- **Quantified Achievement:** "Architected multi-model workspace in Next.js App Router supporting 100K+ MAU, achieving zero hydration layout shifts."\n- **Web Vitals Optimization:** "Engineered sub-second initial load with responsive Tailwind v4 token system, cutting TTI by 44%."\n- **Design System Governance:** "Built accessible keyboard-first UI primitive library compliant with WCAG 2.1 AA."\n\n*Note: Simulated frontend demonstration response generated with ${selectedModel.name}.*`;
+      return `### Targeted Resume Recommendations\n\nSynthesized via **${model.name}**:\n\n- **Quantified Achievement:** "Architected multi-model workspace in Next.js App Router supporting 100K+ MAU, achieving zero hydration layout shifts."\n- **Web Vitals Optimization:** "Engineered sub-second initial load with responsive Tailwind token system, cutting TTI by 44%."\n- **Design System Governance:** "Built accessible keyboard-first UI primitive library compliant with WCAG 2.1 AA."\n\n*Note: Simulated response generated with ${model.name} (${model.provider}).*`;
     }
 
-    return `I received your prompt: "${userPrompt.slice(0, 80)}${userPrompt.length > 80 ? "..." : ""}"\n\nEchoGPT has synthesized your request using the **${selectedModel.name}** (${selectedModel.provider}) intelligence engine.\n\nKey takeaways:\n1. **Dynamic Model Routing:** Active model is **${selectedModel.name}** with ${selectedModel.contextWindow || "standard"} context.\n2. **Design Language:** Lexend typography, clean spacing, and brand purple (#713CF4) accents.\n3. **Session Persistence:** Your model preference and conversation state are safely maintained across reloads.\n\n*Note: Simulated frontend demonstration response generated with ${selectedModel.name}.*`;
+    return `I received your prompt: "${userPrompt.slice(0, 80)}${userPrompt.length > 80 ? "..." : ""}"\n\nEchoGPT has synthesized your request using the **${model.name}** (${model.provider}) intelligence engine.\n\nKey takeaways:\n1. **Dynamic Model Routing:** Active model is **${model.name}** with ${model.contextWindow || "standard"} context.\n2. **Design Language:** Lexend typography, clean spacing, and brand purple (#713CF4) accents.\n3. **Session Persistence:** Your conversation is isolated under its own unique ID and saved in History.\n\n*Note: Simulated response generated with ${model.name} (${model.provider}).*`;
   };
 
+  // ── Send Message Handler (IMMEDIATE HISTORY PERSISTENCE & ASYNC ISOLATION)
   const handleSendMessage = () => {
     if (!promptText.trim() || isGenerating) return;
+
+    // Fixed conversation target for this message exchange
+    const targetConvId = activeConversationId;
+    const targetModel = selectedModel;
+    const sentPrompt = promptText.trim();
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
     const userMessage: ChatMessage = {
       id: `msg-${Date.now()}-u`,
       role: "user",
-      content: promptText.trim(),
-      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      content: sentPrompt,
+      timestamp: timeStr,
     };
 
-    const newMessages = [...messages, userMessage];
-    updateCurrentChatMessages(newMessages, selectedModelId);
-
-    const sentPrompt = promptText.trim();
+    const updatedMessages = [...messages, userMessage];
+    setMessages(updatedMessages);
     setPromptText("");
     setAttachment(null);
     if (textareaRef.current) textareaRef.current.style.height = "auto";
 
+    // Deterministic title derivation
+    const title = existingTitleRef.current || deriveConversationTitle(sentPrompt);
+    existingTitleRef.current = title;
+
+    const createdAt = createdAtRef.current || now.toISOString();
+
+    // Silently update browser address bar so reloading restores this specific conversation
+    if (typeof window !== "undefined" && !window.location.search.includes(`c=${targetConvId}`)) {
+      window.history.replaceState(null, "", `/chat?c=${targetConvId}`);
+    }
+
+    // IMMEDIATELY PERSIST TO HISTORY (Section 11 requirement)
+    upsertHistoryConversation({
+      id: targetConvId,
+      title,
+      preview: sentPrompt.slice(0, 100),
+      createdAt,
+      updatedAt: now.toISOString(),
+      formattedDate: `Today at ${timeStr}`,
+      modelId: targetModel.id,
+      modelName: targetModel.name,
+      messageCount: updatedMessages.length,
+      messages: updatedMessages,
+    });
+
     setIsGenerating(true);
 
+    // Asynchronous simulated AI response
     setTimeout(() => {
       const assistantMessage: ChatMessage = {
         id: `msg-${Date.now()}-a`,
         role: "assistant",
-        content: generateMockResponse(sentPrompt),
+        content: generateMockResponse(sentPrompt, targetModel),
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       };
-      updateCurrentChatMessages([...newMessages, assistantMessage], selectedModelId);
-      setIsGenerating(false);
+
+      const finalMessages = [...updatedMessages, assistantMessage];
+
+      // Update in History for targetConvId
+      upsertHistoryConversation({
+        id: targetConvId,
+        title,
+        preview: assistantMessage.content.slice(0, 120),
+        createdAt,
+        updatedAt: new Date().toISOString(),
+        formattedDate: `Today at ${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`,
+        modelId: targetModel.id,
+        modelName: targetModel.name,
+        messageCount: finalMessages.length,
+        messages: finalMessages,
+      });
+
+      // ASYNC ISOLATION (Section 18 requirement):
+      // Only update local messages state if user is STILL on this conversation!
+      if (activeConversationIdRef.current === targetConvId) {
+        setMessages(finalMessages);
+        setIsGenerating(false);
+      }
     }, 850);
   };
 
@@ -531,20 +600,6 @@ export function PlaceholderWorkspace({
       e.preventDefault();
       handleSendMessage();
     }
-  };
-
-  // New Chat: clears messages but PRESERVES selected model
-  const handleStartNewChat = () => {
-    if (messages.length > 0) archiveCurrentChat();
-    clearCurrentChat();
-    setPromptText("");
-    setAttachment(null);
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-      textareaRef.current.focus();
-    }
-    showToast(`New chat started with ${selectedModel.name}`, "info");
-    if (onNewChat) onNewChat();
   };
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -560,7 +615,7 @@ export function PlaceholderWorkspace({
         actions={
           <div className="flex items-center gap-1.5">
             {/* Share — only when messages exist */}
-            {messages.length > 1 && (
+            {messages.length > 0 && (
               <button
                 type="button"
                 onClick={handleShareChat}
@@ -573,7 +628,7 @@ export function PlaceholderWorkspace({
               </button>
             )}
 
-            {/* New Chat reset */}
+            {/* New Chat reset button in header */}
             {messages.length > 0 && (
               <button
                 type="button"
@@ -591,6 +646,7 @@ export function PlaceholderWorkspace({
             <ModelSelector
               selectedModelId={selectedModelId}
               onSelectModel={handleSelectModel}
+              placement="bottom"
             />
           </div>
         }
@@ -639,26 +695,42 @@ export function PlaceholderWorkspace({
               ))}
             </div>
 
-            {/* Quota / Limit Strip */}
+            {/* Quota / Limit Strip with Demo Pro Integration */}
             <div className="pt-1">
               <div className="inline-flex flex-wrap items-center justify-center gap-1.5 px-4 py-2 rounded-xl border border-zinc-200/70 dark:border-zinc-800/70 bg-white/70 dark:bg-[#121319]/70 text-[11px] text-zinc-500 dark:text-zinc-400">
                 <span className="font-semibold text-zinc-800 dark:text-zinc-200">
-                  {selectedModel.isPro ? "Pro Model Active" : "5 of 5 messages left this window"}
+                  {isProUser
+                    ? "✦ EchoGPT Pro Active"
+                    : selectedModel.isPro
+                    ? "Pro Model Active"
+                    : "5 of 5 messages left this window"}
                 </span>
                 <span>·</span>
-                <span>5 on advanced models</span>
+                <span>
+                  {isProUser ? "Unlimited frontier reasoning" : "5 on advanced models"}
+                </span>
                 <span>·</span>
-                <button
-                  type="button"
-                  onClick={() =>
-                    openUpgradeModal(
-                      "Upgrade to EchoGPT Pro for unlimited high-speed messaging across all frontier models."
-                    )
-                  }
-                  className="text-[#713CF4] dark:text-[#a78bfa] hover:underline font-medium cursor-pointer"
-                >
-                  Upgrade to Pro
-                </button>
+                {isProUser ? (
+                  <button
+                    type="button"
+                    onClick={() => openUpgradeModal("Manage your EchoGPT Pro subscription")}
+                    className="text-[#713CF4] dark:text-[#a78bfa] hover:underline font-medium cursor-pointer"
+                  >
+                    Manage Plan
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      openUpgradeModal(
+                        "Upgrade to EchoGPT Pro for unlimited high-speed messaging across all frontier models."
+                      )
+                    }
+                    className="text-[#713CF4] dark:text-[#a78bfa] hover:underline font-medium cursor-pointer"
+                  >
+                    Upgrade to Pro
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -785,7 +857,7 @@ export function PlaceholderWorkspace({
               </div>
             )}
 
-            {/* ── Top toolbar ── */}
+            {/* ── Top toolbar inside composer card ── */}
             <div className="flex items-center justify-between px-3.5 pt-3 pb-1 border-b border-zinc-100 dark:border-zinc-850">
               {/* Left: Model Selector (opens UPWARD) + Connectors + Rocket */}
               <div className="flex items-center gap-2">
@@ -799,6 +871,7 @@ export function PlaceholderWorkspace({
 
                 <span className="text-zinc-300 dark:text-zinc-700 select-none">|</span>
 
+                {/* Connected Tools */}
                 <button
                   type="button"
                   onClick={() =>
@@ -811,16 +884,25 @@ export function PlaceholderWorkspace({
                   <GitBranch className="size-3.5" />
                 </button>
 
+                {/* Rocket / Upgrade Pro */}
                 <button
                   type="button"
-                  onClick={() =>
-                    openUpgradeModal(
-                      "Upgrade to EchoGPT Pro to unlock unlimited access to every frontier AI model."
-                    )
-                  }
-                  className="p-1 rounded-md text-[#713CF4] hover:text-[#602ee0] dark:text-[#a78bfa] hover:bg-[#713CF4]/10 transition-colors cursor-pointer"
-                  title="Upgrade to Pro"
-                  aria-label="Upgrade to Pro"
+                  onClick={() => {
+                    if (isProUser) {
+                      showToast("EchoGPT Pro is active. Unlimited access to all frontier models.", "info");
+                    } else {
+                      openUpgradeModal(
+                        "Upgrade to EchoGPT Pro to unlock unlimited access to every frontier AI model."
+                      );
+                    }
+                  }}
+                  className={`p-1 rounded-md transition-colors cursor-pointer ${
+                    isProUser
+                      ? "text-emerald-500 hover:text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10"
+                      : "text-[#713CF4] hover:text-[#602ee0] dark:text-[#a78bfa] hover:bg-[#713CF4]/10"
+                  }`}
+                  title={isProUser ? "EchoGPT Pro Active" : "Upgrade to Pro"}
+                  aria-label={isProUser ? "EchoGPT Pro Active" : "Upgrade to Pro"}
                 >
                   <Rocket className="size-3.5" />
                 </button>
@@ -832,7 +914,7 @@ export function PlaceholderWorkspace({
                   type="button"
                   onClick={handleStartNewChat}
                   className="p-1 rounded-md text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
-                  title="New Chat — preserves current model"
+                  title="New Chat — creates a new conversation"
                   aria-label="Start new chat"
                 >
                   <Plus className="size-4" />
@@ -852,7 +934,7 @@ export function PlaceholderWorkspace({
 
             {/* ── Bottom input row ── */}
             <div className="flex items-end gap-2 px-3 pb-2.5 pt-1.5">
-              {/* Hidden real file input (only if we wanted to allow Pro users to actually pick files) */}
+              {/* Native file input for Pro attachments */}
               <input
                 ref={fileInputRef}
                 type="file"
@@ -863,13 +945,13 @@ export function PlaceholderWorkspace({
                 onChange={handleFileSelected}
               />
 
-              {/* Paperclip — opens Upgrade modal (Pro gate) */}
+              {/* Paperclip */}
               <button
                 type="button"
                 onClick={handleAttachClick}
                 className="p-2 rounded-xl text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer shrink-0 mb-0.5"
-                title="Attach file (Pro feature)"
-                aria-label="Attach file — Pro feature"
+                title={isProUser ? "Attach file" : "Attach file (Pro feature)"}
+                aria-label={isProUser ? "Attach file" : "Attach file — Pro feature"}
               >
                 <Paperclip className="size-4" />
               </button>
@@ -886,7 +968,7 @@ export function PlaceholderWorkspace({
                 aria-label="Message prompt input"
               />
 
-              {/* Microphone — Web Speech API with real states */}
+              {/* Microphone */}
               <button
                 type="button"
                 onClick={handleVoiceClick}
