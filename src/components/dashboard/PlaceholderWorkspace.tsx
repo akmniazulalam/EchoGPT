@@ -262,7 +262,7 @@ export function PlaceholderWorkspace({
       textareaRef.current.focus();
     }
 
-    showToast(`New chat started with ${selectedModel.name}`, "info");
+    // showToast(`New chat started with ${selectedModel.name}`, "info");
     onNewChat?.();
   }, [onNewChat, selectedModel.name]);
 
