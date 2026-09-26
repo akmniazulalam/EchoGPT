@@ -62,9 +62,9 @@ export const ENGAGEMENT_ITEMS: NavItem[] = [
     icon: Store,
   },
   {
-    id: "ai-tasks",
+    id: "tasks",
     label: "AI Tasks",
-    href: "/ai-tasks",
+    href: "/tasks",
     icon: ListCheck,
   },
   {
