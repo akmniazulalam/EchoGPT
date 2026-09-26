@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { TasksWorkspace } from "@/components/dashboard/tasks/TasksWorkspace";
 
 export const metadata: Metadata = {
-  title: "AI Tasks | EchoGPT",
+  title: "AI Tasks",
   description:
     "Discover and run specialized AI-powered workflows that turn complex tasks into structured results.",
 };
