@@ -37,6 +37,13 @@ export interface ModelSelectorProps {
   headerTitle?: string;
   allowProSelection?: boolean;
   groupByTier?: boolean;
+
+  /**
+   * placement="bottom" (default) — dropdown opens downward (top-full).
+   * placement="top" — dropdown opens upward (bottom-full). Use for selectors
+   * near the bottom of the viewport (e.g. the in-composer model selector).
+   */
+  placement?: "bottom" | "top";
 }
 
 export function ModelSelector({
@@ -55,6 +62,7 @@ export function ModelSelector({
   headerTitle,
   allowProSelection = false,
   groupByTier = false,
+  placement = "bottom",
 }: ModelSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -188,6 +196,12 @@ export function ModelSelector({
     return selectedModelId === id;
   };
 
+  // Dropdown position classes
+  const dropdownPositionClass =
+    placement === "top"
+      ? `bottom-full mb-1.5` // opens upward
+      : `top-full mt-1.5`; // opens downward (default)
+
   return (
     <div
       className={`relative inline-block text-left ${className}`}
@@ -201,6 +215,11 @@ export function ModelSelector({
         className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#1b1725] text-xs font-medium text-zinc-800 dark:text-zinc-200 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors shadow-2xs outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] cursor-pointer ${triggerClassName}`}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
+        aria-label={
+          multiSelect
+            ? "Select AI models"
+            : `Current model: ${selectedModel.name}. Click to change.`
+        }
       >
         {triggerIcon ? (
           triggerIcon
@@ -215,7 +234,7 @@ export function ModelSelector({
           <SlidersHorizontal className="size-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
         )}
 
-        <span className="truncate max-w-36 sm:max-w-48">
+        <span className="truncate max-w-28 sm:max-w-40">
           {triggerLabel ? (
             triggerLabel
           ) : multiSelect ? (
@@ -245,7 +264,7 @@ export function ModelSelector({
           aria-label={headerTitle || "Available AI models"}
           className={`absolute ${
             align === "left" ? "left-0" : "right-0"
-          } top-full mt-1.5 w-80 sm:w-92 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#1b1725] shadow-2xl p-2 z-50 focus:outline-none animate-in fade-in-50 zoom-in-95 duration-100`}
+          } ${dropdownPositionClass} w-80 sm:w-92 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#1b1725] shadow-2xl p-2 z-50 focus:outline-none animate-in fade-in-50 zoom-in-95 duration-100`}
         >
           {/* Header & Search */}
           <div className="p-1.5 space-y-2 border-b border-zinc-100 dark:border-zinc-850 pb-2.5">
@@ -365,14 +384,14 @@ export function ModelSelector({
                             </p>
                           </div>
 
-                          {model.isPro && !allowProSelection ? (
-                            <span className="inline-flex items-center gap-1 text-[10px] text-amber-500 dark:text-amber-400 font-medium shrink-0 mt-0.5 px-1.5 py-0.5 rounded bg-amber-500/10 dark:bg-amber-500/20">
-                              <Lock className="size-2.5" />
-                              <span className="hidden sm:inline">Upgrade</span>
-                            </span>
-                          ) : isSelected ? (
-                            <Check className="size-4 text-[#713CF4] dark:text-[#a78bfa] shrink-0 mt-0.5" />
-                          ) : null}
+                          {/* Check / Lock */}
+                          <div className="shrink-0 mt-0.5">
+                            {isSelected ? (
+                              <Check className="size-3.5 text-[#713CF4]" />
+                            ) : model.isPro && !allowProSelection ? (
+                              <Lock className="size-3 text-zinc-400" />
+                            ) : null}
+                          </div>
                         </button>
                       );
                     })}
@@ -380,6 +399,25 @@ export function ModelSelector({
                 </div>
               ))
             )}
+          </div>
+
+          {/* Footer */}
+          <div className="pt-2 px-2 pb-1 border-t border-zinc-100 dark:border-zinc-850 mt-1">
+            <p className="text-[10px] text-zinc-400 dark:text-zinc-500">
+              <span className="text-[#713CF4] font-semibold">PRO</span> models require
+              an active EchoGPT subscription.{" "}
+              <button
+                type="button"
+                onClick={() =>
+                  openUpgradeModal(
+                    "Upgrade to EchoGPT Pro to access all frontier AI models."
+                  )
+                }
+                className="underline hover:text-zinc-600 dark:hover:text-zinc-300 cursor-pointer"
+              >
+                Upgrade
+              </button>
+            </p>
           </div>
         </div>
       )}
