@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PlaceholderPage } from "@/components/dashboard/PlaceholderPage";
+import { NewsletterWorkspace } from "@/components/newsletter/NewsletterWorkspace";
 
 export const metadata: Metadata = {
   title: "Newsletter",
@@ -7,10 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function NewsletterPage() {
-  return (
-    <PlaceholderPage
-      title="Newsletter"
-      description="Stay informed with weekly EchoGPT product releases, research highlights, and AI productivity strategies."
-    />
-  );
+  return <NewsletterWorkspace />;
 }

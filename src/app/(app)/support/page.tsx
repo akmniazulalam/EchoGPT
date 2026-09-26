@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PlaceholderPage } from "@/components/dashboard/PlaceholderPage";
+import { SupportWorkspace } from "@/components/support/SupportWorkspace";
 
 export const metadata: Metadata = {
   title: "Support",
@@ -7,10 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function SupportPage() {
-  return (
-    <PlaceholderPage
-      title="Support"
-      description="Access customer support, technical documentation, billing inquiries, and troubleshooting guides."
-    />
-  );
+  return <SupportWorkspace />;
 }
