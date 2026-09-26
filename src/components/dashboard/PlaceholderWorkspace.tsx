@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect, useMemo } from "react";
+import React, { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import {
   Sparkles,
@@ -32,6 +32,7 @@ import {
   upsertHistoryConversation,
   loadSelectedModel,
   saveSelectedModel,
+  loadDemoProState,
 } from "@/lib/chatStorage";
 import { useUpgradeModal } from "@/context/UpgradeModalContext";
 import { showToast } from "@/components/ui/Toast";
@@ -154,17 +155,25 @@ export function PlaceholderWorkspace({
 
   // Model ID derivation: restored > initial prop > localStorage > default
   const [selectedModelId, setSelectedModelId] = useState<string>(() => {
+    let candidate = "echogpt";
     if (restoredConv?.modelId && AI_MODELS.some((m) => m.id === restoredConv.modelId)) {
-      return restoredConv.modelId;
-    }
-    if (initialModelId && AI_MODELS.some((m) => m.id === initialModelId)) {
-      return initialModelId;
-    }
-    if (typeof window !== "undefined") {
+      candidate = restoredConv.modelId;
+    } else if (initialModelId && AI_MODELS.some((m) => m.id === initialModelId)) {
+      candidate = initialModelId;
+    } else if (typeof window !== "undefined") {
       const stored = loadSelectedModel();
-      if (stored && AI_MODELS.some((m) => m.id === stored)) return stored;
+      if (stored && AI_MODELS.some((m) => m.id === stored)) {
+        candidate = stored;
+      }
     }
-    return "echogpt";
+
+    // Safety check: if candidate is PRO but user is not Pro, fallback to free default
+    const candidateModel = AI_MODELS.find((m) => m.id === candidate);
+    const hasPro = typeof window !== "undefined" ? loadDemoProState() : false;
+    if (candidateModel?.isPro && !hasPro) {
+      return "echogpt";
+    }
+    return candidate;
   });
 
   // Active conversation ID
@@ -177,7 +186,7 @@ export function PlaceholderWorkspace({
     return restoredConv?.messages || [];
   });
 
-  // Track conversation metadata refs for safe async resolution
+  // Track conversation metadata refs for safe async resolution without stale closures
   const activeConversationIdRef = useRef<string>(activeConversationId);
   const existingTitleRef = useRef<string>(restoredConv?.title || "");
   const createdAtRef = useRef<string>(restoredConv?.createdAt || "");
@@ -198,10 +207,15 @@ export function PlaceholderWorkspace({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Active Model object
+  // Active Model object derived strictly from selectedModelId
   const selectedModel = useMemo(() => {
     return AI_MODELS.find((m) => m.id === selectedModelId) || AI_MODELS[0];
   }, [selectedModelId]);
+
+  const selectedModelRef = useRef<AIModel>(selectedModel);
+  useEffect(() => {
+    selectedModelRef.current = selectedModel;
+  }, [selectedModel]);
 
   // Auto-scroll on new messages
   useEffect(() => {
@@ -230,9 +244,39 @@ export function PlaceholderWorkspace({
     };
   }, []);
 
+  // ── New Chat Action (CREATES A NEW CONVERSATION SESSION) ──────────────────
+  const handleStartNewChat = useCallback(() => {
+    const newId = generateConversationId();
+    setActiveConversationId(newId);
+    activeConversationIdRef.current = newId;
+    existingTitleRef.current = "";
+    createdAtRef.current = new Date().toISOString();
+
+    setMessages([]);
+    setPromptText("");
+    setAttachment(null);
+    setIsGenerating(false);
+
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.focus();
+    }
+
+    showToast(`New chat started with ${selectedModel.name}`, "info");
+    onNewChat?.();
+  }, [onNewChat, selectedModel.name]);
+
   // ── Model Selection Handler (MUST START A NEW CONVERSATION) ──────────────
-  const handleSelectModel = (model: AIModel) => {
-    // If the user selects the same model and hasn't started typing/messaging, no-op
+  const handleSelectModel = useCallback((model: AIModel) => {
+    // Pro access check
+    if (model.isPro && !isProUser) {
+      openUpgradeModal(
+        `${model.name} is an EchoGPT Pro model. Upgrade to access frontier AI reasoning.`
+      );
+      return;
+    }
+
+    // If selecting the exact same model and no messages exist yet, no-op
     if (model.id === selectedModelId && messages.length === 0) return;
 
     // Save preferred model for future new sessions
@@ -252,46 +296,41 @@ export function PlaceholderWorkspace({
     setAttachment(null);
     setIsGenerating(false);
 
-    // Clean URL so it no longer points to a historical ?c=...
-    if (typeof window !== "undefined" && window.location.search) {
-      router.replace("/chat");
-    }
-
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
       textareaRef.current.focus();
     }
 
     showToast(`Started new chat with ${model.name}`, "info");
-  };
+  }, [isProUser, messages.length, openUpgradeModal, selectedModelId]);
 
-  // ── New Chat Action (CREATES A NEW CONVERSATION SESSION) ──────────────────
-  const handleStartNewChat = () => {
-    // CRITICAL: Generates fresh conversationId, empty messages, preserves active model
-    const newId = generateConversationId();
-    setActiveConversationId(newId);
-    activeConversationIdRef.current = newId;
-    existingTitleRef.current = "";
-    createdAtRef.current = new Date().toISOString();
+  // ── Event Subscriptions for External Actions ─────────────────────────────
 
-    setMessages([]);
-    setPromptText("");
-    setAttachment(null);
-    setIsGenerating(false);
+  // Global new-chat event listener (e.g. from AppShell Sidebar New Chat or Ctrl+Shift+K)
+  useEffect(() => {
+    const onNewChatEvent = () => handleStartNewChat();
+    window.addEventListener("echogpt:new-chat", onNewChatEvent);
+    return () => window.removeEventListener("echogpt:new-chat", onNewChatEvent);
+  }, [handleStartNewChat]);
 
-    // Clean URL
-    if (typeof window !== "undefined" && window.location.search) {
-      router.replace("/chat");
-    }
+  // Pro Reset Protection (BUG #3 / Section 14):
+  // When Demo Pro state is reset to Free, if current model is a PRO model,
+  // automatically fallback safely to default free model ("echogpt") and start a fresh chat.
+  useEffect(() => {
+    const handleProStatusChange = () => {
+      const isPro = loadDemoProState();
+      if (!isPro && selectedModelRef.current.isPro) {
+        const fallback = "echogpt";
+        saveSelectedModel(fallback);
+        setSelectedModelId(fallback);
+        handleStartNewChat();
+        showToast("Switched to EchoGPT standard model (previous Pro model is now locked).", "info");
+      }
+    };
 
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-      textareaRef.current.focus();
-    }
-
-    showToast(`New chat started with ${selectedModel.name}`, "info");
-    onNewChat?.();
-  };
+    window.addEventListener("echogpt:pro-status-updated", handleProStatusChange);
+    return () => window.removeEventListener("echogpt:pro-status-updated", handleProStatusChange);
+  }, [handleStartNewChat]);
 
   // ── Input & Prompt Handlers ──────────────────────────────────────────────
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -321,10 +360,8 @@ export function PlaceholderWorkspace({
   // ── File Attachment Handlers (Pro-Gated) ──────────────────────────────────
   const handleAttachClick = () => {
     if (isProUser) {
-      // Pro user: trigger real file selector
       fileInputRef.current?.click();
     } else {
-      // Free user: show upgrade modal with feature explanation
       openUpgradeModal(
         "File attachments are an EchoGPT Pro feature. Upgrade to attach PDFs, code files, and images directly in your conversations."
       );
@@ -510,11 +547,20 @@ export function PlaceholderWorkspace({
     return `I received your prompt: "${userPrompt.slice(0, 80)}${userPrompt.length > 80 ? "..." : ""}"\n\nEchoGPT has synthesized your request using the **${model.name}** (${model.provider}) intelligence engine.\n\nKey takeaways:\n1. **Dynamic Model Routing:** Active model is **${model.name}** with ${model.contextWindow || "standard"} context.\n2. **Design Language:** Lexend typography, clean spacing, and brand purple (#713CF4) accents.\n3. **Session Persistence:** Your conversation is isolated under its own unique ID and saved in History.\n\n*Note: Simulated response generated with ${model.name} (${model.provider}).*`;
   };
 
-  // ── Send Message Handler (IMMEDIATE HISTORY PERSISTENCE & ASYNC ISOLATION)
+  // ── Send Message Handler (IMMEDIATE HISTORY PERSISTENCE & FIRST-MESSAGE RESPONSE FIX)
   const handleSendMessage = () => {
     if (!promptText.trim() || isGenerating) return;
 
-    // Fixed conversation target for this message exchange
+    // Send-time Pro access validation (Section 15):
+    // If active model is PRO and user is NOT Pro, block message and open Upgrade modal
+    if (selectedModel.isPro && !isProUser) {
+      openUpgradeModal(
+        `${selectedModel.name} is an EchoGPT Pro model. Upgrade to send messages with frontier models.`
+      );
+      return;
+    }
+
+    // Fixed conversation target and model captured in closure
     const targetConvId = activeConversationId;
     const targetModel = selectedModel;
     const sentPrompt = promptText.trim();
@@ -534,16 +580,12 @@ export function PlaceholderWorkspace({
     setAttachment(null);
     if (textareaRef.current) textareaRef.current.style.height = "auto";
 
-    // Deterministic title derivation
+    // Deterministic title derivation from first user prompt
     const title = existingTitleRef.current || deriveConversationTitle(sentPrompt);
     existingTitleRef.current = title;
 
     const createdAt = createdAtRef.current || now.toISOString();
-
-    // Silently update browser address bar so reloading restores this specific conversation
-    if (typeof window !== "undefined" && !window.location.search.includes(`c=${targetConvId}`)) {
-      window.history.replaceState(null, "", `/chat?c=${targetConvId}`);
-    }
+    createdAtRef.current = createdAt;
 
     // IMMEDIATELY PERSIST TO HISTORY (Section 11 requirement)
     upsertHistoryConversation({
@@ -586,7 +628,7 @@ export function PlaceholderWorkspace({
         messages: finalMessages,
       });
 
-      // ASYNC ISOLATION (Section 18 requirement):
+      // ASYNC ISOLATION:
       // Only update local messages state if user is STILL on this conversation!
       if (activeConversationIdRef.current === targetConvId) {
         setMessages(finalMessages);
