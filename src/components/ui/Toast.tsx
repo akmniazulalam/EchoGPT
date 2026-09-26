@@ -47,7 +47,7 @@ export function ToastContainer() {
 
   return (
     <div
-      className="fixed bottom-5 right-5 z-60 flex flex-col gap-2 max-w-sm pointer-events-none"
+      className="fixed top-5 left-1/2 -translate-x-1/2 z-60 flex flex-col gap-2 max-w-sm pointer-events-none"
       aria-live="polite"
     >
       {toasts.map((toast) => {
@@ -57,7 +57,7 @@ export function ToastContainer() {
         return (
           <div
             key={toast.id}
-            className="pointer-events-auto flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl border bg-white dark:bg-[#1b1725] border-zinc-200 dark:border-zinc-800 shadow-lg text-zinc-900 dark:text-zinc-100 text-[13px] font-medium animate-in slide-in-from-bottom-3 fade-in duration-200"
+            className="pointer-events-auto flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl border bg-white dark:bg-[#2A2538] border-zinc-200 dark:border-zinc-800 shadow-lg text-zinc-900 dark:text-zinc-100 text-[13px] font-medium animate-in slide-in-from-bottom-3 fade-in duration-200"
           >
             {isSuccess && (
               <CheckCircle2 className="size-4 text-emerald-500 shrink-0" />
