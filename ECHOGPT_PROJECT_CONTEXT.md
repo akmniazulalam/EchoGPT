@@ -1616,10 +1616,76 @@ The original EchoGPT reference screenshots (`media_1790417263993.png` and `media
 
 ---
 
+## Milestone 4.zf — AI Tasks Experience Redesign (Marketplace & Interactive Workflow Engine)
+
+### Completed: 2026-09-26 ✓
+
+#### What Was Implemented & Engineered
+
+**1. Canonical Routing Architecture & Navigation**
+- **Canonical Route**: Created `src/app/(app)/tasks/page.tsx` rendering the high-performance `TasksWorkspace`.
+- **Legacy URL Redirect**: Updated `src/app/(app)/ai-tasks/page.tsx` to automatically redirect (`redirect("/tasks")`), ensuring zero broken bookmarks or legacy links.
+- **Navigation Sync**: Updated `src/config/navigation.ts` sidebar item to point directly to `/tasks`.
+
+**2. Comprehensive 25-Task Catalog (`src/config/tasks.ts`)**
+- Faithfully modeled all 25 tasks from the 4 original EchoGPT reference screenshots across their 4 respective categories:
+  - **Ideas (5 Tasks)**:
+    1. *Think Outside the Box* (Disruptive angles & challenge inverted assumptions)
+    2. *Startup* [PRO] (Venture incubator, business model canvas, 2-week MVP roadmap)
+    3. *Innovate and Elevate* (Feature modernization & competitive differentiation matrix)
+    4. *Unleashing Creativity* (SCAMPER method, sensory creative blocks breaker)
+    5. *Idea Sparks* (Rapid-fire viral marketing hooks & micro-concepts)
+  - **Work (5 Tasks)**:
+    1. *Max Productivity* (Deep-work time-blocking & energy management blueprint)
+    2. *Recruiting* [PRO] (Role scorecard, ATS job description, vetting rubric)
+    3. *CV Builder* (Quantified STAR achievement bullets & ATS keyword cloud)
+    4. *Email* (High-conversion business communications & follow-up sequence)
+    5. *Interview Tips* (Predicted tough questions, STAR answers, reverse questions)
+  - **Fun (5 Tasks)**:
+    1. *Gaming* (Loadout builds, boss battle walkthroughs, immersive lore deep-dive)
+    2. *Movie Time* (Film sommelier recommendations, thematic tropes, snack pairings)
+    3. *Cycling Day* (Pacing power zones, ride nutrition schedule, pre-ride check)
+    4. *Outdoor Activities* (Adventure itinerary, safety matrix, Leave No Trace protocols)
+    5. *Fun with buddies* (Original party games, lightning trivia, memorable challenges)
+  - **Online Content (10 Tasks)**:
+    1. *X Posts* (280-char standalone posts + 5-part viral thread breakdown)
+    2. *YouTube Scripts* [PRO] (5s retention hooks, B-roll cues, multi-segment audio/visual script)
+    3. *TikTok Posts* (On-screen text directives, viral pacing, comment-trap questions)
+    4. *TikTok Captions* (SEO search-optimized descriptions & curated hashtag clusters)
+    5. *Insta Content* (Multi-slide carousel blueprints & save-driver checklists)
+    6. *Insta Reels* (Visual shot list, audio cues, voiceover timing markers)
+    7. *Insta Captions* (Storytelling micro-blogs & aesthetic short one-liners)
+    8. *LinkedIn Hiring* (Authentic culture-first hiring announcements)
+    9. *LinkedIn Job Search* (High-status recruiter InMails & networking templates)
+    10. *LinkedIn Profile* [PRO] (1-3-1 executive thought-leadership narratives)
+
+**3. Visual & Interactive Tasks Marketplace (`TasksWorkspace.tsx` & `TaskCard.tsx`)**
+- **Hero & Search**: Matching original EchoGPT visual hierarchy with centered title, descriptive subtitle, and search bar supporting live filtering across task title, description, detailed overview, and keywords.
+- **Category Tabs**: Exact matching navigation tabs (`Ideas`, `Work`, `Fun`, `Online Content`) with active purple underline indicators.
+- **Branded Platform SVGs**: Custom vector logos for X, YouTube, TikTok, Instagram, and LinkedIn (`TaskIcons.tsx`).
+- **Responsive Card Grid**: 3-column desktop (`lg:grid-cols-3`), 2-column tablet (`md:grid-cols-2`), and 1-column mobile (`grid-cols-1`) layouts with smooth hover lift and keyboard navigation (`Enter` / `Space`).
+
+**4. Interactive Preview & Configuration Modal (`TaskConfigModal.tsx`)**
+- **Detailed Specifications**: Displays "What this task does", "What you'll need", "Expected output", and "Recommended Model" badge.
+- **Dynamic Input Schema**: Dynamically renders typed inputs (`text`, `textarea`, `select`) with form validation.
+- **Live Prompt Preview**: Collapsible prompt blueprint preview showing the exact compiled prompt sent to the LLM.
+- **Direct Chat Handoff**: Submitting hands off seamlessly to `/chat?prompt=...&new=...`, prefilling the prompt into the active chat session for immediate generation.
+
+**5. Unified Pro Gating**
+- Reuses existing `useUpgradeModal()` / `UpgradeProModal`.
+- Free users selecting Pro workflows (`Startup`, `Recruiting`, `YouTube Scripts`, `LinkedIn Profile`) trigger the Pro upgrade modal.
+- Active Demo Pro users seamlessly access and configure all 25 workflows.
+
+#### Build & Code Quality Verification
+- `npm run lint` → 0 errors, 0 warnings ✓
+- `npm run build` → 19/19 static routes prerendered, exit code 0 ✓
+
+---
+
 ## CURRENT MILESTONE
 
 Current milestone:
-Milestone 4.ze — Critical Bug-Fix Pass: First-Message Response & Pro Model Access Control
+Milestone 4.zf — AI Tasks Experience Redesign (Marketplace & Interactive Workflow Engine)
 
 Status:
 Completed ✓
