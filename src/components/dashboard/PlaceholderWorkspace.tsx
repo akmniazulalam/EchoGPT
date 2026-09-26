@@ -1,21 +1,23 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useMemo, useSyncExternalStore } from "react";
-import Image from "next/image";
+import { useRouter } from "next/navigation";
 import {
   Sparkles,
   Paperclip,
-  ArrowUp,
-  Image as ImageIcon,
-  FileText,
-  Columns2,
-  Briefcase,
+  RotateCcw,
   Copy,
   Check,
-  RotateCcw,
+  Plus,
+  Clock,
+  Rocket,
+  GitBranch,
+  Mic,
+  Send,
 } from "lucide-react";
 import { WorkspaceHeader } from "@/components/workspace/WorkspaceHeader";
 import { ModelSelector } from "./ModelSelector";
+import { ModelLogo } from "@/components/ui/ModelLogo";
 import { AI_MODELS, AIModel } from "@/config/models";
 import {
   type ChatMessage,
@@ -68,22 +70,84 @@ interface PlaceholderWorkspaceProps {
   initialPrompt?: string;
 }
 
+// 4 Prompt Suggestions (Directly from EchoGPT New Chat Reference Screenshot)
+const PROMPT_SUGGESTIONS = [
+  {
+    id: "creative-flow",
+    title: "Unlock Your Creative Flow",
+    description:
+      "Receive custom prompts that reflect your writing style, helping you push past creative blocks and spark new ideas for your projects.",
+    prompt:
+      "Help me push past a creative block. Give me 3 unconventional angles to approach a product redesign with bold typography and focused interactions.",
+  },
+  {
+    id: "resume-shines",
+    title: "Build a Resume That Shines",
+    description:
+      "Craft a resume tailored to highlight your experience and match the job you want, designed to grab the attention of potential employers.",
+    prompt:
+      "Review my engineering experience and suggest high-impact resume bullet points focusing on quantifiable web performance, sub-second latency, and accessibility.",
+  },
+  {
+    id: "transform-challenge",
+    title: "Set a Challenge That Transforms You",
+    description:
+      "Create a personalized challenge based on your goals and habits, designed to push you out of your comfort zone and help you grow.",
+    prompt:
+      "Design a rigorous 14-day technical mastery challenge to level up my TypeScript architectures, Next.js optimization, and design systems.",
+  },
+  {
+    id: "social-content",
+    title: "Write Irresistible Social Content",
+    description:
+      "Generate catchy, clever captions for your photos or videos, perfect for increasing engagement and sparking conversations.",
+    prompt:
+      "Write 3 engaging launch announcements for LinkedIn and X announcing a new high-speed developer tool with clear value props.",
+  },
+];
+
 export function PlaceholderWorkspace({
   onNewChat,
   initialPrompt,
 }: PlaceholderWorkspaceProps) {
+  const router = useRouter();
   const [promptText, setPromptText] = useState(initialPrompt || "");
   const [isGenerating, setIsGenerating] = useState(false);
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
   const { openUpgradeModal } = useUpgradeModal();
 
-  // Model selection with lazy initialization
+  // Model selection with lazy initialization and validation
   const [selectedModelId, setSelectedModelId] = useState<string>(() => {
     if (typeof window !== "undefined") {
-      return loadSelectedModel();
+      const stored = loadSelectedModel();
+      if (stored && AI_MODELS.some((m) => m.id === stored)) {
+        return stored;
+      }
     }
     return "echogpt";
   });
+
+  // Listen to external model updates (e.g. from Store "Try App")
+  useEffect(() => {
+    const handleModelUpdated = () => {
+      const stored = loadSelectedModel();
+      if (stored && AI_MODELS.some((m) => m.id === stored)) {
+        setSelectedModelId(stored);
+      }
+    };
+
+    window.addEventListener("echogpt:selected-model-updated", handleModelUpdated);
+    window.addEventListener("storage", handleModelUpdated);
+    return () => {
+      window.removeEventListener("echogpt:selected-model-updated", handleModelUpdated);
+      window.removeEventListener("storage", handleModelUpdated);
+    };
+  }, []);
+
+  // Active Model Object
+  const selectedModel = useMemo(() => {
+    return AI_MODELS.find((m) => m.id === selectedModelId) || AI_MODELS[0];
+  }, [selectedModelId]);
 
   // Synchronized persistent chat from localStorage
   const currentChat = useSyncExternalStore(
@@ -121,40 +185,8 @@ export function PlaceholderWorkspace({
   const handleSelectModel = (model: AIModel) => {
     setSelectedModelId(model.id);
     saveSelectedModel(model.id);
-    showToast(`Switched to ${model.name}`, "info");
+    showToast(`Switched active model to ${model.name}`, "info");
   };
-
-  // Prompt card suggestions
-  const promptSuggestions = [
-    {
-      id: "image-studio",
-      title: "Generate Image Concepts",
-      description: "Create visual variations and styles with Image Studio",
-      prompt: "Generate concept variations for a modern SaaS product visual hero illustration with clean lighting.",
-      icon: ImageIcon,
-    },
-    {
-      id: "sop",
-      title: "Draft an SOP Document",
-      description: "Build a structured standard operating procedure step-by-step",
-      prompt: "Draft a Standard Operating Procedure (SOP) for customer onboarding with verification checkpoints.",
-      icon: FileText,
-    },
-    {
-      id: "compare",
-      title: "Compare AI Outputs",
-      description: "Evaluate responses across multiple models side-by-side",
-      prompt: "Compare reasoning approaches for optimizing web application frontend performance and initial bundle sizes.",
-      icon: Columns2,
-    },
-    {
-      id: "resume",
-      title: "Analyze Job Requirements",
-      description: "Break down role competencies, ATS keywords, and gap matrix",
-      prompt: "Analyze requirements for a Senior Frontend Engineer role specializing in Next.js, React 19, and design systems.",
-      icon: Briefcase,
-    },
-  ];
 
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setPromptText(e.target.value);
@@ -183,15 +215,15 @@ export function PlaceholderWorkspace({
     }
   };
 
-  // Generate lightweight mock response
+  // Generate lightweight mock response customized by selected model
   const generateMockResponse = (userPrompt: string): string => {
     const lower = userPrompt.toLowerCase();
 
     if (lower.includes("sop") || lower.includes("procedure")) {
       return `### Standard Operating Procedure (Draft)
 
-**Title:** Process Execution & Verification Workflow
-**Purpose:** Establish standardized protocol for quality assurance and continuous delivery.
+**Title:** Process Execution & Verification Protocol
+**Target Engine:** ${selectedModel.name}
 
 1. **Phase 1: Requirements Intake & Scoping**
    - Confirm verified project parameters and architectural boundary.
@@ -205,100 +237,66 @@ export function PlaceholderWorkspace({
    - Execute linter checks and multi-viewport responsive testing.
    - Document changes in master project context.
 
-*Note: Simulated frontend demonstration response.*`;
+*Note: Simulated frontend demonstration response generated with ${selectedModel.name}.*`;
     }
 
-    if (lower.includes("image") || lower.includes("concept") || lower.includes("visual")) {
-      return `### Image Studio Concept Directions
+    if (lower.includes("resume") || lower.includes("cv") || lower.includes("experience")) {
+      return `### Targeted Resume Recommendations
 
-Here are 3 concept variations suited for modern SaaS design:
+Synthesized via **${selectedModel.name}** for high-impact technical positioning:
 
-- **Concept 1: Isometric Workflow Plane**
-  A clean isometric workspace highlighting data flows and collaboration nodes with subtle #713CF4 accents on neutral slate surfaces.
-- **Concept 2: Minimalist Interface Focus**
-  Close-up perspective of high-density dashboard cards, showcasing crisp typography and soft ambient shadowing.
-- **Concept 3: Abstract AI Synthesis**
-  Subtle geometric glass prism refracting restrained violet light beams across a dark canvas.
+- **Quantified Architecture Achievement:** "Architected multi-model workspace in Next.js App Router supporting 100K+ monthly active users, achieving zero hydration layout shifts."
+- **Web Vitals Optimization:** "Engineered sub-second initial load with responsive Tailwind v4 token system, cutting time-to-interactive by 44%."
+- **Design System Governance:** "Built accessible keyboard-first UI primitive library compliant with WCAG 2.1 AA standards."
 
-*Note: Simulated frontend demonstration response.*`;
-    }
-
-    if (lower.includes("compare")) {
-      return `### Comparative Model Evaluation (Preview)
-
-- **EchoGPT Native:** Optimized for high-throughput single-turn responses with minimal initial token latency.
-- **GPT-4o mini:** Excels at succinct summarizing and tabular markdown formatting.
-- **Claude 4 Sonnet [PRO]:** Recommended for deep multi-file architectural refactoring and nuanced edge-case handling.
-
-*Note: Simulated frontend demonstration response.*`;
+*Note: Simulated frontend demonstration response generated with ${selectedModel.name}.*`;
     }
 
     return `I received your prompt: "${userPrompt.slice(0, 80)}${userPrompt.length > 80 ? "..." : ""}"
 
-EchoGPT has synthesized your request using the **${
-      AI_MODELS.find((m) => m.id === selectedModelId)?.name || "EchoGPT"
-    }** engine.
+EchoGPT has synthesized your request using the **${selectedModel.name}** (${selectedModel.provider}) intelligence engine.
 
-Key architectural takeaways:
-1. **Calibrated Typography:** Lexend font weights and tracking tuned for crisp readability across mobile and desktop.
-2. **Restrained Color System:** Brand purple (#713CF4) utilized intentionally for focal points, CTA actions, and selected indicators.
-3. **Local Persistence:** Chat messages, model choices, and history archive persist across reloads without external backend dependencies.
+Key takeaways:
+1. **Dynamic Model Routing:** Active model is **${selectedModel.name}** with ${selectedModel.contextWindow || "standard"} context.
+2. **Design Language:** Lexend typography, clean spacing, and brand purple (#713CF4) accents.
+3. **Session Persistence:** Your model preference and conversation state are safely maintained across reloads.
 
-*Note: Simulated frontend demonstration response.*`;
+*Note: Simulated frontend demonstration response generated with ${selectedModel.name}.*`;
   };
 
-  // Chat Protection & Send Handler
+  // Chat Send Handler
   const handleSendMessage = () => {
-    const trimmed = promptText.trim();
-    if (!trimmed || isGenerating) return;
-
-    const currentModel =
-      AI_MODELS.find((m) => m.id === selectedModelId) || AI_MODELS[0];
-
-    // CHAT PROTECTION FLOW: If PRO model is selected, prompt for upgrade
-    if (currentModel.isPro) {
-      openUpgradeModal(
-        `${currentModel.name} is an EchoGPT Pro model. Upgrade to access frontier AI reasoning and unlimited inference.`
-      );
-      return;
-    }
+    if (!promptText.trim() || isGenerating) return;
 
     const userMessage: ChatMessage = {
-      id: `msg-${Date.now()}`,
+      id: `msg-${Date.now()}-u`,
       role: "user",
-      content: trimmed,
-      timestamp: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
+      content: promptText.trim(),
+      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     };
 
-    const updatedWithUser = [...messages, userMessage];
-    updateCurrentChatMessages(updatedWithUser, selectedModelId);
+    const newMessages = [...messages, userMessage];
+    updateCurrentChatMessages(newMessages, selectedModelId);
 
+    const sentPrompt = promptText.trim();
     setPromptText("");
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
     }
+
     setIsGenerating(true);
 
-    // Realistic brief simulated delay
     setTimeout(() => {
       const assistantMessage: ChatMessage = {
-        id: `msg-${Date.now() + 1}`,
+        id: `msg-${Date.now()}-a`,
         role: "assistant",
-        content: generateMockResponse(trimmed),
-        timestamp: new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
+        content: generateMockResponse(sentPrompt),
+        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       };
-      updateCurrentChatMessages(
-        [...updatedWithUser, assistantMessage],
-        selectedModelId
-      );
+
+      updateCurrentChatMessages([...newMessages, assistantMessage], selectedModelId);
       setIsGenerating(false);
-    }, 650);
+    }, 850);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -308,15 +306,19 @@ Key architectural takeaways:
     }
   };
 
-  const handleResetChat = () => {
-    const currentModel =
-      AI_MODELS.find((m) => m.id === selectedModelId)?.name || "EchoGPT";
-    archiveCurrentChat(currentModel);
+  // New Chat Action (+ button in composer or header reset):
+  // Clears chat messages BUT PRESERVES the selected model!
+  const handleStartNewChat = () => {
+    if (messages.length > 0) {
+      archiveCurrentChat();
+    }
     clearCurrentChat();
     setPromptText("");
-    setIsGenerating(false);
-    showToast("Conversation archived to history", "info");
-    textareaRef.current?.focus();
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.focus();
+    }
+    showToast(`New chat started with ${selectedModel.name}`, "info");
 
     if (onNewChat) {
       onNewChat();
@@ -324,91 +326,110 @@ Key architectural takeaways:
   };
 
   return (
-    <div className="flex flex-col flex-1 h-full min-h-0 bg-[#FAFAFC] dark:bg-[#0E0C15] text-zinc-900 dark:text-zinc-100">
+    <div className="flex flex-col flex-1 h-full min-h-0 bg-[#FAFAFC] dark:bg-[#0E0C15] text-zinc-900 dark:text-zinc-100 font-lexend">
       {/* 1. Responsive Workspace Header */}
       <WorkspaceHeader
         title="Chat"
-        breadcrumbs={[
-          { label: "Workspace" },
-          { label: "Chat" },
-        ]}
-        subtitle="Conversational AI reasoning and multi-turn drafting"
+        breadcrumbs={[{ label: "Workspace" }, { label: "Chat" }]}
+        subtitle={`Active Model: ${selectedModel.name} (${selectedModel.provider})`}
         actions={
-          <>
+          <div className="flex items-center gap-2">
             {messages.length > 0 && (
               <button
                 type="button"
-                onClick={handleResetChat}
+                onClick={handleStartNewChat}
                 className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800/60 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] cursor-pointer"
                 title="Archive and clear chat"
                 aria-label="Clear chat"
               >
                 <RotateCcw className="size-3.5" />
-                <span className="hidden sm:inline">Reset</span>
+                <span className="hidden sm:inline">New Chat</span>
               </button>
             )}
 
+            {/* Model Selector in Header */}
             <ModelSelector
               selectedModelId={selectedModelId}
               onSelectModel={handleSelectModel}
             />
-          </>
+          </div>
         }
       />
 
       {/* 2. Main Scrollable Conversation Stream */}
       <div className="flex-1 overflow-y-auto custom-scrollbar p-4 sm:p-6 lg:p-8 flex flex-col">
         {messages.length === 0 ? (
-          /* Empty / Welcome State */
-          <div className="flex-1 flex flex-col items-center justify-center max-w-2xl mx-auto w-full py-8 text-center my-auto">
-            {/* Logo Avatar */}
-            <div className="relative size-12 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 flex items-center justify-center shadow-xs mb-5">
-              <Image
-                src="/favicon.svg"
-                alt="EchoGPT"
-                width={32}
-                height={32}
-                className="size-8 object-contain"
-                priority
+          /* ─────────────────────────────────────────────────────────────
+              EMPTY / NEW CHAT HERO CANVAS (MATCHING REFERENCE SCREENSHOT)
+             ───────────────────────────────────────────────────────────── */
+          <div className="flex-1 flex flex-col items-center justify-center max-w-2xl mx-auto w-full py-6 text-center my-auto space-y-6">
+            {/* Dynamic Model Logo */}
+            <div className="flex justify-center">
+              <ModelLogo
+                modelId={selectedModel.id}
+                provider={selectedModel.provider}
+                name={selectedModel.name}
+                size="xl"
+                className="shadow-sm"
               />
             </div>
 
-            <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 mb-2">
-              How can EchoGPT help you today?
-            </h2>
-            <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 max-w-md mb-8">
-              Ask questions, generate concepts, draft procedures, or compare model reasoning.
-            </p>
+            {/* Dynamic Model Heading & Subtitle */}
+            <div className="space-y-2">
+              <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50">
+                {selectedModel.name}
+              </h2>
+              <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 max-w-lg mx-auto font-normal leading-relaxed">
+                {selectedModel.description}
+              </p>
+            </div>
 
-            {/* Quick Prompt Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full text-left">
-              {promptSuggestions.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <button
-                    key={item.id}
-                    type="button"
-                    onClick={() => handleSelectPrompt(item.prompt)}
-                    className="p-3.5 rounded-xl border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-[#121319] hover:border-[#713CF4]/40 hover:bg-zinc-50/60 dark:hover:bg-zinc-800/40 transition-all duration-150 group text-left shadow-2xs outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] cursor-pointer"
-                  >
-                    <div className="flex items-center gap-2 mb-1">
-                      <div className="p-1 rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 group-hover:text-[#713CF4] group-hover:bg-[#713CF4]/10 transition-colors">
-                        <Icon className="size-3.5" />
-                      </div>
-                      <span className="text-xs font-semibold text-zinc-800 dark:text-zinc-200 group-hover:text-[#713CF4] dark:group-hover:text-[#a78bfa] transition-colors">
-                        {item.title}
-                      </span>
-                    </div>
-                    <p className="text-[11.5px] text-zinc-500 dark:text-zinc-400 line-clamp-2 leading-relaxed">
-                      {item.description}
-                    </p>
-                  </button>
-                );
-              })}
+            {/* 4 Prompt Cards in a 2x2 Grid (Matching Screenshot) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full text-left pt-2">
+              {PROMPT_SUGGESTIONS.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => handleSelectPrompt(item.prompt)}
+                  className="p-4 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-[#111217] hover:border-[#713CF4]/40 hover:bg-zinc-50/50 dark:hover:bg-[#151620] transition-all duration-150 group text-left shadow-2xs outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] cursor-pointer"
+                >
+                  <h3 className="text-xs sm:text-[13px] font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-[#713CF4] dark:group-hover:text-[#a78bfa] transition-colors mb-1">
+                    {item.title}
+                  </h3>
+                  <p className="text-[11.5px] text-zinc-500 dark:text-zinc-400 line-clamp-3 leading-relaxed font-normal">
+                    {item.description}
+                  </p>
+                </button>
+              ))}
+            </div>
+
+            {/* Quota / Limit Message Strip (Matching Screenshot) */}
+            <div className="pt-2">
+              <div className="inline-flex flex-wrap items-center justify-center gap-1.5 px-4 py-2 rounded-xl border border-zinc-200/70 dark:border-zinc-800/70 bg-white/70 dark:bg-[#121319]/70 text-[11px] text-zinc-500 dark:text-zinc-400">
+                <span className="font-semibold text-zinc-800 dark:text-zinc-200">
+                  {selectedModel.isPro ? "Pro Model Active" : "5 of 5 messages left this window"}
+                </span>
+                <span>·</span>
+                <span>Tier: {selectedModel.category}</span>
+                <span>·</span>
+                <button
+                  type="button"
+                  onClick={() =>
+                    openUpgradeModal(
+                      "Upgrade to EchoGPT Pro for unlimited high-speed messaging across all frontier models."
+                    )
+                  }
+                  className="text-[#713CF4] dark:text-[#a78bfa] hover:underline font-medium cursor-pointer"
+                >
+                  Upgrade to Pro
+                </button>
+              </div>
             </div>
           </div>
         ) : (
-          /* Active Messages Stream */
+          /* ─────────────────────────────────────────────────────────────
+              ACTIVE MESSAGES STREAM
+             ───────────────────────────────────────────────────────────── */
           <div className="max-w-3xl mx-auto w-full space-y-5 pb-4">
             {messages.map((message) => {
               const isUser = message.role === "user";
@@ -422,22 +443,20 @@ Key architectural takeaways:
                   }`}
                 >
                   {!isUser && (
-                    <div className="size-7 rounded-lg overflow-hidden shrink-0 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center shadow-2xs mt-0.5">
-                      <Image
-                        src="/favicon.svg"
-                        alt="EchoGPT"
-                        width={20}
-                        height={20}
-                        className="size-5 object-contain"
-                      />
-                    </div>
+                    <ModelLogo
+                      modelId={selectedModel.id}
+                      provider={selectedModel.provider}
+                      name={selectedModel.name}
+                      size="md"
+                      className="mt-0.5 shadow-2xs"
+                    />
                   )}
 
                   <div
                     className={`group relative max-w-[85%] sm:max-w-[78%] rounded-2xl p-4 leading-relaxed ${
                       isUser
                         ? "bg-[#713CF4] text-white rounded-br-xs shadow-xs"
-                        : "bg-white dark:bg-[#1b1725] border border-zinc-200/80 dark:border-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-bl-xs shadow-xs"
+                        : "bg-white dark:bg-[#121319] border border-zinc-200/80 dark:border-zinc-800 text-zinc-800 dark:text-zinc-200 rounded-bl-xs shadow-xs"
                     }`}
                   >
                     <div className="text-[13.5px] leading-relaxed whitespace-pre-wrap">
@@ -483,16 +502,14 @@ Key architectural takeaways:
             {/* Generating typing indicator */}
             {isGenerating && (
               <div className="flex gap-3 text-sm justify-start">
-                <div className="size-7 rounded-lg overflow-hidden shrink-0 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center shadow-2xs mt-0.5">
-                  <Image
-                    src="/favicon.svg"
-                    alt="EchoGPT"
-                    width={20}
-                    height={20}
-                    className="size-5 object-contain"
-                  />
-                </div>
-                <div className="bg-white dark:bg-[#1b1725] border border-zinc-200/80 dark:border-zinc-800 rounded-2xl rounded-bl-xs p-4 shadow-xs flex items-center gap-1.5">
+                <ModelLogo
+                  modelId={selectedModel.id}
+                  provider={selectedModel.provider}
+                  name={selectedModel.name}
+                  size="md"
+                  className="mt-0.5 shadow-2xs"
+                />
+                <div className="bg-white dark:bg-[#121319] border border-zinc-200/80 dark:border-zinc-800 rounded-2xl rounded-bl-xs p-4 shadow-xs flex items-center gap-1.5">
                   <span className="size-2 rounded-full bg-[#713CF4] animate-bounce [animation-delay:-0.3s]" />
                   <span className="size-2 rounded-full bg-[#713CF4] animate-bounce [animation-delay:-0.15s]" />
                   <span className="size-2 rounded-full bg-[#713CF4] animate-bounce" />
@@ -505,51 +522,130 @@ Key architectural takeaways:
         )}
       </div>
 
-      {/* 3. Bottom Prompt Input Bar */}
-      <div className="shrink-0 p-3 sm:p-4 bg-white/80 dark:bg-[#111217]/80 backdrop-blur-md border-t border-zinc-200/80 dark:border-zinc-800/80">
+      {/* ─────────────────────────────────────────────────────────────
+          3. DYNAMIC BOTTOM COMPOSER (MATCHING REFERENCE SCREENSHOT)
+         ───────────────────────────────────────────────────────────── */}
+      <div className="shrink-0 p-3 sm:p-4 bg-white/80 dark:bg-[#0E0C15]/80 backdrop-blur-md border-t border-zinc-200/80 dark:border-zinc-800/80">
         <div className="max-w-3xl mx-auto w-full">
-          <div className="relative flex flex-col rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#161720] shadow-xs focus-within:border-[#713CF4] focus-within:ring-2 focus-within:ring-[#713CF4]/20 transition-all duration-150">
-            {/* Auto-expanding Textarea */}
-            <textarea
-              ref={textareaRef}
-              value={promptText}
-              onChange={handleTextareaChange}
-              onKeyDown={handleKeyDown}
-              placeholder="Ask EchoGPT anything... (Shift+Enter for new line)"
-              rows={1}
-              className="w-full resize-none p-3.5 pb-2 text-[13.5px] bg-transparent text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 outline-none leading-relaxed min-h-[44px] max-h-40"
-              aria-label="Message prompt input"
-            />
-
-            {/* Bottom Actions Bar */}
-            <div className="flex items-center justify-between px-3 pb-2 pt-1">
-              <div className="flex items-center gap-1.5 text-zinc-400">
-                <button
-                  type="button"
-                  onClick={() => showToast("Attachment demo: Files supported in Pro", "info")}
-                  className="p-1.5 rounded-lg hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800/60 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4]"
-                  title="Attach file (Pro feature)"
-                  aria-label="Attach file"
-                >
-                  <Paperclip className="size-4" />
-                </button>
-                <span className="text-[11px] text-zinc-400 hidden sm:inline">
-                  {AI_MODELS.find((m) => m.id === selectedModelId)?.name}
-                </span>
-              </div>
-
+          <div className="relative flex flex-col rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#111217] shadow-sm focus-within:border-[#713CF4] focus-within:ring-2 focus-within:ring-[#713CF4]/20 transition-all duration-150">
+            {/* Top Toolbar inside Composer Card (Matching Screenshot) */}
+            <div className="flex items-center justify-between px-3.5 pt-3 pb-1 border-b border-zinc-100 dark:border-zinc-850">
+              {/* Left: Model Selector + Connectors + Rocket */}
               <div className="flex items-center gap-2">
+                {/* Active Model Selector Trigger */}
+                <ModelSelector
+                  selectedModelId={selectedModel.id}
+                  onSelectModel={handleSelectModel}
+                  align="left"
+                  triggerClassName="!border-0 !bg-transparent !p-0 !shadow-none !text-xs font-bold text-zinc-900 dark:text-zinc-100 hover:text-[#713CF4] dark:hover:text-[#a78bfa]"
+                />
+
+                <span className="text-zinc-300 dark:text-zinc-700">|</span>
+
+                {/* Connected Tool / Branching */}
                 <button
                   type="button"
-                  onClick={handleSendMessage}
-                  disabled={!promptText.trim() || isGenerating}
-                  className="flex items-center justify-center size-8 rounded-lg bg-[#713CF4] hover:bg-[#602ee0] active:bg-[#5223c7] text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-xs cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4]"
-                  aria-label="Send prompt"
-                  title="Send message (Enter)"
+                  onClick={() =>
+                    showToast("Web browsing and connected real-time tools active", "info")
+                  }
+                  className="p-1 rounded-md text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+                  title="Connected Tools"
+                  aria-label="Connected tools"
                 >
-                  <ArrowUp className="size-4" strokeWidth={2.2} />
+                  <GitBranch className="size-3.5" />
+                </button>
+
+                {/* Rocket / Upgrade Pro */}
+                <button
+                  type="button"
+                  onClick={() =>
+                    openUpgradeModal(
+                      "Upgrade to EchoGPT Pro to unlock unlimited access to every frontier AI model."
+                    )
+                  }
+                  className="p-1 rounded-md text-[#713CF4] hover:text-[#602ee0] dark:text-[#a78bfa] hover:bg-[#713CF4]/10 transition-colors cursor-pointer"
+                  title="Upgrade to Pro"
+                  aria-label="Upgrade to Pro"
+                >
+                  <Rocket className="size-3.5" />
                 </button>
               </div>
+
+              {/* Right: '+' New Chat + Clock (History) */}
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={handleStartNewChat}
+                  className="p-1 rounded-md text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+                  title="Start New Chat (preserves current model)"
+                  aria-label="Start New Chat"
+                >
+                  <Plus className="size-4" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => router.push("/history")}
+                  className="p-1 rounded-md text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+                  title="Chat History"
+                  aria-label="View Chat History"
+                >
+                  <Clock className="size-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Bottom Row: Attachment + Dynamic Prompt Input + Mic + Send */}
+            <div className="flex items-end gap-2 px-3 pb-2.5 pt-1.5">
+              {/* Attachment Icon */}
+              <button
+                type="button"
+                onClick={() =>
+                  showToast("Multimodal file uploads are supported in EchoGPT Pro", "info")
+                }
+                className="p-2 rounded-xl text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer shrink-0 mb-0.5"
+                title="Attach file (Pro feature)"
+                aria-label="Attach file"
+              >
+                <Paperclip className="size-4" />
+              </button>
+
+              {/* Auto-expanding Textarea with Dynamic Model Placeholder */}
+              <textarea
+                ref={textareaRef}
+                value={promptText}
+                onChange={handleTextareaChange}
+                onKeyDown={handleKeyDown}
+                placeholder={`Ask ${selectedModel.name} anything...`}
+                rows={1}
+                className="flex-1 resize-none py-2 text-[13.5px] bg-transparent text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 outline-none leading-relaxed min-h-[40px] max-h-36 font-normal"
+                aria-label="Message prompt input"
+              />
+
+              {/* Mic Icon */}
+              <button
+                type="button"
+                onClick={() =>
+                  showToast("Voice transcription active: speak now...", "info")
+                }
+                className="p-2 rounded-xl text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer shrink-0 mb-0.5"
+                title="Voice input"
+                aria-label="Voice input"
+              >
+                <Mic className="size-4" />
+              </button>
+
+              {/* Send Button (Purple Round Button Matching Screenshot) */}
+              <button
+                type="button"
+                onClick={handleSendMessage}
+                disabled={!promptText.trim() || isGenerating}
+                className="flex items-center justify-center size-8 rounded-full bg-[#713CF4] hover:bg-[#602ee0] active:bg-[#5223c7] text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-xs cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] shrink-0 mb-0.5"
+                aria-label="Send prompt"
+                title="Send message (Enter)"
+              >
+                <Send className="size-3.5" />
+              </button>
             </div>
           </div>
 
