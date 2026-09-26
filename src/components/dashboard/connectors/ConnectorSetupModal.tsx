@@ -1,0 +1,343 @@
+"use client";
+
+import React, { useState } from "react";
+import { Sparkles, ShieldAlert, Loader2, Zap } from "lucide-react";
+import { Modal } from "@/components/ui/Modal";
+import { Button } from "@/components/ui/Button";
+import { useConnectors } from "@/context/ConnectorContext";
+import { useUpgradeModal } from "@/context/UpgradeModalContext";
+import { showToast } from "@/components/ui/Toast";
+import { DEMO_PRESETS } from "@/lib/mockMcpService";
+
+interface ConnectorSetupModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSuccess?: () => void;
+}
+
+export function ConnectorSetupModal({
+  isOpen,
+  onClose,
+  onSuccess,
+}: ConnectorSetupModalProps) {
+  const { addConnector, canAddMore, connectedCount, quotaLimit } = useConnectors();
+  const { openUpgradeModal, isProUser } = useUpgradeModal();
+
+  const [name, setName] = useState("");
+  const [serverUrl, setServerUrl] = useState("");
+  const [authHeader, setAuthHeader] = useState("");
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadingPhase, setLoadingPhase] = useState("");
+
+  const resetForm = () => {
+    setName("");
+    setServerUrl("");
+    setAuthHeader("");
+    setErrors({});
+    setIsLoading(false);
+    setLoadingPhase("");
+  };
+
+  const handleClose = () => {
+    resetForm();
+    onClose();
+  };
+
+  const applyPreset = (preset: (typeof DEMO_PRESETS)[0]) => {
+    setName(preset.name);
+    setServerUrl(preset.serverUrl);
+    setAuthHeader("Bearer demo_token_secret_123");
+    setErrors({});
+  };
+
+  const applyFailurePreset = () => {
+    setName("Faulty Endpoint Demo");
+    setServerUrl("https://mcp.failure-test.com/v1");
+    setAuthHeader("Bearer test_fail");
+    setErrors({});
+  };
+
+  const validate = (): boolean => {
+    const newErrors: Record<string, string> = {};
+
+    if (!name.trim()) {
+      newErrors.name = "Connector name is required.";
+    } else if (name.trim().length < 2) {
+      newErrors.name = "Name must be at least 2 characters.";
+    }
+
+    if (!serverUrl.trim()) {
+      newErrors.serverUrl = "MCP server URL is required.";
+    } else {
+      try {
+        const url = new URL(serverUrl.trim());
+        if (url.protocol !== "https:") {
+          newErrors.serverUrl = "Enter a valid HTTPS MCP server URL (http:// is not permitted).";
+        }
+      } catch {
+        newErrors.serverUrl = "Enter a valid HTTPS MCP server URL (e.g. https://mcp.example.com/mcp).";
+      }
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Check quota for Free tier
+    if (!canAddMore) {
+      openUpgradeModal(
+        "Free tier includes 1 active MCP connector. Upgrade to EchoGPT Pro for unlimited tool connectors."
+      );
+      return;
+    }
+
+    if (!validate()) return;
+
+    setIsLoading(true);
+    setLoadingPhase("Connecting to MCP server endpoint...");
+
+    setTimeout(() => {
+      setLoadingPhase("Discovering available tools & permissions schema...");
+    }, 350);
+
+    const result = await addConnector({
+      name,
+      serverUrl,
+      authorizationHeader: authHeader,
+    });
+
+    setIsLoading(false);
+
+    if (result.success && result.connector) {
+      showToast(`Connected "${result.connector.name}" (${result.connector.tools.length} tools discovered)`, "success");
+      handleClose();
+      onSuccess?.();
+    } else {
+      showToast(result.error || "Connection failed. Please check the server endpoint.", "error");
+      handleClose();
+      onSuccess?.();
+    }
+  };
+
+  return (
+    <Modal
+      isOpen={isOpen}
+      onClose={handleClose}
+      maxWidth="lg"
+      bodyClassName="p-0"
+    >
+      <div className="flex flex-col max-h-[90vh]">
+        {/* Modal Header (Matching Screenshot 2 & 4) */}
+        <div className="p-5 sm:p-6 border-b border-zinc-100 dark:border-white/[0.08] bg-zinc-50/60 dark:bg-white/[0.02]">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-50">
+                Add custom connector
+              </h3>
+              <p className="text-xs sm:text-[13px] text-zinc-500 dark:text-zinc-400 mt-1">
+                Connect an MCP server and its tools become available while you chat.
+              </p>
+            </div>
+
+            {/* Quota Badge */}
+            <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-zinc-100 dark:bg-white/[0.06] text-zinc-600 dark:text-zinc-300 border border-zinc-200 dark:border-white/[0.08] shrink-0">
+              {isProUser ? "Unlimited Pro" : `${connectedCount} of ${quotaLimit} connected`}
+            </span>
+          </div>
+        </div>
+
+        {/* Form Body */}
+        <form onSubmit={handleSubmit} className="overflow-y-auto custom-scrollbar p-5 sm:p-6 space-y-4.5">
+          {/* Free Tier Quota Alert if at limit */}
+          {!canAddMore && (
+            <div className="p-4 rounded-xl bg-amber-50/80 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/40 text-amber-800 dark:text-amber-300 text-xs flex items-start gap-2.5">
+              <Sparkles className="size-4 shrink-0 text-[#713CF4] mt-0.5" />
+              <div className="space-y-1">
+                <p className="font-semibold">Connector Limit Reached (Free Tier)</p>
+                <p className="text-amber-700 dark:text-amber-400 leading-relaxed">
+                  Your Free plan includes 1 active MCP connector. Upgrade to EchoGPT Pro to connect unlimited external tools and private APIs.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => openUpgradeModal("Upgrade to EchoGPT Pro to unlock unlimited MCP connectors.")}
+                  className="mt-1 font-semibold text-[#713CF4] dark:text-[#a78bfa] hover:underline cursor-pointer"
+                >
+                  Upgrade to Pro →
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Quick Demo Presets Strip */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-semibold text-zinc-700 dark:text-zinc-300 flex items-center gap-1">
+                <Zap className="size-3 text-[#713CF4]" />
+                <span>Quick-Fill Demo Presets:</span>
+              </span>
+              <span className="text-[11px] text-zinc-400">1-click test data</span>
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {DEMO_PRESETS.map((preset) => (
+                <button
+                  key={preset.id}
+                  type="button"
+                  onClick={() => applyPreset(preset)}
+                  className="px-2.5 py-1 rounded-lg text-xs font-medium bg-zinc-100 hover:bg-zinc-200/70 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-zinc-700 dark:text-zinc-300 border border-zinc-200/80 dark:border-white/[0.08] transition-colors cursor-pointer"
+                >
+                  {preset.name}
+                </button>
+              ))}
+              <button
+                type="button"
+                onClick={applyFailurePreset}
+                className="px-2.5 py-1 rounded-lg text-xs font-medium bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/20 dark:hover:bg-rose-950/40 text-rose-600 dark:text-rose-400 border border-rose-200/60 dark:border-rose-900/40 transition-colors cursor-pointer"
+                title="Test simulated error & retry workflow"
+              >
+                Test Failure
+              </button>
+            </div>
+          </div>
+
+          {/* Field 1: Connector Name */}
+          <div className="space-y-1.5">
+            <label
+              htmlFor="connector-name"
+              className="block text-xs font-medium text-zinc-700 dark:text-zinc-300"
+            >
+              Name — shown in the connectors list <span className="text-rose-500">*</span>
+            </label>
+            <input
+              id="connector-name"
+              type="text"
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value);
+                if (errors.name) setErrors((prev) => ({ ...prev, name: "" }));
+              }}
+              placeholder="e.g. GitHub Tools"
+              disabled={isLoading}
+              className={`w-full text-xs sm:text-sm px-3.5 py-2.5 rounded-xl bg-white dark:bg-[#181524] border ${
+                errors.name
+                  ? "border-rose-500 focus:border-rose-500"
+                  : "border-zinc-200 dark:border-white/[0.08] focus:border-[#713CF4]"
+              } text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 outline-none focus:ring-1 focus:ring-[#713CF4] transition-all`}
+            />
+            {errors.name ? (
+              <p className="text-[11px] text-rose-500">{errors.name}</p>
+            ) : (
+              <p className="text-[11px] text-zinc-400 dark:text-zinc-500">
+                Give this connection a recognizable name.
+              </p>
+            )}
+          </div>
+
+          {/* Field 2: MCP Server URL */}
+          <div className="space-y-1.5">
+            <label
+              htmlFor="server-url"
+              className="block text-xs font-medium text-zinc-700 dark:text-zinc-300"
+            >
+              MCP server URL <span className="text-rose-500">*</span>
+            </label>
+            <input
+              id="server-url"
+              type="text"
+              value={serverUrl}
+              onChange={(e) => {
+                setServerUrl(e.target.value);
+                if (errors.serverUrl) setErrors((prev) => ({ ...prev, serverUrl: "" }));
+              }}
+              placeholder="https://mcp.example.com/mcp"
+              disabled={isLoading}
+              className={`w-full text-xs sm:text-sm px-3.5 py-2.5 rounded-xl bg-white dark:bg-[#181524] border ${
+                errors.serverUrl
+                  ? "border-rose-500 focus:border-rose-500"
+                  : "border-zinc-200 dark:border-white/[0.08] focus:border-[#713CF4]"
+              } text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 outline-none focus:ring-1 focus:ring-[#713CF4] transition-all font-mono`}
+            />
+            {errors.serverUrl ? (
+              <p className="text-[11px] text-rose-500">{errors.serverUrl}</p>
+            ) : (
+              <p className="text-[11px] text-zinc-400 dark:text-zinc-500">
+                The HTTPS address where the server accepts MCP requests.
+              </p>
+            )}
+          </div>
+
+          {/* Field 3: Authorization Header (Optional) */}
+          <div className="space-y-1.5">
+            <label
+              htmlFor="auth-header"
+              className="block text-xs font-medium text-zinc-700 dark:text-zinc-300"
+            >
+              Authorization header (optional)
+            </label>
+            <input
+              id="auth-header"
+              type="password"
+              value={authHeader}
+              onChange={(e) => setAuthHeader(e.target.value)}
+              placeholder="Bearer your-token-here"
+              disabled={isLoading}
+              className="w-full text-xs sm:text-sm px-3.5 py-2.5 rounded-xl bg-white dark:bg-[#181524] border border-zinc-200 dark:border-white/[0.08] text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 outline-none focus:border-[#713CF4] focus:ring-1 focus:ring-[#713CF4] transition-all font-mono"
+            />
+            <p className="text-[11px] text-zinc-400 dark:text-zinc-500">
+              Use this only if the MCP server requires authentication. Secret tokens are never shown or logged.
+            </p>
+          </div>
+
+          {/* Loading Indicator State */}
+          {isLoading && (
+            <div className="p-3.5 rounded-xl bg-[#713CF4]/10 border border-[#713CF4]/20 flex items-center gap-3 animate-in fade-in duration-150">
+              <Loader2 className="size-4 text-[#713CF4] animate-spin shrink-0" />
+              <div className="text-xs text-[#713CF4] dark:text-[#a78bfa] font-medium">
+                {loadingPhase}
+              </div>
+            </div>
+          )}
+
+          {/* Security Note (Matching Screenshot 2 & 4) */}
+          <div className="p-3 rounded-xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/60 dark:border-white/[0.06] text-xs text-zinc-500 dark:text-zinc-400 flex items-start gap-2">
+            <ShieldAlert className="size-4 shrink-0 text-amber-500 mt-0.5" />
+            <p className="leading-relaxed">
+              Only connect servers you trust — their tools can act on your behalf.
+            </p>
+          </div>
+
+          <div className="text-[11px] text-zinc-400 dark:text-zinc-500 italic">
+            Demo connector — MCP handshake and tool discovery are simulated in this frontend demo environment.
+          </div>
+        </form>
+
+        {/* Modal Actions Footer */}
+        <div className="p-4 sm:p-5 border-t border-zinc-100 dark:border-white/[0.08] bg-zinc-50/60 dark:bg-white/[0.02] flex items-center justify-end gap-3">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={handleClose}
+            disabled={isLoading}
+          >
+            Cancel
+          </Button>
+
+          <Button
+            type="button"
+            variant="primary"
+            size="md"
+            onClick={handleSubmit}
+            isLoading={isLoading}
+            className="px-5 font-semibold shadow-md shadow-[#713CF4]/20"
+          >
+            Continue
+          </Button>
+        </div>
+      </div>
+    </Modal>
+  );
+}
