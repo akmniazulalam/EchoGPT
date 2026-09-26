@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { AIModel, AI_MODELS } from "@/config/models";
 import { Badge } from "@/components/ui/Badge";
+import { ModelLogo } from "@/components/ui/ModelLogo";
 import { useUpgradeModal } from "@/context/UpgradeModalContext";
 
 export interface ModelSelectorProps {
@@ -201,7 +202,16 @@ export function ModelSelector({
         aria-haspopup="listbox"
         aria-expanded={isOpen}
       >
-        {triggerIcon || (
+        {triggerIcon ? (
+          triggerIcon
+        ) : !multiSelect ? (
+          <ModelLogo
+            modelId={selectedModel.id}
+            provider={selectedModel.provider}
+            name={selectedModel.name}
+            size="xs"
+          />
+        ) : (
           <SlidersHorizontal className="size-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
         )}
 
@@ -314,6 +324,13 @@ export function ModelSelector({
                               : "hover:bg-zinc-100 dark:hover:bg-zinc-800/60 text-zinc-700 dark:text-zinc-300 border border-transparent"
                           }`}
                         >
+                          <ModelLogo
+                            modelId={model.id}
+                            provider={model.provider}
+                            name={model.name}
+                            size="sm"
+                            className="mt-0.5"
+                          />
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-1.5 flex-wrap">
                               <span
