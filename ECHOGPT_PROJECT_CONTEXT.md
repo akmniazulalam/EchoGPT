@@ -1482,10 +1482,92 @@ The original EchoGPT reference screenshots (`media_1790417263993.png` and `media
 
 ---
 
+## Milestone 4.zd — Conversation Architecture, Model Isolation, History & Pro Upgrade Flow
+
+### Completed: 2026-09-26 ✓
+
+#### What Was Fixed & Implemented
+
+**1. Root Cause Analysis of Previous State Leakage**
+- Previously, `CURRENT_CHAT_KEY` stored a single active chat object globally in localStorage. When a user changed models in `ModelSelector` or clicked "Try App" from Store, only `selectedModelId` changed, leaving the previous model's messages visible on screen.
+- When messages were appended, the old messages were combined with the new model, corrupting conversation history.
+- On app restart or browser reload, `/chat` automatically restored the old conversation rather than starting with a fresh session.
+
+**2. New Conversation Architecture (`src/lib/chatStorage.ts`)**
+- Decoupled `conversationId` completely from `modelId`:
+  - `selectedModelId`: controls the active AI model engine for new turns/sessions.
+  - `activeConversationId`: unique session identity (`conv-${timestamp}-${rand}`).
+  - `messages[]`: strictly scoped to that `conversationId`.
+- Added `generateConversationId()`, `deriveConversationTitle(firstPrompt)`, `upsertHistoryConversation(item)`, `getConversationById(id)`.
+- **Immediate History Persistence**: As soon as the first user message is sent, the conversation is immediately created and saved in History with a clean deterministic title (e.g. "Explain Docker volumes") derived from the user prompt. Assistant replies update the same record immediately.
+
+**3. Strict Model Isolation & New Chat Flow**
+- Whenever the model is changed via `ModelSelector` or Store "Try App":
+  - A brand new `conversationId` is generated.
+  - Visible messages are set to `[]`.
+  - The previous conversation remains fully intact in History.
+  - Input, attachments, voice, and generation states are reset.
+- Every New Chat action (Composer `+`, Sidebar "New Chat", Header reset button, Keyboard shortcut Ctrl+Shift+K, History "New Chat"):
+  - Generates a fresh `conversationId`.
+  - Clears `messages` to `[]`.
+  - Preserves the currently selected model.
+  - Does NOT load or leak previous messages.
+- Multiple chats with the SAME model (e.g. Claude Chat #1 and Claude Chat #2) have unique conversation IDs and appear as separate entries in History.
+
+**4. App Startup & Browser Reload Behavior**
+- Visiting `/chat` directly without URL parameters always starts with a fresh empty chat session. It does NOT automatically resume the previous conversation.
+- History remains fully accessible under `/history`.
+- Opening a historical conversation: User clicks an item in History → navigates to `/chat?c=${item.id}`. The specific conversation and its stored model are restored cleanly.
+- When chatting, `window.history.replaceState(null, "", '/chat?c=' + currentId)` ensures that if a user manually refreshes their active chat, it reloads that specific in-progress conversation.
+
+**5. Asynchronous Response Isolation**
+- When a user sends a prompt, the target conversation ID (`targetConvId`) is captured in closure.
+- When the 850ms mock AI response resolves, it persists the assistant message to `targetConvId` in History.
+- If the user switched models or started a new chat during that 850ms, the response is saved in History for the original conversation, but NEVER leaks into the newly active conversation.
+
+**6. History Page Model Logos (`src/components/dashboard/HistoryWorkspace.tsx`)**
+- Replaced generic lucide icons with `ModelLogo` for every history item.
+- Every History card renders `ModelLogo` using its OWN stored `item.modelId` (e.g. Claude displays Anthropic star, DeepSeek displays DeepSeek wave, Gemini displays Google star), NOT the currently selected active model.
+- Clicking an archived session navigates to `/chat?c=${item.id}` to restore that exact conversation.
+
+**7. Professional Pro Upgrade Flow (`UpgradeProModal.tsx` & `UpgradeModalContext.tsx`)**
+- Replaced fake "Upgrade successful" toast loop with a professional 2-step checkout flow matching the EchoGPT product structure:
+  - **Step 1: Plan & Features Showcase**: Billing period tabs (Monthly, Quarterly, Semi-Annual, Annual), included models grid, categorized premium features. Clicking "Continue to Payment" proceeds to Step 2.
+  - **Step 2: Choose Payment Method**:
+    - **Secure International Payments**: Credit/Debit Cards (Visa, Mastercard, Amex, PayPal, Apple Pay via Stripe).
+    - **Pay in BDT**: Local Mobile Banking (bKash, Nagad, Rocket, Upay, Bangladeshi Bank Cards via SSLCommerz).
+    - Clear, honest **Frontend Demo Environment** notice explaining that local demo Pro mode will be enabled without charging real funds.
+- **Local Demo Pro State**:
+  - Clicking "Complete Demo Upgrade" sets `isProUser = true` in `localStorage` (`echogpt:is-demo-pro`) and updates application state via `useSyncExternalStore`.
+  - Unlocks all 36+ frontier models in `ModelSelector` without upgrade modals.
+  - Unlocks real mock file attachment in Composer (native file picker + chip preview).
+  - Updates Composer rocket icon to "EchoGPT Pro Active".
+  - Updates Quota bar to "✦ EchoGPT Pro Active · Unlimited frontier reasoning".
+  - Updates Sidebar `UpgradeCard` to "EchoGPT Pro Active" with "Manage Plan" CTA.
+  - Provides a "Reset Demo to Free Tier" button in the modal so testers can re-evaluate the upgrade flow anytime.
+
+#### Verification Results (All 10 Tests Passed)
+- **TEST 1 (Model Isolation)**: Switched from Claude to Gemini -> Gemini started with empty chat; Claude conversation remained intact in History.
+- **TEST 2 (Same Model New Chat)**: Created two Claude chats -> both appear as separate history items with unique IDs.
+- **TEST 3 (Sidebar New Chat)**: Clicking Sidebar New Chat creates fresh empty conversation with current model.
+- **TEST 4 (Store Try App)**: Clicking "Try App" on GLM from Store navigates to `/chat` with GLM selected and empty chat.
+- **TEST 5 (History Model Logos)**: DeepSeek, GPT-4o, and EchoGPT items render their respective brand logos independently of active model.
+- **TEST 6 (Open History Item)**: Clicking history item navigates to `/chat?c=...` and loads exact stored messages and model.
+- **TEST 7 (App Startup / Reload)**: Visiting `/chat` directly starts fresh conversation without auto-resuming old conversation.
+- **TEST 8 (Async Generation)**: Response during model switch saves to original conversation in History and does not leak to new chat.
+- **TEST 9 (Upgrade Flow)**: Pro feature -> Upgrade Modal -> Continue to Payment -> Choose Payment Method (International vs BDT) -> Complete Demo Upgrade -> Demo Pro Mode activated with honest feedback.
+- **TEST 10 (Repeated Upgrade)**: With Demo Pro active, selecting Pro models in ModelSelector works directly without repeating upgrade modal.
+
+#### Build Verification
+- `npm run lint` → 0 errors, 0 warnings ✓
+- `npm run build` → 18/18 static routes, exit code 0 ✓
+
+---
+
 ## CURRENT MILESTONE
 
 Current milestone:
-Milestone 4.zc — Store + New Chat Polish & Fix Pass (`/store` & `/chat`)
+Milestone 4.zd — Conversation Architecture, Model Isolation, History & Pro Upgrade Flow
 
 Status:
 Completed ✓
