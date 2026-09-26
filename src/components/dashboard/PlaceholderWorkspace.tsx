@@ -11,7 +11,6 @@ import {
   Plus,
   Clock,
   Rocket,
-  GitBranch,
   Mic,
   MicOff,
   Send,
@@ -35,6 +34,9 @@ import {
   loadDemoProState,
 } from "@/lib/chatStorage";
 import { useUpgradeModal } from "@/context/UpgradeModalContext";
+import { useConnectors } from "@/context/ConnectorContext";
+import { ChatConnectorPopover } from "@/components/dashboard/connectors/ChatConnectorPopover";
+import { McpBranchIcon } from "@/components/dashboard/connectors/ConnectorIcons";
 import { showToast } from "@/components/ui/Toast";
 
 // ─── Types ────────────────────────────────────────────────────────────────
@@ -206,6 +208,17 @@ export function PlaceholderWorkspace({
   const recognitionRef = useRef<ISpeechRecognition | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // ── MCP Connectors Integration ───────────────────────────────────────────
+  const { connectors, activeConnectorIds, toggleActiveConnectorInChat } = useConnectors();
+  const [isConnectorPopoverOpen, setIsConnectorPopoverOpen] = useState(false);
+  const connectorBtnRef = useRef<HTMLButtonElement>(null);
+
+  const activeConnectors = useMemo(() => {
+    return connectors.filter(
+      (c) => activeConnectorIds.includes(c.id) && c.enabled && c.status === "connected"
+    );
+  }, [connectors, activeConnectorIds]);
 
   // Active Model object derived strictly from selectedModelId
   const selectedModel = useMemo(() => {
@@ -536,15 +549,25 @@ export function PlaceholderWorkspace({
   const generateMockResponse = (userPrompt: string, model: AIModel): string => {
     const lower = userPrompt.toLowerCase();
 
+    const toolSummary =
+      activeConnectors.length > 0
+        ? `\n\n**Connected MCP Tools Active:**\n${activeConnectors
+            .map(
+              (c) =>
+                `• **${c.name}**: Available tools [\`${c.tools.map((t) => t.displayName).slice(0, 3).join("`, `")}\`]`
+            )
+            .join("\n")}`
+        : "";
+
     if (lower.includes("sop") || lower.includes("procedure")) {
-      return `### Standard Operating Procedure (Draft)\n\n**Title:** Process Execution & Verification Protocol\n**Target Engine:** ${model.name}\n\n1. **Phase 1: Requirements Intake & Scoping**\n   - Confirm verified project parameters and architectural boundaries.\n   - Validate design tokens (Typography: Lexend, Brand: #713CF4).\n\n2. **Phase 2: Execution & Component Assembly**\n   - Implement modular presentation logic without tight backend coupling.\n   - Maintain accessible states and keyboard event listeners.\n\n3. **Phase 3: Verification & Review**\n   - Execute linter checks and multi-viewport responsive testing.\n   - Document changes in master project context.\n\n*Note: Simulated response generated with ${model.name} (${model.provider}).*`;
+      return `### Standard Operating Procedure (Draft)\n\n**Title:** Process Execution & Verification Protocol\n**Target Engine:** ${model.name}\n\n1. **Phase 1: Requirements Intake & Scoping**\n   - Confirm verified project parameters and architectural boundaries.\n   - Validate design tokens (Typography: Lexend, Brand: #713CF4).\n\n2. **Phase 2: Execution & Component Assembly**\n   - Implement modular presentation logic without tight backend coupling.\n   - Maintain accessible states and keyboard event listeners.\n\n3. **Phase 3: Verification & Review**\n   - Execute linter checks and multi-viewport responsive testing.\n   - Document changes in master project context.\n\n*Note: Simulated response generated with ${model.name} (${model.provider}).*${toolSummary}`;
     }
 
     if (lower.includes("resume") || lower.includes("cv") || lower.includes("experience")) {
-      return `### Targeted Resume Recommendations\n\nSynthesized via **${model.name}**:\n\n- **Quantified Achievement:** "Architected multi-model workspace in Next.js App Router supporting 100K+ MAU, achieving zero hydration layout shifts."\n- **Web Vitals Optimization:** "Engineered sub-second initial load with responsive Tailwind token system, cutting TTI by 44%."\n- **Design System Governance:** "Built accessible keyboard-first UI primitive library compliant with WCAG 2.1 AA."\n\n*Note: Simulated response generated with ${model.name} (${model.provider}).*`;
+      return `### Targeted Resume Recommendations\n\nSynthesized via **${model.name}**:\n\n- **Quantified Achievement:** "Architected multi-model workspace in Next.js App Router supporting 100K+ MAU, achieving zero hydration layout shifts."\n- **Web Vitals Optimization:** "Engineered sub-second initial load with responsive Tailwind token system, cutting TTI by 44%."\n- **Design System Governance:** "Built accessible keyboard-first UI primitive library compliant with WCAG 2.1 AA."\n\n*Note: Simulated response generated with ${model.name} (${model.provider}).*${toolSummary}`;
     }
 
-    return `I received your prompt: "${userPrompt.slice(0, 80)}${userPrompt.length > 80 ? "..." : ""}"\n\nEchoGPT has synthesized your request using the **${model.name}** (${model.provider}) intelligence engine.\n\nKey takeaways:\n1. **Dynamic Model Routing:** Active model is **${model.name}** with ${model.contextWindow || "standard"} context.\n2. **Design Language:** Lexend typography, clean spacing, and brand purple (#713CF4) accents.\n3. **Session Persistence:** Your conversation is isolated under its own unique ID and saved in History.\n\n*Note: Simulated response generated with ${model.name} (${model.provider}).*`;
+    return `I received your prompt: "${userPrompt.slice(0, 80)}${userPrompt.length > 80 ? "..." : ""}"\n\nEchoGPT has synthesized your request using the **${model.name}** (${model.provider}) intelligence engine.\n\nKey takeaways:\n1. **Dynamic Model Routing:** Active model is **${model.name}** with ${model.contextWindow || "standard"} context.\n2. **Design Language:** Lexend typography, clean spacing, and brand purple (#713CF4) accents.\n3. **Session Persistence:** Your conversation is isolated under its own unique ID and saved in History.\n\n*Note: Simulated response generated with ${model.name} (${model.provider}).*${toolSummary}`;
   };
 
   // ── Send Message Handler (IMMEDIATE HISTORY PERSISTENCE & FIRST-MESSAGE RESPONSE FIX)
@@ -899,6 +922,32 @@ export function PlaceholderWorkspace({
               </div>
             )}
 
+            {/* ── Active Connector Chips ── */}
+            {activeConnectors.length > 0 && (
+              <div className="flex flex-wrap items-center gap-1.5 px-3.5 pt-2.5 pb-0">
+                {activeConnectors.map((c) => (
+                  <div
+                    key={c.id}
+                    className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-[#713CF4]/10 dark:bg-[#713CF4]/20 border border-[#713CF4]/30 text-xs text-[#713CF4] dark:text-[#a78bfa] font-medium"
+                  >
+                    <McpBranchIcon className="size-3" />
+                    <span>{c.name}</span>
+                    <span className="text-[10px] text-zinc-400 dark:text-zinc-500">
+                      ({c.tools.length} tools)
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => toggleActiveConnectorInChat(c.id)}
+                      className="hover:text-rose-500 transition-colors cursor-pointer ml-0.5"
+                      aria-label={`Remove ${c.name} from active chat`}
+                    >
+                      <X className="size-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
             {/* ── Top toolbar inside composer card ── */}
             <div className="flex items-center justify-between px-3.5 pt-3 pb-1 border-b border-zinc-100 dark:border-zinc-850">
               {/* Left: Model Selector (opens UPWARD) + Connectors + Rocket */}
@@ -913,18 +962,36 @@ export function PlaceholderWorkspace({
 
                 <span className="text-zinc-300 dark:text-zinc-700 select-none">|</span>
 
-                {/* Connected Tools */}
-                <button
-                  type="button"
-                  onClick={() =>
-                    showToast("Web browsing and connected real-time tools active", "info")
-                  }
-                  className="p-1 rounded-md text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
-                  title="Connected Tools"
-                  aria-label="Connected tools"
-                >
-                  <GitBranch className="size-3.5" />
-                </button>
+                {/* Connected Tools / MCP Connectors (Matching Screenshots 3 & 4) */}
+                <div className="relative">
+                  <button
+                    ref={connectorBtnRef}
+                    type="button"
+                    onClick={() => setIsConnectorPopoverOpen(!isConnectorPopoverOpen)}
+                    className={`relative p-1 rounded-md transition-colors cursor-pointer ${
+                      activeConnectors.length > 0
+                        ? "text-[#713CF4] dark:text-[#a78bfa] bg-[#713CF4]/10 hover:bg-[#713CF4]/20"
+                        : "text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                    }`}
+                    title={
+                      activeConnectors.length > 0
+                        ? `Connectors Active: ${activeConnectors.map((c) => c.name).join(", ")}`
+                        : "Connectors (MCP Tools)"
+                    }
+                    aria-label="Connectors (MCP Tools)"
+                  >
+                    <McpBranchIcon className="size-3.5" />
+                    {activeConnectors.length > 0 && (
+                      <span className="absolute -top-0.5 -right-0.5 size-2 rounded-full bg-[#713CF4] border-2 border-white dark:border-[#111217]" />
+                    )}
+                  </button>
+
+                  <ChatConnectorPopover
+                    isOpen={isConnectorPopoverOpen}
+                    onClose={() => setIsConnectorPopoverOpen(false)}
+                    triggerRef={connectorBtnRef}
+                  />
+                </div>
 
                 {/* Rocket / Upgrade Pro */}
                 <button
