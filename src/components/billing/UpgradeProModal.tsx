@@ -177,7 +177,7 @@ export function UpgradeProModal() {
   const handleResetPro = () => {
     resetDemoPro();
     handleClose();
-    showToast("EchoGPT Pro demo state has been reset to Free tier.", "info");
+    // showToast("EchoGPT Pro demo state has been reset to Free tier.", "info");
   };
 
   return (
@@ -186,7 +186,7 @@ export function UpgradeProModal() {
       onClose={handleClose}
       maxWidth="5xl"
       showCloseButton={true}
-      className="p-0 border-zinc-200/90 dark:border-white/[0.08]"
+      className="p-0 border-zinc-200/90 dark:border-white/8"
       bodyClassName="p-4 sm:p-6 lg:p-7 overflow-y-auto"
     >
       {/* ── VIEW A: ALREADY PRO ACTIVE ─────────────────────────────────── */}
@@ -284,7 +284,7 @@ export function UpgradeProModal() {
             <label
               className={`flex items-start gap-3.5 p-4 rounded-2xl border transition-all cursor-pointer ${
                 paymentGateway === "international"
-                  ? "border-[#713CF4] bg-[#713CF4]/[0.03] dark:bg-[#713CF4]/[0.08] shadow-xs"
+                  ? "border-[#713CF4] bg-[#713CF4]/3 dark:bg-[#713CF4]/8 shadow-xs"
                   : "border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#121319] hover:border-zinc-300 dark:hover:border-zinc-700"
               }`}
             >
@@ -319,7 +319,7 @@ export function UpgradeProModal() {
             <label
               className={`flex items-start gap-3.5 p-4 rounded-2xl border transition-all cursor-pointer ${
                 paymentGateway === "bdt"
-                  ? "border-[#713CF4] bg-[#713CF4]/[0.03] dark:bg-[#713CF4]/[0.08] shadow-xs"
+                  ? "border-[#713CF4] bg-[#713CF4]/3 dark:bg-[#713CF4]/8 shadow-xs"
                   : "border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#121319] hover:border-zinc-300 dark:hover:border-zinc-700"
               }`}
             >
@@ -421,9 +421,9 @@ export function UpgradeProModal() {
           {/* Main 2-Column Responsive Body */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-start">
             {/* Left Column: Unlock All Premium Features */}
-            <div className="order-2 lg:order-1 lg:col-span-7 rounded-2xl border border-zinc-200/80 dark:border-white/[0.08] bg-zinc-50/60 dark:bg-white/[0.02] p-4 sm:p-5 flex flex-col justify-between space-y-5">
+            <div className="order-2 lg:order-1 lg:col-span-7 rounded-2xl border border-zinc-200/80 dark:border-white/8 bg-zinc-50/60 dark:bg-white/2 p-4 sm:p-5 flex flex-col justify-between space-y-5">
               <div>
-                <div className="flex items-center justify-between pb-3 mb-3 border-b border-zinc-200/60 dark:border-white/[0.06]">
+                <div className="flex items-center justify-between pb-3 mb-3 border-b border-zinc-200/60 dark:border-white/6">
                   <div>
                     <h3 className="text-sm sm:text-base font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
                       Unlock all premium features
@@ -452,7 +452,7 @@ export function UpgradeProModal() {
                           return (
                             <div
                               key={item.name}
-                              className="flex items-start gap-2.5 p-2.5 rounded-xl bg-white dark:bg-[#161520] border border-zinc-200/60 dark:border-white/[0.06] hover:border-[#713CF4]/30 dark:hover:border-[#713CF4]/40 transition-colors group"
+                              className="flex items-start gap-2.5 p-2.5 rounded-xl bg-white dark:bg-[#161520] border border-zinc-200/60 dark:border-white/6 hover:border-[#713CF4]/30 dark:hover:border-[#713CF4]/40 transition-colors group"
                             >
                               <div
                                 className={`size-7.5 rounded-lg flex items-center justify-center shrink-0 mt-0.5 transition-transform group-hover:scale-105 ${item.color}`}
@@ -466,7 +466,7 @@ export function UpgradeProModal() {
                                     {item.name}
                                   </span>
                                   {item.badge && (
-                                    <span className="text-[9.5px] font-medium px-1.5 py-0.2 rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 border border-zinc-200/60 dark:border-white/[0.06] shrink-0">
+                                    <span className="text-[9.5px] font-medium px-1.5 py-0.2 rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 border border-zinc-200/60 dark:border-white/6 shrink-0">
                                       {item.badge}
                                     </span>
                                   )}
@@ -485,7 +485,7 @@ export function UpgradeProModal() {
               </div>
 
               {/* Bottom highlight pill */}
-              <div className="pt-2 border-t border-zinc-200/60 dark:border-white/[0.06] flex items-center justify-between text-[11px] text-zinc-500 dark:text-zinc-400">
+              <div className="pt-2 border-t border-zinc-200/60 dark:border-white/6 flex items-center justify-between text-[11px] text-zinc-500 dark:text-zinc-400">
                 <span className="flex items-center gap-1">
                   <Check className="size-3.5 text-emerald-500" />
                   Priority access during peak traffic
@@ -500,7 +500,7 @@ export function UpgradeProModal() {
             {/* Right Column: Billing Selector, Models Showcase, Pricing, CTA */}
             <div className="order-1 lg:order-2 lg:col-span-5 flex flex-col space-y-4">
               {/* Billing Period Selector Tabs */}
-              <div className="p-1 rounded-xl bg-zinc-100/90 dark:bg-white/[0.04] border border-zinc-200/80 dark:border-white/[0.06] grid grid-cols-2 sm:grid-cols-4 gap-1">
+              <div className="p-1 rounded-xl bg-zinc-100/90 dark:bg-white/4 border border-zinc-200/80 dark:border-white/6 grid grid-cols-2 sm:grid-cols-4 gap-1">
                 {(
                   [
                     "monthly",
@@ -540,7 +540,7 @@ export function UpgradeProModal() {
               </div>
 
               {/* AI Models Showcase Box */}
-              <div className="rounded-2xl border border-zinc-200/80 dark:border-white/[0.08] bg-white dark:bg-[#161520] p-3.5 space-y-2.5">
+              <div className="rounded-2xl border border-zinc-200/80 dark:border-white/8 bg-white dark:bg-[#161520] p-3.5 space-y-2.5">
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
                     Included Frontier AI Models
@@ -550,13 +550,13 @@ export function UpgradeProModal() {
                   </span>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-1.5 max-h-[175px] overflow-y-auto custom-scrollbar pr-1">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-1.5 max-h-43.75 overflow-y-auto custom-scrollbar pr-1">
                   {SHOWCASE_MODELS.map((m) => {
                     const Icon = m.icon;
                     return (
                       <div
                         key={m.name}
-                        className="flex items-center justify-between py-1 px-2 rounded-lg bg-zinc-50/80 dark:bg-white/[0.02] border border-zinc-200/50 dark:border-white/[0.04] text-xs"
+                        className="flex items-center justify-between py-1 px-2 rounded-lg bg-zinc-50/80 dark:bg-white/2 border border-zinc-200/50 dark:border-white/4 text-xs"
                       >
                         <div className="flex items-center gap-1.5 min-w-0">
                           <Icon className="size-3.5 text-[#713CF4] dark:text-[#a78bfa] shrink-0" />
@@ -574,7 +574,7 @@ export function UpgradeProModal() {
               </div>
 
               {/* Plan Description & Pricing Card */}
-              <div className="rounded-2xl border border-[#713CF4]/25 dark:border-[#713CF4]/30 bg-gradient-to-b from-[#713CF4]/[0.04] to-transparent dark:from-[#713CF4]/[0.08] dark:to-transparent p-4 space-y-3.5">
+              <div className="rounded-2xl border border-[#713CF4]/25 dark:border-[#713CF4]/30 bg-linear-to-b from-[#713CF4]/4 to-transparent dark:from-[#713CF4]/8 dark:to-transparent p-4 space-y-3.5">
                 <div>
                   <p className="text-[11.5px] text-zinc-500 dark:text-zinc-400 leading-relaxed font-normal">
                     Experience the full benefits of Pro membership with unlimited
@@ -589,7 +589,7 @@ export function UpgradeProModal() {
                 </div>
 
                 {/* Price Row */}
-                <div className="pt-2 border-t border-zinc-200/60 dark:border-white/[0.06]">
+                <div className="pt-2 border-t border-zinc-200/60 dark:border-white/6">
                   <div className="flex items-baseline gap-2">
                     <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
                       USD
