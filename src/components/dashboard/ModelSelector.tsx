@@ -70,7 +70,9 @@ export function ModelSelector({
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const { openUpgradeModal } = useUpgradeModal();
+  const { openUpgradeModal, isProUser } = useUpgradeModal();
+
+  const canSelectPro = allowProSelection || isProUser;
 
   const selectedModel = useMemo(() => {
     return models.find((m) => m.id === selectedModelId) || models[0];
@@ -167,7 +169,7 @@ export function ModelSelector({
 
   const handleItemClick = (model: AIModel) => {
     if (multiSelect) {
-      if (model.isPro && !allowProSelection) {
+      if (model.isPro && !canSelectPro) {
         openUpgradeModal(
           `${model.name} is an EchoGPT Pro model. Upgrade to include frontier models in your comparison.`
         );
@@ -175,7 +177,7 @@ export function ModelSelector({
       }
       onToggleModel?.(model);
     } else {
-      if (model.isPro && !allowProSelection) {
+      if (model.isPro && !canSelectPro) {
         openUpgradeModal(
           `${model.name} is an EchoGPT Pro model. Upgrade to access frontier AI reasoning.`
         );
@@ -388,7 +390,7 @@ export function ModelSelector({
                           <div className="shrink-0 mt-0.5">
                             {isSelected ? (
                               <Check className="size-3.5 text-[#713CF4]" />
-                            ) : model.isPro && !allowProSelection ? (
+                            ) : model.isPro && !canSelectPro ? (
                               <Lock className="size-3 text-zinc-400" />
                             ) : null}
                           </div>
