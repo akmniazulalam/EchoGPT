@@ -13,7 +13,12 @@ import {
   Rocket,
   GitBranch,
   Mic,
+  MicOff,
   Send,
+  Share2,
+  X,
+  FileText,
+  FileImage,
 } from "lucide-react";
 import { WorkspaceHeader } from "@/components/workspace/WorkspaceHeader";
 import { ModelSelector } from "./ModelSelector";
@@ -32,7 +37,7 @@ import {
 import { useUpgradeModal } from "@/context/UpgradeModalContext";
 import { showToast } from "@/components/ui/Toast";
 
-// External store subscription for cached current chat
+// ─── External store for cached current chat ────────────────────────────────
 let cachedRaw: string | null = null;
 let cachedChat: CurrentChatData | null = null;
 
@@ -50,9 +55,7 @@ function getChatSnapshot(): CurrentChatData | null {
   if (typeof window === "undefined") return null;
   try {
     const raw = localStorage.getItem(CURRENT_CHAT_KEY);
-    if (raw === cachedRaw) {
-      return cachedChat;
-    }
+    if (raw === cachedRaw) return cachedChat;
     cachedRaw = raw;
     cachedChat = raw ? JSON.parse(raw) : null;
     return cachedChat;
@@ -65,12 +68,69 @@ function getServerChatSnapshot(): CurrentChatData | null {
   return null;
 }
 
+// ─── Types ────────────────────────────────────────────────────────────────
 interface PlaceholderWorkspaceProps {
   onNewChat?: () => void;
   initialPrompt?: string;
 }
 
-// 4 Prompt Suggestions (Directly from EchoGPT New Chat Reference Screenshot)
+interface AttachmentFile {
+  name: string;
+  size: number;
+  type: string;
+  objectUrl?: string;
+}
+
+type VoiceState = "idle" | "requesting" | "listening" | "unsupported" | "denied" | "error";
+
+// ─── Web Speech API – self-contained type shim ───────────────────────────
+// We define our own minimal interfaces so the component compiles cleanly
+// regardless of whether @types/dom-speech-api is installed.
+interface ISpeechRecognitionResult {
+  readonly transcript: string;
+  readonly confidence: number;
+}
+
+interface ISpeechRecognitionResultList {
+  readonly length: number;
+  item(index: number): ISpeechRecognitionResult[];
+  [index: number]: ISpeechRecognitionResult[];
+}
+
+interface ISpeechRecognitionEvent extends Event {
+  readonly results: ISpeechRecognitionResultList;
+}
+
+interface ISpeechRecognitionErrorEvent extends Event {
+  readonly error: string;
+}
+
+interface ISpeechRecognition extends EventTarget {
+  lang: string;
+  continuous: boolean;
+  interimResults: boolean;
+  maxAlternatives: number;
+  start(): void;
+  stop(): void;
+  abort(): void;
+  onstart: ((this: ISpeechRecognition, ev: Event) => void) | null;
+  onresult: ((this: ISpeechRecognition, ev: ISpeechRecognitionEvent) => void) | null;
+  onerror: ((this: ISpeechRecognition, ev: ISpeechRecognitionErrorEvent) => void) | null;
+  onend: ((this: ISpeechRecognition, ev: Event) => void) | null;
+}
+
+interface ISpeechRecognitionConstructor {
+  new (): ISpeechRecognition;
+}
+
+declare global {
+  interface Window {
+    SpeechRecognition?: ISpeechRecognitionConstructor;
+    webkitSpeechRecognition?: ISpeechRecognitionConstructor;
+  }
+}
+
+// ─── Prompt Suggestions (matching original EchoGPT screenshot) ────────────
 const PROMPT_SUGGESTIONS = [
   {
     id: "creative-flow",
@@ -106,6 +166,8 @@ const PROMPT_SUGGESTIONS = [
   },
 ];
 
+const ACCEPTED_FILE_TYPES = ".pdf,.doc,.docx,.txt,.md,.png,.jpg,.jpeg,.webp,.csv";
+
 export function PlaceholderWorkspace({
   onNewChat,
   initialPrompt,
@@ -114,15 +176,18 @@ export function PlaceholderWorkspace({
   const [promptText, setPromptText] = useState(initialPrompt || "");
   const [isGenerating, setIsGenerating] = useState(false);
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
+  const [attachment, setAttachment] = useState<AttachmentFile | null>(null);
+  const [voiceState, setVoiceState] = useState<VoiceState>("idle");
   const { openUpgradeModal } = useUpgradeModal();
 
-  // Model selection with lazy initialization and validation
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const recognitionRef = useRef<ISpeechRecognition | null>(null);
+
+  // ── Model selection with lazy init + validation ─────────────────────────
   const [selectedModelId, setSelectedModelId] = useState<string>(() => {
     if (typeof window !== "undefined") {
       const stored = loadSelectedModel();
-      if (stored && AI_MODELS.some((m) => m.id === stored)) {
-        return stored;
-      }
+      if (stored && AI_MODELS.some((m) => m.id === stored)) return stored;
     }
     return "echogpt";
   });
@@ -135,7 +200,6 @@ export function PlaceholderWorkspace({
         setSelectedModelId(stored);
       }
     };
-
     window.addEventListener("echogpt:selected-model-updated", handleModelUpdated);
     window.addEventListener("storage", handleModelUpdated);
     return () => {
@@ -144,18 +208,16 @@ export function PlaceholderWorkspace({
     };
   }, []);
 
-  // Active Model Object
   const selectedModel = useMemo(() => {
     return AI_MODELS.find((m) => m.id === selectedModelId) || AI_MODELS[0];
   }, [selectedModelId]);
 
-  // Synchronized persistent chat from localStorage
+  // ── Synchronized chat from localStorage ─────────────────────────────────
   const currentChat = useSyncExternalStore(
     subscribeChat,
     getChatSnapshot,
     getServerChatSnapshot
   );
-
   const messages: ChatMessage[] = useMemo(
     () => currentChat?.messages || [],
     [currentChat]
@@ -171,21 +233,32 @@ export function PlaceholderWorkspace({
     }
   }, [messages, isGenerating]);
 
-  // Focus textarea when shortcut triggers
+  // Focus textarea shortcut
   useEffect(() => {
-    const handleFocus = () => {
-      textareaRef.current?.focus();
-    };
+    const handleFocus = () => textareaRef.current?.focus();
     window.addEventListener("echogpt:focus-chat-input", handleFocus);
+    return () => window.removeEventListener("echogpt:focus-chat-input", handleFocus);
+  }, []);
+
+  // Cleanup speech recognition on unmount
+  useEffect(() => {
     return () => {
-      window.removeEventListener("echogpt:focus-chat-input", handleFocus);
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.abort();
+        } catch {
+          // ignore
+        }
+      }
     };
   }, []);
+
+  // ── Handlers ─────────────────────────────────────────────────────────────
 
   const handleSelectModel = (model: AIModel) => {
     setSelectedModelId(model.id);
     saveSelectedModel(model.id);
-    showToast(`Switched active model to ${model.name}`, "info");
+    showToast(`Switched to ${model.name}`, "info");
   };
 
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -199,10 +272,7 @@ export function PlaceholderWorkspace({
     if (textareaRef.current) {
       textareaRef.current.focus();
       textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = `${Math.min(
-        textareaRef.current.scrollHeight,
-        160
-      )}px`;
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 160)}px`;
     }
   };
 
@@ -215,56 +285,215 @@ export function PlaceholderWorkspace({
     }
   };
 
-  // Generate lightweight mock response customized by selected model
+  // ── File Attachment ──────────────────────────────────────────────────────
+
+  const handleAttachClick = () => {
+    // Pro gate: show upgrade modal for non-Pro flows
+    openUpgradeModal(
+      "File attachments are an EchoGPT Pro feature. Upgrade to attach PDFs, images, and documents directly in your conversations."
+    );
+  };
+
+  const handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Max 10MB safety check
+    if (file.size > 10 * 1024 * 1024) {
+      showToast("File too large. Maximum attachment size is 10 MB.", "error");
+      return;
+    }
+
+    const objectUrl =
+      file.type.startsWith("image/") ? URL.createObjectURL(file) : undefined;
+
+    setAttachment({ name: file.name, size: file.size, type: file.type, objectUrl });
+    showToast(`Attached: ${file.name}`, "success");
+
+    // reset input so same file can be re-selected
+    e.target.value = "";
+  };
+
+  const handleRemoveAttachment = () => {
+    if (attachment?.objectUrl) URL.revokeObjectURL(attachment.objectUrl);
+    setAttachment(null);
+  };
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  };
+
+  // ── Voice Input ──────────────────────────────────────────────────────────
+
+  const getSpeechRecognition = () => {
+    if (typeof window === "undefined") return null;
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    return SpeechRec ? new SpeechRec() : null;
+  };
+
+  const handleVoiceClick = () => {
+    // Already listening — stop it
+    if (voiceState === "listening") {
+      recognitionRef.current?.stop();
+      setVoiceState("idle");
+      return;
+    }
+
+    const recognition = getSpeechRecognition();
+
+    if (!recognition) {
+      setVoiceState("unsupported");
+      showToast(
+        "Voice input isn't supported in this browser. Try Chrome or Edge.",
+        "error"
+      );
+      setTimeout(() => setVoiceState("idle"), 3000);
+      return;
+    }
+
+    setVoiceState("requesting");
+
+    recognition.lang = "en-US";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    recognition.continuous = false;
+
+    recognition.onstart = () => {
+      setVoiceState("listening");
+    };
+
+    recognition.onresult = (event: ISpeechRecognitionEvent) => {
+      const transcript = event.results[0][0].transcript;
+      if (transcript) {
+        setPromptText((prev) => (prev ? `${prev} ${transcript}` : transcript));
+        if (textareaRef.current) {
+          textareaRef.current.style.height = "auto";
+          textareaRef.current.style.height = `${Math.min(
+            textareaRef.current.scrollHeight,
+            160
+          )}px`;
+          textareaRef.current.focus();
+        }
+        showToast("Voice transcription complete.", "success");
+      }
+      setVoiceState("idle");
+    };
+
+    recognition.onerror = (event: ISpeechRecognitionErrorEvent) => {
+      if (event.error === "not-allowed" || event.error === "permission-denied") {
+        setVoiceState("denied");
+        showToast(
+          "Microphone permission denied. Allow access in your browser settings.",
+          "error"
+        );
+      } else if (event.error === "no-speech") {
+        showToast("No speech detected. Please try again.", "info");
+        setVoiceState("idle");
+      } else {
+        setVoiceState("error");
+        showToast("Voice recognition failed. Please try again.", "error");
+      }
+      setTimeout(() => setVoiceState("idle"), 3000);
+    };
+
+    // Use functional update to avoid stale closure over voiceState
+    recognition.onend = () => {
+      setVoiceState((prev) => (prev === "listening" ? "idle" : prev));
+    };
+
+    recognitionRef.current = recognition;
+
+    try {
+      recognition.start();
+    } catch {
+      setVoiceState("error");
+      showToast("Could not start voice recognition.", "error");
+      setTimeout(() => setVoiceState("idle"), 2000);
+    }
+  };
+
+  const voiceMicClass = () => {
+    switch (voiceState) {
+      case "listening":
+        return "text-red-500 dark:text-red-400 bg-red-50 dark:bg-red-900/20 animate-pulse";
+      case "requesting":
+        return "text-amber-500 dark:text-amber-400";
+      case "denied":
+      case "error":
+        return "text-zinc-300 dark:text-zinc-600 cursor-not-allowed";
+      default:
+        return "text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800";
+    }
+  };
+
+  const voiceMicLabel = () => {
+    switch (voiceState) {
+      case "listening":
+        return "Listening — click to stop";
+      case "requesting":
+        return "Requesting microphone permission…";
+      case "denied":
+        return "Microphone permission denied";
+      case "unsupported":
+        return "Voice input not supported";
+      case "error":
+        return "Voice recognition error";
+      default:
+        return "Voice input";
+    }
+  };
+
+  // ── Share Chat ───────────────────────────────────────────────────────────
+
+  const handleShareChat = async () => {
+    if (messages.length === 0) return;
+
+    const shareText = messages
+      .slice(0, 4)
+      .map((m) => `${m.role === "user" ? "You" : selectedModel.name}: ${m.content.slice(0, 120)}`)
+      .join("\n\n");
+    const shareTitle = `Chat with ${selectedModel.name} on EchoGPT`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: shareTitle, text: shareText });
+      } catch (e) {
+        // User dismissed — no toast needed
+        const err = e as Error;
+        if (err.name !== "AbortError") {
+          showToast("Share failed. Try copying instead.", "error");
+        }
+      }
+    } else {
+      // Clipboard fallback
+      const clipboardText = `${shareTitle}\n\n${shareText}\n\n— Shared from EchoGPT`;
+      try {
+        await navigator.clipboard.writeText(clipboardText);
+        showToast("Chat summary copied to clipboard!", "success");
+      } catch {
+        showToast("Could not copy to clipboard.", "error");
+      }
+    }
+  };
+
+  // ── Chat Send Handler ────────────────────────────────────────────────────
+
   const generateMockResponse = (userPrompt: string): string => {
     const lower = userPrompt.toLowerCase();
 
     if (lower.includes("sop") || lower.includes("procedure")) {
-      return `### Standard Operating Procedure (Draft)
-
-**Title:** Process Execution & Verification Protocol
-**Target Engine:** ${selectedModel.name}
-
-1. **Phase 1: Requirements Intake & Scoping**
-   - Confirm verified project parameters and architectural boundary.
-   - Validate design tokens (Typography: Lexend, Brand: #713CF4).
-
-2. **Phase 2: Execution & Component Assembly**
-   - Implement modular presentation logic without tight backend coupling.
-   - Maintain accessible states and keyboard event listeners.
-
-3. **Phase 3: Verification & Review**
-   - Execute linter checks and multi-viewport responsive testing.
-   - Document changes in master project context.
-
-*Note: Simulated frontend demonstration response generated with ${selectedModel.name}.*`;
+      return `### Standard Operating Procedure (Draft)\n\n**Title:** Process Execution & Verification Protocol\n**Target Engine:** ${selectedModel.name}\n\n1. **Phase 1: Requirements Intake & Scoping**\n   - Confirm verified project parameters and architectural boundary.\n   - Validate design tokens (Typography: Lexend, Brand: #713CF4).\n\n2. **Phase 2: Execution & Component Assembly**\n   - Implement modular presentation logic without tight backend coupling.\n   - Maintain accessible states and keyboard event listeners.\n\n3. **Phase 3: Verification & Review**\n   - Execute linter checks and multi-viewport responsive testing.\n   - Document changes in master project context.\n\n*Note: Simulated frontend demonstration response generated with ${selectedModel.name}.*`;
     }
 
     if (lower.includes("resume") || lower.includes("cv") || lower.includes("experience")) {
-      return `### Targeted Resume Recommendations
-
-Synthesized via **${selectedModel.name}** for high-impact technical positioning:
-
-- **Quantified Architecture Achievement:** "Architected multi-model workspace in Next.js App Router supporting 100K+ monthly active users, achieving zero hydration layout shifts."
-- **Web Vitals Optimization:** "Engineered sub-second initial load with responsive Tailwind v4 token system, cutting time-to-interactive by 44%."
-- **Design System Governance:** "Built accessible keyboard-first UI primitive library compliant with WCAG 2.1 AA standards."
-
-*Note: Simulated frontend demonstration response generated with ${selectedModel.name}.*`;
+      return `### Targeted Resume Recommendations\n\nSynthesized via **${selectedModel.name}**:\n\n- **Quantified Achievement:** "Architected multi-model workspace in Next.js App Router supporting 100K+ MAU, achieving zero hydration layout shifts."\n- **Web Vitals Optimization:** "Engineered sub-second initial load with responsive Tailwind v4 token system, cutting TTI by 44%."\n- **Design System Governance:** "Built accessible keyboard-first UI primitive library compliant with WCAG 2.1 AA."\n\n*Note: Simulated frontend demonstration response generated with ${selectedModel.name}.*`;
     }
 
-    return `I received your prompt: "${userPrompt.slice(0, 80)}${userPrompt.length > 80 ? "..." : ""}"
-
-EchoGPT has synthesized your request using the **${selectedModel.name}** (${selectedModel.provider}) intelligence engine.
-
-Key takeaways:
-1. **Dynamic Model Routing:** Active model is **${selectedModel.name}** with ${selectedModel.contextWindow || "standard"} context.
-2. **Design Language:** Lexend typography, clean spacing, and brand purple (#713CF4) accents.
-3. **Session Persistence:** Your model preference and conversation state are safely maintained across reloads.
-
-*Note: Simulated frontend demonstration response generated with ${selectedModel.name}.*`;
+    return `I received your prompt: "${userPrompt.slice(0, 80)}${userPrompt.length > 80 ? "..." : ""}"\n\nEchoGPT has synthesized your request using the **${selectedModel.name}** (${selectedModel.provider}) intelligence engine.\n\nKey takeaways:\n1. **Dynamic Model Routing:** Active model is **${selectedModel.name}** with ${selectedModel.contextWindow || "standard"} context.\n2. **Design Language:** Lexend typography, clean spacing, and brand purple (#713CF4) accents.\n3. **Session Persistence:** Your model preference and conversation state are safely maintained across reloads.\n\n*Note: Simulated frontend demonstration response generated with ${selectedModel.name}.*`;
   };
 
-  // Chat Send Handler
   const handleSendMessage = () => {
     if (!promptText.trim() || isGenerating) return;
 
@@ -280,9 +509,8 @@ Key takeaways:
 
     const sentPrompt = promptText.trim();
     setPromptText("");
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-    }
+    setAttachment(null);
+    if (textareaRef.current) textareaRef.current.style.height = "auto";
 
     setIsGenerating(true);
 
@@ -293,7 +521,6 @@ Key takeaways:
         content: generateMockResponse(sentPrompt),
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       };
-
       updateCurrentChatMessages([...newMessages, assistantMessage], selectedModelId);
       setIsGenerating(false);
     }, 850);
@@ -306,41 +533,54 @@ Key takeaways:
     }
   };
 
-  // New Chat Action (+ button in composer or header reset):
-  // Clears chat messages BUT PRESERVES the selected model!
+  // New Chat: clears messages but PRESERVES selected model
   const handleStartNewChat = () => {
-    if (messages.length > 0) {
-      archiveCurrentChat();
-    }
+    if (messages.length > 0) archiveCurrentChat();
     clearCurrentChat();
     setPromptText("");
+    setAttachment(null);
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
       textareaRef.current.focus();
     }
     showToast(`New chat started with ${selectedModel.name}`, "info");
-
-    if (onNewChat) {
-      onNewChat();
-    }
+    if (onNewChat) onNewChat();
   };
 
+  // ─────────────────────────────────────────────────────────────────────────
+  // RENDER
+  // ─────────────────────────────────────────────────────────────────────────
   return (
     <div className="flex flex-col flex-1 h-full min-h-0 bg-[#FAFAFC] dark:bg-[#0E0C15] text-zinc-900 dark:text-zinc-100 font-lexend">
-      {/* 1. Responsive Workspace Header */}
+      {/* ── 1. HEADER ──────────────────────────────────────────────────── */}
       <WorkspaceHeader
         title="Chat"
         breadcrumbs={[{ label: "Workspace" }, { label: "Chat" }]}
-        subtitle={`Active Model: ${selectedModel.name} (${selectedModel.provider})`}
+        subtitle={`Active: ${selectedModel.name} · ${selectedModel.provider}`}
         actions={
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
+            {/* Share — only when messages exist */}
+            {messages.length > 1 && (
+              <button
+                type="button"
+                onClick={handleShareChat}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800/60 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] cursor-pointer"
+                title="Share conversation"
+                aria-label="Share this conversation"
+              >
+                <Share2 className="size-3.5" />
+                <span className="hidden sm:inline">Share</span>
+              </button>
+            )}
+
+            {/* New Chat reset */}
             {messages.length > 0 && (
               <button
                 type="button"
                 onClick={handleStartNewChat}
                 className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800/60 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] cursor-pointer"
-                title="Archive and clear chat"
-                aria-label="Clear chat"
+                title="Archive and start new chat"
+                aria-label="Start new chat"
               >
                 <RotateCcw className="size-3.5" />
                 <span className="hidden sm:inline">New Chat</span>
@@ -356,25 +596,21 @@ Key takeaways:
         }
       />
 
-      {/* 2. Main Scrollable Conversation Stream */}
+      {/* ── 2. CONVERSATION STREAM ─────────────────────────────────────── */}
       <div className="flex-1 overflow-y-auto custom-scrollbar p-4 sm:p-6 lg:p-8 flex flex-col">
         {messages.length === 0 ? (
-          /* ─────────────────────────────────────────────────────────────
-              EMPTY / NEW CHAT HERO CANVAS (MATCHING REFERENCE SCREENSHOT)
-             ───────────────────────────────────────────────────────────── */
+          /* ─── EMPTY / NEW CHAT HERO ─────────────────────────────────── */
           <div className="flex-1 flex flex-col items-center justify-center max-w-2xl mx-auto w-full py-6 text-center my-auto space-y-6">
             {/* Dynamic Model Logo */}
-            <div className="flex justify-center">
-              <ModelLogo
-                modelId={selectedModel.id}
-                provider={selectedModel.provider}
-                name={selectedModel.name}
-                size="xl"
-                className="shadow-sm"
-              />
-            </div>
+            <ModelLogo
+              modelId={selectedModel.id}
+              provider={selectedModel.provider}
+              name={selectedModel.name}
+              size="xl"
+              className="shadow-sm mx-auto"
+            />
 
-            {/* Dynamic Model Heading & Subtitle */}
+            {/* Dynamic Model Name + Description */}
             <div className="space-y-2">
               <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50">
                 {selectedModel.name}
@@ -384,7 +620,7 @@ Key takeaways:
               </p>
             </div>
 
-            {/* 4 Prompt Cards in a 2x2 Grid (Matching Screenshot) */}
+            {/* 4 Prompt Cards — 2 × 2 grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full text-left pt-2">
               {PROMPT_SUGGESTIONS.map((item) => (
                 <button
@@ -403,14 +639,14 @@ Key takeaways:
               ))}
             </div>
 
-            {/* Quota / Limit Message Strip (Matching Screenshot) */}
-            <div className="pt-2">
+            {/* Quota / Limit Strip */}
+            <div className="pt-1">
               <div className="inline-flex flex-wrap items-center justify-center gap-1.5 px-4 py-2 rounded-xl border border-zinc-200/70 dark:border-zinc-800/70 bg-white/70 dark:bg-[#121319]/70 text-[11px] text-zinc-500 dark:text-zinc-400">
                 <span className="font-semibold text-zinc-800 dark:text-zinc-200">
                   {selectedModel.isPro ? "Pro Model Active" : "5 of 5 messages left this window"}
                 </span>
                 <span>·</span>
-                <span>Tier: {selectedModel.category}</span>
+                <span>5 on advanced models</span>
                 <span>·</span>
                 <button
                   type="button"
@@ -427,9 +663,7 @@ Key takeaways:
             </div>
           </div>
         ) : (
-          /* ─────────────────────────────────────────────────────────────
-              ACTIVE MESSAGES STREAM
-             ───────────────────────────────────────────────────────────── */
+          /* ─── ACTIVE MESSAGES ────────────────────────────────────────── */
           <div className="max-w-3xl mx-auto w-full space-y-5 pb-4">
             {messages.map((message) => {
               const isUser = message.role === "user";
@@ -438,9 +672,7 @@ Key takeaways:
               return (
                 <div
                   key={message.id}
-                  className={`flex gap-3 text-sm ${
-                    isUser ? "justify-end" : "justify-start"
-                  }`}
+                  className={`flex gap-3 text-sm ${isUser ? "justify-end" : "justify-start"}`}
                 >
                   {!isUser && (
                     <ModelLogo
@@ -448,7 +680,7 @@ Key takeaways:
                       provider={selectedModel.provider}
                       name={selectedModel.name}
                       size="md"
-                      className="mt-0.5 shadow-2xs"
+                      className="mt-0.5 shadow-2xs shrink-0"
                     />
                   )}
 
@@ -471,7 +703,6 @@ Key takeaways:
                       }`}
                     >
                       <span>{message.timestamp}</span>
-
                       {!isUser && (
                         <button
                           type="button"
@@ -499,7 +730,7 @@ Key takeaways:
               );
             })}
 
-            {/* Generating typing indicator */}
+            {/* Generating indicator */}
             {isGenerating && (
               <div className="flex gap-3 text-sm justify-start">
                 <ModelLogo
@@ -522,27 +753,52 @@ Key takeaways:
         )}
       </div>
 
-      {/* ─────────────────────────────────────────────────────────────
-          3. DYNAMIC BOTTOM COMPOSER (MATCHING REFERENCE SCREENSHOT)
-         ───────────────────────────────────────────────────────────── */}
+      {/* ── 3. BOTTOM COMPOSER ─────────────────────────────────────────── */}
       <div className="shrink-0 p-3 sm:p-4 bg-white/80 dark:bg-[#0E0C15]/80 backdrop-blur-md border-t border-zinc-200/80 dark:border-zinc-800/80">
         <div className="max-w-3xl mx-auto w-full">
           <div className="relative flex flex-col rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#111217] shadow-sm focus-within:border-[#713CF4] focus-within:ring-2 focus-within:ring-[#713CF4]/20 transition-all duration-150">
-            {/* Top Toolbar inside Composer Card (Matching Screenshot) */}
+
+            {/* ── Attachment preview chip ── */}
+            {attachment && (
+              <div className="flex items-center gap-2 px-3.5 pt-2.5 pb-0">
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-xs max-w-xs">
+                  {attachment.type.startsWith("image/") ? (
+                    <FileImage className="size-3.5 text-zinc-500 shrink-0" />
+                  ) : (
+                    <FileText className="size-3.5 text-zinc-500 shrink-0" />
+                  )}
+                  <span className="truncate text-zinc-700 dark:text-zinc-300 font-medium">
+                    {attachment.name}
+                  </span>
+                  <span className="text-zinc-400 shrink-0">
+                    {formatFileSize(attachment.size)}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={handleRemoveAttachment}
+                    className="text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 ml-0.5 cursor-pointer"
+                    aria-label="Remove attachment"
+                  >
+                    <X className="size-3" />
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* ── Top toolbar ── */}
             <div className="flex items-center justify-between px-3.5 pt-3 pb-1 border-b border-zinc-100 dark:border-zinc-850">
-              {/* Left: Model Selector + Connectors + Rocket */}
+              {/* Left: Model Selector (opens UPWARD) + Connectors + Rocket */}
               <div className="flex items-center gap-2">
-                {/* Active Model Selector Trigger */}
                 <ModelSelector
                   selectedModelId={selectedModel.id}
                   onSelectModel={handleSelectModel}
                   align="left"
+                  placement="top"
                   triggerClassName="!border-0 !bg-transparent !p-0 !shadow-none !text-xs font-bold text-zinc-900 dark:text-zinc-100 hover:text-[#713CF4] dark:hover:text-[#a78bfa]"
                 />
 
-                <span className="text-zinc-300 dark:text-zinc-700">|</span>
+                <span className="text-zinc-300 dark:text-zinc-700 select-none">|</span>
 
-                {/* Connected Tool / Branching */}
                 <button
                   type="button"
                   onClick={() =>
@@ -555,7 +811,6 @@ Key takeaways:
                   <GitBranch className="size-3.5" />
                 </button>
 
-                {/* Rocket / Upgrade Pro */}
                 <button
                   type="button"
                   onClick={() =>
@@ -571,14 +826,14 @@ Key takeaways:
                 </button>
               </div>
 
-              {/* Right: '+' New Chat + Clock (History) */}
+              {/* Right: + New Chat + Clock History */}
               <div className="flex items-center gap-1">
                 <button
                   type="button"
                   onClick={handleStartNewChat}
                   className="p-1 rounded-md text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
-                  title="Start New Chat (preserves current model)"
-                  aria-label="Start New Chat"
+                  title="New Chat — preserves current model"
+                  aria-label="Start new chat"
                 >
                   <Plus className="size-4" />
                 </button>
@@ -588,29 +843,38 @@ Key takeaways:
                   onClick={() => router.push("/history")}
                   className="p-1 rounded-md text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
                   title="Chat History"
-                  aria-label="View Chat History"
+                  aria-label="View chat history"
                 >
                   <Clock className="size-4" />
                 </button>
               </div>
             </div>
 
-            {/* Bottom Row: Attachment + Dynamic Prompt Input + Mic + Send */}
+            {/* ── Bottom input row ── */}
             <div className="flex items-end gap-2 px-3 pb-2.5 pt-1.5">
-              {/* Attachment Icon */}
+              {/* Hidden real file input (only if we wanted to allow Pro users to actually pick files) */}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept={ACCEPTED_FILE_TYPES}
+                className="sr-only"
+                aria-hidden="true"
+                tabIndex={-1}
+                onChange={handleFileSelected}
+              />
+
+              {/* Paperclip — opens Upgrade modal (Pro gate) */}
               <button
                 type="button"
-                onClick={() =>
-                  showToast("Multimodal file uploads are supported in EchoGPT Pro", "info")
-                }
+                onClick={handleAttachClick}
                 className="p-2 rounded-xl text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer shrink-0 mb-0.5"
                 title="Attach file (Pro feature)"
-                aria-label="Attach file"
+                aria-label="Attach file — Pro feature"
               >
                 <Paperclip className="size-4" />
               </button>
 
-              {/* Auto-expanding Textarea with Dynamic Model Placeholder */}
+              {/* Auto-expanding Textarea */}
               <textarea
                 ref={textareaRef}
                 value={promptText}
@@ -622,26 +886,30 @@ Key takeaways:
                 aria-label="Message prompt input"
               />
 
-              {/* Mic Icon */}
+              {/* Microphone — Web Speech API with real states */}
               <button
                 type="button"
-                onClick={() =>
-                  showToast("Voice transcription active: speak now...", "info")
-                }
-                className="p-2 rounded-xl text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer shrink-0 mb-0.5"
-                title="Voice input"
-                aria-label="Voice input"
+                onClick={handleVoiceClick}
+                disabled={voiceState === "denied" || voiceState === "unsupported"}
+                className={`p-2 rounded-xl transition-colors cursor-pointer shrink-0 mb-0.5 outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] disabled:cursor-not-allowed ${voiceMicClass()}`}
+                title={voiceMicLabel()}
+                aria-label={voiceMicLabel()}
+                aria-pressed={voiceState === "listening"}
               >
-                <Mic className="size-4" />
+                {voiceState === "listening" || voiceState === "requesting" ? (
+                  <MicOff className="size-4" />
+                ) : (
+                  <Mic className="size-4" />
+                )}
               </button>
 
-              {/* Send Button (Purple Round Button Matching Screenshot) */}
+              {/* Send */}
               <button
                 type="button"
                 onClick={handleSendMessage}
                 disabled={!promptText.trim() || isGenerating}
                 className="flex items-center justify-center size-8 rounded-full bg-[#713CF4] hover:bg-[#602ee0] active:bg-[#5223c7] text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-xs cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] shrink-0 mb-0.5"
-                aria-label="Send prompt"
+                aria-label="Send message (Enter)"
                 title="Send message (Enter)"
               >
                 <Send className="size-3.5" />
@@ -649,10 +917,21 @@ Key takeaways:
             </div>
           </div>
 
-          <div className="flex items-center justify-center gap-2 mt-2 text-[11px] text-zinc-400 dark:text-zinc-500">
-            <Sparkles className="size-3 text-[#713CF4]" />
-            <span>EchoGPT Web App Redesign. Press Shift+Enter for new line.</span>
-          </div>
+          {/* Voice listening indicator strip */}
+          {voiceState === "listening" && (
+            <div className="flex items-center justify-center gap-2 mt-2 text-[11px] text-red-500 dark:text-red-400">
+              <span className="size-1.5 rounded-full bg-red-500 animate-ping" />
+              <span className="font-medium">Listening — speak now</span>
+              <span className="text-zinc-400">Click mic to stop</span>
+            </div>
+          )}
+
+          {voiceState !== "listening" && (
+            <div className="flex items-center justify-center gap-2 mt-2 text-[11px] text-zinc-400 dark:text-zinc-500">
+              <Sparkles className="size-3 text-[#713CF4]" />
+              <span>EchoGPT Web App Redesign. Press Shift+Enter for new line.</span>
+            </div>
+          )}
         </div>
       </div>
     </div>
