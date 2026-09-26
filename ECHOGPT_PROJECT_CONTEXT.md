@@ -1420,10 +1420,72 @@ The original EchoGPT reference screenshots (`media_1790417263993.png` and `media
 
 ---
 
+## Milestone 4.zc — Store + New Chat Polish & Fix Pass (`/store` & `/chat`)
+
+### Completed: 2026-09-26 ✓
+
+#### What Changed
+
+**1. `src/config/models.ts` — AI_MODELS expanded to 36 models**
+- Added new providers: `Meta`, `Cohere`, `NovaSky`
+- New models added:
+  - GLM-4 Flash, Gemini 2.0 Flash (free)
+  - GPT-4.5, o3, o4-mini (OpenAI PRO)
+  - Gemini 2.5 Pro (Google PRO Reasoning)
+  - Claude 3.5 Haiku (Anthropic PRO Fast)
+  - DeepSeek R2, Grok 3 (PRO)
+  - Kimi k1.5, QwQ-32B (Reasoning)
+  - Llama 3.3 70B, Llama 3.1 8B, Llama 3.1 405B (Meta)
+  - Mistral Codestral (Open Source)
+  - Command R+ (Cohere PRO)
+  - Sky-T1 32B (NovaSky Open)
+  - Qwen 3 235B, GLM-5.2
+
+**2. `src/components/ui/ModelLogo.tsx` — Added Meta, Cohere, NovaSky, QwQ support**
+- Meta/Llama: sky-blue icon with llama silhouette path
+- Cohere: rose-accented "C" lettermark
+- NovaSky: indigo-to-sky gradient star polygon
+- Qwen condition extended to also match `qwq` model IDs
+
+**3. `src/components/dashboard/ModelSelector.tsx` — placement prop added**
+- New prop: `placement?: "bottom" | "top"` (default: `"bottom"`)
+- `placement="top"`: dropdown opens **upward** (`bottom-full mb-1.5`) — for in-composer use
+- `placement="bottom"`: existing behavior (`top-full mt-1.5`) — for header use
+- Fixes critical bug where in-composer ModelSelector was clipping below the viewport
+
+**4. `src/components/dashboard/PlaceholderWorkspace.tsx` — Full polish pass**
+- **Paperclip / File Attachment**: Now calls `openUpgradeModal()` with proper message (was a toast before) — correct Pro gate
+- **Voice Input (Web Speech API)**: Real implementation with states `idle | requesting | listening | unsupported | denied | error`
+  - Self-contained `ISpeechRecognition*` interface shim (no external @types needed)
+  - Shows animated red pulsing indicator strip while listening
+  - `MicOff` icon while active, `Mic` icon at rest
+  - `aria-pressed` for accessibility
+  - Functional updater in `onend` to avoid stale closure bug
+  - Graceful fallback toast for unsupported browsers / permission denied
+- **Share Chat**: Web Share API with clipboard text fallback
+  - Only visible when `messages.length > 1`
+  - Shares first 4 message excerpts as text
+  - Clipboard fallback with success toast "Chat summary copied to clipboard!"
+- **In-composer ModelSelector**: `placement="top"` applied — opens upward correctly
+- **Share button** added to WorkspaceHeader actions area
+- Attachment chip with file name, size, type icon, and remove button
+
+#### Verification
+- `npm run lint` → 0 errors, 0 warnings ✓
+- `npm run build` → 17 routes + `/` + `/_not-found` = exit 0 ✓
+
+#### Files Created / Changed
+- `src/config/models.ts` — Expanded to 36 AI_MODELS + 3 new providers
+- `src/components/ui/ModelLogo.tsx` — Added Meta/Llama, Cohere, NovaSky, QwQ logos
+- `src/components/dashboard/ModelSelector.tsx` — Added `placement` prop
+- `src/components/dashboard/PlaceholderWorkspace.tsx` — Full polish: voice, share, attachment, placement fix
+
+---
+
 ## CURRENT MILESTONE
 
 Current milestone:
-Milestone 4.zb — Store Page Redesign & Connected New Chat Experience (`/store` & `/chat`)
+Milestone 4.zc — Store + New Chat Polish & Fix Pass (`/store` & `/chat`)
 
 Status:
 Completed ✓
