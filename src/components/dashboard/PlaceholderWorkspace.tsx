@@ -65,12 +65,14 @@ function getServerChatSnapshot(): CurrentChatData | null {
 
 interface PlaceholderWorkspaceProps {
   onNewChat?: () => void;
+  initialPrompt?: string;
 }
 
 export function PlaceholderWorkspace({
   onNewChat,
+  initialPrompt,
 }: PlaceholderWorkspaceProps) {
-  const [promptText, setPromptText] = useState("");
+  const [promptText, setPromptText] = useState(initialPrompt || "");
   const [isGenerating, setIsGenerating] = useState(false);
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
   const { openUpgradeModal } = useUpgradeModal();
@@ -132,7 +134,7 @@ export function PlaceholderWorkspace({
       icon: ImageIcon,
     },
     {
-      id: "ai-sop-builder",
+      id: "sop",
       title: "Draft an SOP Document",
       description: "Build a structured standard operating procedure step-by-step",
       prompt: "Draft a Standard Operating Procedure (SOP) for customer onboarding with verification checkpoints.",

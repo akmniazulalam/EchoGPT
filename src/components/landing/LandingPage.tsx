@@ -84,7 +84,7 @@ const FEATURES = [
     bg: "bg-rose-500/10",
     title: "AI SOP Builder",
     desc: "Transform raw process notes into structured, professional standard operating procedures.",
-    href: "/ai-sop-builder",
+    href: "/sop",
   },
 ];
 

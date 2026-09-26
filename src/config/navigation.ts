@@ -74,9 +74,9 @@ export const ENGAGEMENT_ITEMS: NavItem[] = [
     icon: Briefcase,
   },
   {
-    id: "ai-sop-builder",
+    id: "sop",
     label: "AI SOP Builder",
-    href: "/ai-sop-builder",
+    href: "/sop",
     icon: FileText,
   },
 ];
