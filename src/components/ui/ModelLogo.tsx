@@ -215,8 +215,13 @@ export function ModelLogo({
     );
   }
 
-  // 9. Qwen (Alibaba)
-  if (mid.includes("qwen") || prov.includes("alibaba") || prov.includes("qwen")) {
+  // 9. Qwen / Alibaba (also QwQ)
+  if (
+    mid.includes("qwen") ||
+    mid.includes("qwq") ||
+    prov.includes("alibaba") ||
+    prov.includes("qwen")
+  ) {
     return (
       <div
         className={`flex items-center justify-center bg-purple-600/15 border border-purple-600/30 text-purple-600 dark:text-purple-400 shadow-2xs shrink-0 font-bold ${sizeClass} ${className}`}
@@ -254,6 +259,75 @@ export function ModelLogo({
         >
           K
         </span>
+      </div>
+    );
+  }
+
+  // 11. Meta / Llama
+  if (
+    mid.includes("llama") ||
+    mid.includes("meta") ||
+    prov.includes("meta")
+  ) {
+    return (
+      <div
+        className={`flex items-center justify-center bg-sky-600/15 border border-sky-600/30 text-sky-600 dark:text-sky-400 shadow-2xs shrink-0 ${sizeClass} ${className}`}
+      >
+        <svg
+          width={iconPx}
+          height={iconPx}
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
+          {/* Simplified llama head silhouette */}
+          <path d="M9 3C7 3 5 4.5 5 7c0 1.5.5 2.5 1.5 3.5C5 11 4 12.5 4 14.5 4 17 5.5 19 8 20h8c2.5-1 4-3 4-5.5 0-2-.8-3.5-2-4.5 1-.8 1.5-1.8 1.5-3 0-2.5-2-4.5-4-4C14 3 12 4 11.5 6A3 3 0 0 0 9 3z" />
+        </svg>
+      </div>
+    );
+  }
+
+  // 12. Cohere
+  if (mid.includes("command") || mid.includes("cohere") || prov.includes("cohere")) {
+    return (
+      <div
+        className={`flex items-center justify-center bg-rose-600/15 border border-rose-600/30 text-rose-600 dark:text-rose-400 shadow-2xs shrink-0 font-bold select-none ${sizeClass} ${className}`}
+      >
+        <span
+          style={{
+            fontFamily: "system-ui, -apple-system, sans-serif",
+            fontSize: `${iconPx * 0.8}px`,
+            lineHeight: 1,
+            fontWeight: 900,
+          }}
+        >
+          C
+        </span>
+      </div>
+    );
+  }
+
+  // 13. NovaSky / Sky
+  if (
+    mid.includes("sky") ||
+    mid.includes("nova") ||
+    prov.includes("novasky") ||
+    prov.includes("nova sky")
+  ) {
+    return (
+      <div
+        className={`flex items-center justify-center bg-gradient-to-br from-indigo-600 to-sky-500 text-white shadow-2xs shrink-0 ${sizeClass} ${className}`}
+      >
+        <svg
+          width={iconPx}
+          height={iconPx}
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.2"
+          strokeLinecap="round"
+        >
+          <polygon points="12 2 15 9 22 9 16.5 13.5 18.5 21 12 16.5 5.5 21 7.5 13.5 2 9 9 9 12 2" />
+        </svg>
       </div>
     );
   }
