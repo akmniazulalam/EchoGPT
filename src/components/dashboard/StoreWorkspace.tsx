@@ -9,9 +9,11 @@ import { Badge } from "@/components/ui/Badge";
 import { WorkspaceHeader } from "@/components/workspace/WorkspaceHeader";
 import { saveSelectedModel } from "@/lib/chatStorage";
 import { showToast } from "@/components/ui/Toast";
+import { useUpgradeModal } from "@/context/UpgradeModalContext";
 
 export function StoreWorkspace() {
   const router = useRouter();
+  const { openUpgradeModal, isProUser } = useUpgradeModal();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("All Apps");
 
@@ -40,14 +42,23 @@ export function StoreWorkspace() {
     });
   }, [searchQuery, selectedCategory]);
 
-  // Handle "Try App" action: Starts a fresh conversation session with the requested model
+  // Handle "Try App" action:
+  // - PRO models for Free users: blocked by UpgradeProModal (Section 6 & 9)
+  // - Free models / Pro users: starts fresh chat with selected model
   const handleTryApp = React.useCallback(
     (model: AIModel) => {
+      if (model.isPro && !isProUser) {
+        openUpgradeModal(
+          `${model.name} is an EchoGPT Pro model. Upgrade to access frontier AI reasoning.`
+        );
+        return;
+      }
+
       saveSelectedModel(model.id);
       showToast(`Started new chat with ${model.name}`, "success");
       router.push(`/chat?model=${encodeURIComponent(model.id)}&new=1`);
     },
-    [router]
+    [isProUser, openUpgradeModal, router]
   );
 
   return (
