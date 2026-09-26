@@ -7,9 +7,24 @@ import { PlaceholderWorkspace } from "./PlaceholderWorkspace";
 function ChatSessionContainer() {
   const searchParams = useSearchParams();
   const sessionKey = searchParams.get("new") ?? "default";
+  const conversationId = searchParams.get("c") ?? undefined;
+  const modelId = searchParams.get("model") ?? undefined;
   const prompt = searchParams.get("prompt") ?? undefined;
 
-  return <PlaceholderWorkspace key={sessionKey} initialPrompt={prompt} />;
+  // React key ensures fresh component state whenever switching conversations,
+  // starting new chats, or choosing a new model from the Store
+  const mountKey = conversationId
+    ? `c-${conversationId}`
+    : `new-${sessionKey}-${modelId ?? "default"}`;
+
+  return (
+    <PlaceholderWorkspace
+      key={mountKey}
+      conversationId={conversationId}
+      initialModelId={modelId}
+      initialPrompt={prompt}
+    />
+  );
 }
 
 export function ChatClient() {
