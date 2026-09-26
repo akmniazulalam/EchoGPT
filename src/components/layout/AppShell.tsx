@@ -33,6 +33,7 @@ export function AppShell({ children }: AppShellProps) {
   const handleNewChat = useCallback(() => {
     router.push(`/chat?new=${Date.now()}`);
     setTimeout(() => {
+      window.dispatchEvent(new CustomEvent("echogpt:new-chat"));
       window.dispatchEvent(new CustomEvent("echogpt:focus-chat-input"));
     }, 100);
   }, [router]);
