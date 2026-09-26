@@ -7,21 +7,21 @@ import { PlaceholderWorkspace } from "./PlaceholderWorkspace";
 function ChatSessionContainer() {
   const searchParams = useSearchParams();
   const sessionKey = searchParams.get("new") ?? "default";
-  const conversationId = searchParams.get("c") ?? undefined;
-  const modelId = searchParams.get("model") ?? undefined;
+  const conversationId = searchParams.get("c") ?? "";
+  const modelId = searchParams.get("model") ?? "";
   const prompt = searchParams.get("prompt") ?? undefined;
 
-  // React key ensures fresh component state whenever switching conversations,
-  // starting new chats, or choosing a new model from the Store
+  // React key ensures clean fresh component state whenever navigating to a different
+  // conversation, clicking New Chat, or selecting a new model from the Store
   const mountKey = conversationId
     ? `c-${conversationId}`
-    : `new-${sessionKey}-${modelId ?? "default"}`;
+    : `new-${sessionKey}-${modelId || "default"}`;
 
   return (
     <PlaceholderWorkspace
       key={mountKey}
-      conversationId={conversationId}
-      initialModelId={modelId}
+      conversationId={conversationId || undefined}
+      initialModelId={modelId || undefined}
       initialPrompt={prompt}
     />
   );
