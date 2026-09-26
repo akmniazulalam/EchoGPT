@@ -1,7 +1,18 @@
 export interface AIModel {
   id: string;
   name: string;
-  provider: "EchoGPT" | "OpenAI" | "Anthropic" | "Google" | "DeepSeek" | "Mistral" | "xAI";
+  provider:
+    | "EchoGPT"
+    | "OpenAI"
+    | "Anthropic"
+    | "Google"
+    | "DeepSeek"
+    | "Mistral"
+    | "xAI"
+    | "GLM"
+    | "Qwen"
+    | "Kimi"
+    | string;
   category: "Flagship" | "Reasoning" | "Fast" | "Open Source";
   description: string;
   isPro: boolean;
@@ -22,6 +33,17 @@ export const AI_MODELS: AIModel[] = [
     badge: "Default",
   },
   {
+    id: "glm-5-3-flash",
+    name: "GLM-5.3 Flash",
+    provider: "GLM",
+    category: "Fast",
+    description:
+      "GLM-5.3 Flash is the fastest GLM tier, made for high-volume chat where latency matters most.",
+    isPro: false,
+    contextWindow: "128K",
+    badge: "Fast",
+  },
+  {
     id: "gpt-4o-mini",
     name: "GPT-4o mini",
     provider: "OpenAI",
@@ -38,6 +60,15 @@ export const AI_MODELS: AIModel[] = [
     description: "Highly capable open-architecture model with balanced throughput",
     isPro: false,
     contextWindow: "64K",
+  },
+  {
+    id: "qwen-2-5-plus",
+    name: "Qwen 2.5 Plus",
+    provider: "Qwen",
+    category: "Open Source",
+    description: "Open-weight reasoning powerhouse with expansive multilingual breadth",
+    isPro: false,
+    contextWindow: "128K",
   },
 
   // 2. Flagship Models (PRO)
@@ -77,6 +108,25 @@ export const AI_MODELS: AIModel[] = [
     description: "Industry-leading coding precision, nuanced writing, and logic",
     isPro: true,
     contextWindow: "200K",
+  },
+  {
+    id: "claude-3-5-sonnet",
+    name: "Claude 3.5 Sonnet",
+    provider: "Anthropic",
+    category: "Flagship",
+    description: "Exceptional coding benchmarks and sophisticated natural language reasoning",
+    isPro: true,
+    contextWindow: "200K",
+    badge: "Popular",
+  },
+  {
+    id: "kimi-k2-code",
+    name: "Kimi K2.7 Code",
+    provider: "Kimi",
+    category: "Reasoning",
+    description: "Ultra-long context code reasoning engine with precise repository synthesis",
+    isPro: true,
+    contextWindow: "256K",
   },
   {
     id: "claude-opus",
