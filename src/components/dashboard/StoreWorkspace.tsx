@@ -40,12 +40,15 @@ export function StoreWorkspace() {
     });
   }, [searchQuery, selectedCategory]);
 
-  // Handle "Try App" action
-  const handleTryApp = (model: AIModel) => {
-    saveSelectedModel(model.id);
-    showToast(`Switched active model to ${model.name}`, "success");
-    router.push("/chat");
-  };
+  // Handle "Try App" action: Starts a fresh conversation session with the requested model
+  const handleTryApp = React.useCallback(
+    (model: AIModel) => {
+      saveSelectedModel(model.id);
+      showToast(`Started new chat with ${model.name}`, "success");
+      router.push(`/chat?model=${encodeURIComponent(model.id)}&new=1`);
+    },
+    [router]
+  );
 
   return (
     <div className="flex flex-col flex-1 h-full min-h-0 bg-[#FAFAFC] dark:bg-[#0E0C15] text-zinc-900 dark:text-zinc-100 font-lexend">
