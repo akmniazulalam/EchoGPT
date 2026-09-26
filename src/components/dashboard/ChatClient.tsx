@@ -7,8 +7,9 @@ import { PlaceholderWorkspace } from "./PlaceholderWorkspace";
 function ChatSessionContainer() {
   const searchParams = useSearchParams();
   const sessionKey = searchParams.get("new") ?? "default";
+  const prompt = searchParams.get("prompt") ?? undefined;
 
-  return <PlaceholderWorkspace key={sessionKey} />;
+  return <PlaceholderWorkspace key={sessionKey} initialPrompt={prompt} />;
 }
 
 export function ChatClient() {
