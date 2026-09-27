@@ -217,15 +217,17 @@ export function PlaceholderWorkspace({
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // ── MCP Connectors Integration ───────────────────────────────────────────
-  const { connectors, activeConnectorIds, toggleActiveConnectorInChat } = useConnectors();
+  const { connectors, activeConnectorIds, toggleActiveConnectorInChat, isHydrated } = useConnectors();
   const [isConnectorPopoverOpen, setIsConnectorPopoverOpen] = useState(false);
   const connectorBtnRef = useRef<HTMLButtonElement>(null);
 
+  // Derive active connectors only after client hydration to prevent SSR mismatch
   const activeConnectors = useMemo(() => {
+    if (!isHydrated) return [];
     return connectors.filter(
       (c) => activeConnectorIds.includes(c.id) && c.enabled && c.status === "connected"
     );
-  }, [connectors, activeConnectorIds]);
+  }, [connectors, activeConnectorIds, isHydrated]);
 
   // Active Model object derived strictly from selectedModelId
   const selectedModel = useMemo(() => {
