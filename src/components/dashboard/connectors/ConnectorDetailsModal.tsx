@@ -114,25 +114,32 @@ export function ConnectorDetailsModal({
         <div className="overflow-y-auto custom-scrollbar p-5 sm:p-6 space-y-4">
           {/* Failed state */}
           {isFailed && (
-            <div className="p-4 rounded-xl bg-rose-50/70 dark:bg-rose-950/20 border border-rose-200/60 dark:border-rose-900/40 text-xs text-rose-700 dark:text-rose-300 flex items-start gap-2">
+            <div className="p-4 rounded-xl bg-rose-50/70 dark:bg-rose-950/20 border border-rose-200/60 dark:border-rose-900/40 text-xs text-rose-700 dark:text-rose-300 flex items-start gap-2.5">
               <AlertCircle className="size-4 shrink-0 mt-0.5 text-rose-500" />
               <div className="flex-1 min-w-0">
-                <p className="font-semibold mb-0.5">Connection failed</p>
-                <p className="line-clamp-3 leading-relaxed">{connector.errorMessage || "Could not reach the MCP server endpoint."}</p>
+                <p className="font-semibold mb-1">Connection failed</p>
+                <p className="text-zinc-600 dark:text-zinc-300 leading-relaxed">
+                  Unable to establish a connection to this MCP server. Check the URL and server availability, or retry the connection handshake.
+                </p>
+                {connector.errorMessage && (
+                  <p className="mt-2 p-2 rounded-lg bg-rose-100/60 dark:bg-rose-900/30 text-[11px] font-mono break-all text-rose-800 dark:text-rose-200">
+                    {connector.errorMessage}
+                  </p>
+                )}
                 <button
                   type="button"
                   onClick={handleRetry}
                   disabled={isConnecting}
-                  className="mt-2 inline-flex items-center gap-1 font-semibold text-rose-700 dark:text-rose-300 hover:underline cursor-pointer disabled:opacity-50"
+                  className="mt-2.5 inline-flex items-center gap-1.5 font-semibold text-rose-700 dark:text-rose-300 hover:underline cursor-pointer disabled:opacity-50"
                 >
                   <RotateCw className={`size-3 ${isConnecting ? "animate-spin" : ""}`} />
-                  <span>Retry connection</span>
+                  <span>Retry connection attempt</span>
                 </button>
               </div>
             </div>
           )}
 
-          {/* Tools section — only when connected */}
+          {/* Tools section — only when connected or disabled (not failed) */}
           {!isFailed && (
             <>
               <div className="flex items-center justify-between">
@@ -201,6 +208,21 @@ export function ConnectorDetailsModal({
           </Button>
 
           <div className="flex items-center gap-2">
+            {/* If failed: show Retry in footer */}
+            {isFailed && (
+              <Button
+                type="button"
+                variant="primary"
+                size="sm"
+                onClick={handleRetry}
+                isLoading={isConnecting}
+                leftIcon={<RotateCw className="size-3.5" />}
+                className="font-semibold shadow-xs"
+              >
+                Retry Connection
+              </Button>
+            )}
+
             {/* Enable/Disable — only meaningful when connected or disabled (not failed) */}
             {!isFailed && !isConnecting && (
               <Button

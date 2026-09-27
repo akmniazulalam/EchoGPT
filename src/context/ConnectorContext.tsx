@@ -25,6 +25,7 @@ interface ConnectorContextType {
   quotaLimit: number;
   connectedCount: number;
   canAddMore: boolean;
+  isHydrated: boolean;
   addConnector: (
     input: AddConnectorInput
   ) => Promise<{ success: boolean; error?: string; connector?: Connector }>;
@@ -42,22 +43,18 @@ const ConnectorContext = createContext<ConnectorContextType | undefined>(undefin
 export function ConnectorProvider({ children }: { children: React.ReactNode }) {
   const { isProUser } = useUpgradeModal();
 
-  const [connectors, setConnectors] = useState<Connector[]>(() => {
-    if (typeof window !== "undefined") {
-      return loadStoredConnectors();
-    }
-    return [];
-  });
+  // Initialize with deterministic empty defaults so SSR === initial client render
+  const [connectors, setConnectors] = useState<Connector[]>([]);
+  const [activeConnectorIds, setActiveConnectorIds] = useState<string[]>([]);
+  const [isHydrated, setIsHydrated] = useState(false);
 
-  const [activeConnectorIds, setActiveConnectorIds] = useState<string[]>(() => {
-    if (typeof window !== "undefined") {
-      return loadActiveChatConnectorIds();
-    }
-    return [];
-  });
-
-  // Keep state synced across tabs / custom events
+  // Restore stored connectors after hydration to guarantee SSR === initial client render
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setConnectors(loadStoredConnectors());
+    setActiveConnectorIds(loadActiveChatConnectorIds());
+    setIsHydrated(true);
+
     const handleUpdate = () => {
       setConnectors(loadStoredConnectors());
       setActiveConnectorIds(loadActiveChatConnectorIds());
@@ -170,10 +167,9 @@ export function ConnectorProvider({ children }: { children: React.ReactNode }) {
     (id: string) => {
       const updated = connectors.map((c) => {
         if (c.id !== id) return c;
-        // Failed connectors: enable/disable only changes the enabled flag
-        // They remain failed until a successful retry
+        // Failed connectors cannot be enabled or disabled
         if (c.status === "failed") {
-          return { ...c, enabled: !c.enabled, updatedAt: new Date().toISOString() };
+          return c;
         }
         const nextEnabled = !c.enabled;
         return {
@@ -271,10 +267,16 @@ export function ConnectorProvider({ children }: { children: React.ReactNode }) {
         );
         setConnectors(updated);
         saveStoredConnectors(updated);
+
+        // Ensure failed connector is never in active chat
+        const updatedActive = activeConnectorIds.filter((actId) => actId !== id);
+        setActiveConnectorIds(updatedActive);
+        saveActiveChatConnectorIds(updatedActive);
+
         return false;
       }
     },
-    [connectors]
+    [activeConnectorIds, connectors]
   );
 
   // Load sample demo connectors
@@ -304,6 +306,7 @@ export function ConnectorProvider({ children }: { children: React.ReactNode }) {
         quotaLimit,
         connectedCount,
         canAddMore,
+        isHydrated,
         addConnector,
         removeConnector,
         toggleConnectorEnabled,
