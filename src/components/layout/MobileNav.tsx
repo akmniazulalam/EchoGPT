@@ -64,8 +64,8 @@ export function MobileNav({
   return (
     <>
       {/* Top Mobile Bar (visible only below md breakpoint) */}
-      <header className="md:hidden sticky top-0 z-30 flex items-center justify-between h-14 px-4 bg-white/95 dark:bg-[#111217]/95 backdrop-blur-md border-b border-zinc-200/80 dark:border-zinc-800/80 select-none">
-        <div className="flex items-center gap-3">
+      <header className="md:hidden sticky top-0 z-30 flex items-center justify-between h-12 px-3.5 bg-white/95 dark:bg-[#111217]/95 backdrop-blur-md border-b border-zinc-200/80 dark:border-zinc-800/80 select-none">
+        <div className="flex items-center gap-2.5">
           <button
             type="button"
             onClick={onOpen}
