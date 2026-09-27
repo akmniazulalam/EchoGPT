@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 
 export interface ModalProps {
@@ -15,6 +16,8 @@ export interface ModalProps {
   bodyClassName?: string;
 }
 
+const emptySubscribe = () => () => {};
+
 export function Modal({
   isOpen,
   onClose,
@@ -28,7 +31,14 @@ export function Modal({
 }: ModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
 
-  // Close on Escape key
+  // Hydration-safe client detection without triggering cascading setState renders
+  const isClient = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
+
+  // Close on Escape key & lock body scroll
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
@@ -45,7 +55,7 @@ export function Modal({
     };
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !isClient) return null;
 
   const maxWidthStyles: Record<string, string> = {
     sm: "max-w-sm",
@@ -58,7 +68,7 @@ export function Modal({
     "5xl": "max-w-5xl",
   };
 
-  return (
+  return createPortal(
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6"
       role="dialog"
@@ -75,7 +85,7 @@ export function Modal({
       <div
         ref={modalRef}
         onClick={(e) => e.stopPropagation()}
-        className={`relative w-full ${maxWidthStyles[maxWidth] || maxWidthStyles.md} max-h-[94vh] flex flex-col bg-white dark:bg-[#121118] border border-zinc-200 dark:border-white/[0.08] rounded-2xl sm:rounded-3xl shadow-2xl z-10 overflow-hidden animate-in zoom-in-95 fade-in duration-200 ${className}`}
+        className={`relative w-full ${maxWidthStyles[maxWidth] || maxWidthStyles.md} max-h-[calc(100dvh-32px)] sm:max-h-[calc(100dvh-48px)] flex flex-col bg-white dark:bg-[#121118] border border-zinc-200 dark:border-white/[0.08] rounded-2xl sm:rounded-3xl shadow-2xl z-10 overflow-hidden animate-in zoom-in-95 fade-in duration-200 ${className}`}
       >
         {/* Header (rendered if title exists) */}
         {title ? (
@@ -122,6 +132,7 @@ export function Modal({
           {children}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
