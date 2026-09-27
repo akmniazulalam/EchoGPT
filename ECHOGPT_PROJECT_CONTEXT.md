@@ -1846,20 +1846,27 @@ Completed ✓
    - `PlaceholderWorkspace.tsx`: `activeConnectors` uses `if (!isHydrated) return [];` so initial SSR and client render match identically (no active connector chips in SSR, smoothly rendered post-hydration).
    - Tested together with persisted model (`selectedModelId`) without hydration errors or layout shift.
 
-4. **Sizing & Viewport Positioning Separation (Issues 3, 4, 5, 6)**:
-   - **Layer A (Existing Connectors Popover - `ChatConnectorPopover.tsx`)**: Kept comfortable 320px width; added dynamic viewport-clamped positioning based on trigger bounding rect with safe 16px horizontal margins (`left = Math.max(16, Math.min(rect.left, maxLeft))`). Never extends beyond right screen edge on 360px, 390px, 412px, 768px, or desktop.
-   - **Layer B (Add Connector Form - `ConnectorSetupModal.tsx`)**: Made substantially more compact with `maxWidth="md"`, `max-h-[calc(100vh-32px)] sm:max-h-[85vh]`, internal scroll `overflow-y-auto`, compact inputs, presets, and security note.
-   - Preserved click-inside fix (`handleClickOutside` guard when `isAddModalOpen` is active).
+4. **Sizing & Viewport Positioning Separation (Issues 3, 4, 5, 6) � FINAL POLISH:**
+   - **Layer A (Existing Connectors Popover - `ChatConnectorPopover.tsx`)**:
+     - Desktop (>= 1024px): anchored to trigger button with `left-0` and `lg:w-96`.
+     - Mobile & Tablet (< 1024px): mathematically centered horizontally in the viewport (`popoverLeft = (window.innerWidth - targetWidth) / 2 - rect.left`).
+     - Vertical Clearance: dynamically capped to `rect.top - 68px` so it never slides under or gets covered by the mobile top navigation and header.
+   - **Layer B (Add Connector Form - `ConnectorSetupModal.tsx` & `Modal.tsx`)**:
+     - Portaled to `document.body` via `createPortal` (using `useSyncExternalStore` for SSR hydration safety), avoiding parent `backdrop-blur-md` containing blocks and centering perfectly.
+     - Presets: wrapped naturally on desktop (`sm:flex-wrap sm:overflow-x-visible`) without horizontal scrollbars, while keeping compact scroll on narrow mobile screens.
+   - **Mobile Header & Composer Space Optimization**:
+     - `WorkspaceHeader.tsx`: refactored to a compact single-row flex layout on mobile, reducing vertical header height by >50% while preserving breadcrumbs, title, subtitle, and model selector.
+     - `MobileNav.tsx`: streamlined to 48px (`h-12`).
+     - Composer active connector chips: single-row horizontal scroll on mobile (`flex-nowrap overflow-x-auto no-scrollbar sm:flex-wrap`), preventing multi-row stacking when 2+ connectors are active.
+   - **Dark Mode Anti-FOUC Reload Flash Elimination**: Replaced async `next/script` in `layout.tsx` with native synchronous inline `<script>` in `<head>` that evaluates before `<body>` is painted. Eliminates any millisecond light mode flash on page refresh.
 
 **Verification:**
-- Lint: 0 errors, 0 warnings ✓
-- Build: exit 0, 19 static routes ✓
-- Responsive: 360px, 390px, 412px, 768px, 1440px tested with 0 overflow ✓
-- Hydration: Deterministic SSR + client hydration with both persisted model & connector state ✓
-
----
-
-
+- Lint: 0 errors, 0 warnings ?
+- Build: exit 0, 19 static routes ?
+- Layer A: `w-80 lg:w-96` desktop, perfectly centered horizontally on mobile & tablet, guaranteed top clearance below header ?
+- Layer B: portaled to body, centered on screen, presets wrap on desktop with no scrollbar ?
+- Composer: chips single-line horizontal scroll on mobile, massive vertical space saved ?
+- Dark mode: zero flash/flicker on reload ?
 
 # 24. MY WORKING PREFERENCE
 
