@@ -317,7 +317,7 @@ export function ModelSelector({
           </div>
 
           {/* Model Groups */}
-          <div className="max-h-72 overflow-y-auto custom-scrollbar p-1 space-y-3 pt-2">
+          <div className="max-h-55 sm:max-h-72 overflow-y-auto custom-scrollbar p-1 space-y-3 pt-2">
             {categories.length === 0 ? (
               <div className="py-6 text-center text-xs text-zinc-400">
                 No matching models found
