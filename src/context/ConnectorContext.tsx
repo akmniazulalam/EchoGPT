@@ -169,16 +169,19 @@ export function ConnectorProvider({ children }: { children: React.ReactNode }) {
   const toggleConnectorEnabled = useCallback(
     (id: string) => {
       const updated = connectors.map((c) => {
-        if (c.id === id) {
-          const nextEnabled = !c.enabled;
-          return {
-            ...c,
-            enabled: nextEnabled,
-            status: nextEnabled ? ("connected" as const) : ("disabled" as const),
-            updatedAt: new Date().toISOString(),
-          };
+        if (c.id !== id) return c;
+        // Failed connectors: enable/disable only changes the enabled flag
+        // They remain failed until a successful retry
+        if (c.status === "failed") {
+          return { ...c, enabled: !c.enabled, updatedAt: new Date().toISOString() };
         }
-        return c;
+        const nextEnabled = !c.enabled;
+        return {
+          ...c,
+          enabled: nextEnabled,
+          status: nextEnabled ? ("connected" as const) : ("disabled" as const),
+          updatedAt: new Date().toISOString(),
+        };
       });
 
       setConnectors(updated);
