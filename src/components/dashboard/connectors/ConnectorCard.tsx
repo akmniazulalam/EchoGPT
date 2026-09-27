@@ -145,17 +145,19 @@ export function ConnectorCard({
                       </button>
                     )}
 
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsMenuOpen(false);
-                        onToggleEnabled(connector.id);
-                      }}
-                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/[0.06] text-zinc-700 dark:text-zinc-200 font-medium flex items-center gap-2"
-                    >
-                      <CheckCircle2 className="size-3.5 text-emerald-500" />
-                      <span>{connector.enabled ? "Disable Connector" : "Enable Connector"}</span>
-                    </button>
+                    {connector.status !== "failed" && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          onToggleEnabled(connector.id);
+                        }}
+                        className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/[0.06] text-zinc-700 dark:text-zinc-200 font-medium flex items-center gap-2"
+                      >
+                        <CheckCircle2 className="size-3.5 text-emerald-500" />
+                        <span>{connector.enabled ? "Disable Connector" : "Enable Connector"}</span>
+                      </button>
+                    )}
 
                     <div className="h-px bg-zinc-100 dark:bg-white/[0.06] my-1" />
 
@@ -197,7 +199,11 @@ export function ConnectorCard({
         )}
 
         {/* Discovered Tools Chips */}
-        {connector.tools.length > 0 ? (
+        {connector.status === "failed" ? (
+          <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-3 italic">
+            No tools available · Connection failed
+          </p>
+        ) : connector.tools.length > 0 ? (
           <div className="space-y-2 mt-4">
             <div className="flex items-center justify-between text-xs">
               <span className="font-semibold text-zinc-700 dark:text-zinc-300 flex items-center gap-1.5">
@@ -207,7 +213,7 @@ export function ConnectorCard({
               <button
                 type="button"
                 onClick={() => onViewDetails(connector)}
-                className="text-[11px] text-[#713CF4] dark:text-[#A78BFA] hover:underline font-medium"
+                className="text-[11px] text-[#713CF4] dark:text-[#A78BFA] hover:underline font-medium cursor-pointer"
               >
                 Inspect All
               </button>
@@ -230,11 +236,11 @@ export function ConnectorCard({
               )}
             </div>
           </div>
-        ) : connector.status !== "failed" ? (
+        ) : (
           <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-3 italic">
             Connected but no tools were exposed by this server.
           </p>
-        ) : null}
+        )}
 
         {/* Meta badges: Auth protected, Demo simulated */}
         <div className="flex items-center gap-2 mt-4 pt-3 border-t border-zinc-100 dark:border-white/[0.06] text-[11px] text-zinc-400">
@@ -258,33 +264,56 @@ export function ConnectorCard({
           onClick={() => onViewDetails(connector)}
           className="text-xs font-semibold text-zinc-600 dark:text-zinc-300 hover:text-[#713CF4] dark:hover:text-[#A78BFA] transition-colors cursor-pointer"
         >
-          View Tools
+          {connector.status === "failed" ? "View Details" : "View Tools"}
         </button>
 
-        <div className="flex items-center gap-3">
-          {/* Enabled Toggle Switch */}
-          <label className="inline-flex items-center gap-1.5 cursor-pointer text-xs text-zinc-500 dark:text-zinc-400 select-none">
-            <span>{connector.enabled ? "Enabled" : "Off"}</span>
-            <input
-              type="checkbox"
-              checked={connector.enabled}
-              onChange={() => onToggleEnabled(connector.id)}
-              className="sr-only peer"
-            />
-            <div className="relative w-8 h-4.5 bg-zinc-200 peer-focus:outline-none rounded-full peer dark:bg-zinc-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-[#713CF4]" />
-          </label>
+        {connector.status === "failed" ? (
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleRetryClick}
+              disabled={isRetrying}
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/20 border border-amber-200/60 dark:border-amber-900/40 transition-colors cursor-pointer disabled:opacity-50"
+            >
+              <RotateCw className={`size-3 ${isRetrying ? "animate-spin" : ""}`} />
+              <span>Retry</span>
+            </button>
 
-          {/* Use in Chat button */}
-          <button
-            type="button"
-            disabled={!connector.enabled || connector.status !== "connected"}
-            onClick={() => onUseInChat(connector)}
-            className="inline-flex items-center gap-1 text-xs font-semibold text-[#713CF4] dark:text-[#A78BFA] hover:underline disabled:opacity-40 disabled:no-underline cursor-pointer disabled:cursor-not-allowed"
-          >
-            <MessageSquare className="size-3.5" />
-            <span>Use in Chat</span>
-          </button>
-        </div>
+            <button
+              type="button"
+              onClick={() => onRemove(connector)}
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/20 border border-rose-200/60 dark:border-rose-900/40 transition-colors cursor-pointer"
+            >
+              <Trash2 className="size-3" />
+              <span>Remove</span>
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-3">
+            {/* Enabled Toggle Switch */}
+            <label className="inline-flex items-center gap-1.5 cursor-pointer text-xs text-zinc-500 dark:text-zinc-400 select-none">
+              <span>{connector.enabled ? "Enabled" : "Off"}</span>
+              <input
+                type="checkbox"
+                checked={connector.enabled}
+                onChange={() => onToggleEnabled(connector.id)}
+                className="sr-only peer"
+              />
+              <div className="relative w-8 h-4.5 bg-zinc-200 peer-focus:outline-none rounded-full peer dark:bg-zinc-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-[#713CF4]" />
+            </label>
+
+            {/* Use in Chat button */}
+            <button
+              type="button"
+              disabled={!connector.enabled || connector.status !== "connected"}
+              onClick={() => onUseInChat(connector)}
+              className="inline-flex items-center gap-1 text-xs font-semibold text-[#713CF4] dark:text-[#A78BFA] hover:underline disabled:opacity-40 disabled:no-underline cursor-pointer disabled:cursor-not-allowed"
+            >
+              <MessageSquare className="size-3.5" />
+              <span>Use in Chat</span>
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
