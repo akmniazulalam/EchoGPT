@@ -155,27 +155,19 @@ export function PlaceholderWorkspace({
     return getConversationById(conversationId);
   }, [conversationId]);
 
-  // Model ID derivation: restored > initial prop > localStorage > default
+  // Initialize with deterministic default so SSR === initial client render (no hydration mismatch)
+  // Restore from conversation > initialModelId prop > localStorage AFTER hydration in useEffect
   const [selectedModelId, setSelectedModelId] = useState<string>(() => {
-    let candidate = "echogpt";
+    // Restored conversation: safe because it comes from props (not localStorage directly)
     if (restoredConv?.modelId && AI_MODELS.some((m) => m.id === restoredConv.modelId)) {
-      candidate = restoredConv.modelId;
-    } else if (initialModelId && AI_MODELS.some((m) => m.id === initialModelId)) {
-      candidate = initialModelId;
-    } else if (typeof window !== "undefined") {
-      const stored = loadSelectedModel();
-      if (stored && AI_MODELS.some((m) => m.id === stored)) {
-        candidate = stored;
-      }
+      return restoredConv.modelId;
     }
-
-    // Safety check: if candidate is PRO but user is not Pro, fallback to free default
-    const candidateModel = AI_MODELS.find((m) => m.id === candidate);
-    const hasPro = typeof window !== "undefined" ? loadDemoProState() : false;
-    if (candidateModel?.isPro && !hasPro) {
-      return "echogpt";
+    // Initial model from navigation prop: also safe (comes from URL params/router)
+    if (initialModelId && AI_MODELS.some((m) => m.id === initialModelId)) {
+      return initialModelId;
     }
-    return candidate;
+    // Default: always "echogpt" — localStorage is read in useEffect after hydration
+    return "echogpt";
   });
 
   // Active conversation ID
@@ -196,6 +188,21 @@ export function PlaceholderWorkspace({
   useEffect(() => {
     activeConversationIdRef.current = activeConversationId;
   }, [activeConversationId]);
+
+  // After hydration: restore persisted model selection from localStorage
+  // This runs only on the client, after SSR HTML is matched, so no hydration mismatch
+  useEffect(() => {
+    // Skip if we already have a meaningful model from conversation/prop
+    if (restoredConv?.modelId || initialModelId) return;
+    const stored = loadSelectedModel();
+    if (!stored || !AI_MODELS.some((m) => m.id === stored)) return;
+    const storedModel = AI_MODELS.find((m) => m.id === stored);
+    const hasPro = loadDemoProState();
+    if (storedModel?.isPro && !hasPro) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSelectedModelId(stored);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // intentionally empty — runs once after mount
 
   // ── UI States ────────────────────────────────────────────────────────────
   const [promptText, setPromptText] = useState(initialPrompt || "");
