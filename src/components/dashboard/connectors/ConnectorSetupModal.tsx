@@ -128,35 +128,35 @@ export function ConnectorSetupModal({
       isOpen={isOpen}
       onClose={handleClose}
       maxWidth="md"
-      bodyClassName="p-0"
+      bodyClassName="p-0 flex flex-col min-h-0 overflow-hidden"
     >
-      <div className="flex flex-col max-h-[calc(100vh-32px)] sm:max-h-[85vh] font-lexend">
-        {/* Compact Modal Header */}
-        <div className="p-4 sm:p-5 border-b border-zinc-100 dark:border-white/[0.08] bg-zinc-50/70 dark:bg-white/[0.02] shrink-0">
+      <div className="flex flex-col h-full max-h-[calc(100dvh-32px)] font-lexend overflow-hidden">
+        {/* Compact Modal Header (Always visible at top) */}
+        <div className="px-4 py-3 sm:px-5 sm:py-3.5 border-b border-zinc-100 dark:border-white/[0.08] bg-zinc-50/70 dark:bg-white/[0.02] shrink-0">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 pr-6">
-              <h3 className="text-base sm:text-lg font-bold text-zinc-900 dark:text-zinc-50 truncate">
+              <h3 className="text-sm sm:text-base font-bold text-zinc-900 dark:text-zinc-50 truncate">
                 Add custom connector
               </h3>
-              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5 leading-snug">
+              <p className="text-[11.5px] sm:text-xs text-zinc-500 dark:text-zinc-400 mt-0.5 leading-snug">
                 Connect an MCP server and its tools become available in chat.
               </p>
             </div>
 
             {/* Quota Badge */}
-            <span className="text-[10.5px] font-semibold px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-white/[0.06] text-zinc-600 dark:text-zinc-300 border border-zinc-200 dark:border-white/[0.08] shrink-0">
+            <span className="text-[10px] sm:text-[10.5px] font-semibold px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-white/[0.06] text-zinc-600 dark:text-zinc-300 border border-zinc-200 dark:border-white/[0.08] shrink-0">
               {isProUser ? "Unlimited Pro" : `${connectedCount} of ${quotaLimit}`}
             </span>
           </div>
         </div>
 
-        {/* Scrollable Form Body with Compact Spacing */}
-        <form onSubmit={handleSubmit} className="overflow-y-auto custom-scrollbar p-4 sm:p-5 space-y-3.5 flex-1 min-h-0">
+        {/* Scrollable Form Body (Only this section scrolls when screen is compact) */}
+        <form onSubmit={handleSubmit} className="overflow-y-auto custom-scrollbar px-4 py-3 sm:px-5 sm:py-4 space-y-3 flex-1 min-h-0">
           {/* Free Tier Quota Alert if at limit */}
           {!canAddMore && (
-            <div className="p-3 rounded-xl bg-amber-50/80 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/40 text-amber-800 dark:text-amber-300 text-xs flex items-start gap-2">
+            <div className="p-2.5 rounded-xl bg-amber-50/80 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/40 text-amber-800 dark:text-amber-300 text-xs flex items-start gap-2">
               <Sparkles className="size-4 shrink-0 text-[#713CF4] mt-0.5" />
-              <div className="space-y-0.5">
+              <div className="space-y-0.5 min-w-0">
                 <p className="font-semibold text-xs">Connector Limit Reached</p>
                 <p className="text-[11px] text-amber-700 dark:text-amber-400 leading-snug">
                   Free tier includes 1 connector. Upgrade to Pro for unlimited tools.
@@ -172,22 +172,22 @@ export function ConnectorSetupModal({
             </div>
           )}
 
-          {/* Quick Demo Presets Strip */}
+          {/* Quick Demo Presets Strip (Horizontal scroll row on mobile to save vertical space) */}
           <div className="space-y-1">
             <div className="flex items-center justify-between text-xs">
-              <span className="font-semibold text-zinc-700 dark:text-zinc-300 flex items-center gap-1 text-[11.5px]">
+              <span className="font-semibold text-zinc-700 dark:text-zinc-300 flex items-center gap-1 text-[11px] sm:text-[11.5px]">
                 <Zap className="size-3 text-[#713CF4]" />
                 <span>Quick-Fill Presets:</span>
               </span>
-              <span className="text-[10.5px] text-zinc-400">1-click test data</span>
+              <span className="text-[10px] text-zinc-400">1-click test</span>
             </div>
-            <div className="flex flex-wrap gap-1">
+            <div className="flex items-center gap-1.5 overflow-x-auto sm:overflow-x-visible sm:flex-wrap no-scrollbar py-0.5">
               {DEMO_PRESETS.map((preset) => (
                 <button
                   key={preset.id}
                   type="button"
                   onClick={() => applyPreset(preset)}
-                  className="px-2 py-0.5 rounded-md text-[11px] font-medium bg-zinc-100 hover:bg-zinc-200/70 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-zinc-700 dark:text-zinc-300 border border-zinc-200/80 dark:border-white/[0.08] transition-colors cursor-pointer"
+                  className="shrink-0 sm:shrink-0 px-2 py-0.5 rounded-md text-[11px] font-medium bg-zinc-100 hover:bg-zinc-200/70 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-zinc-700 dark:text-zinc-300 border border-zinc-200/80 dark:border-white/[0.08] transition-colors cursor-pointer"
                 >
                   {preset.name}
                 </button>
@@ -195,7 +195,7 @@ export function ConnectorSetupModal({
               <button
                 type="button"
                 onClick={applyFailurePreset}
-                className="px-2 py-0.5 rounded-md text-[11px] font-medium bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/20 dark:hover:bg-rose-950/40 text-rose-600 dark:text-rose-400 border border-rose-200/60 dark:border-rose-900/40 transition-colors cursor-pointer"
+                className="shrink-0 sm:shrink-0 px-2 py-0.5 rounded-md text-[11px] font-medium bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/20 dark:hover:bg-rose-950/40 text-rose-600 dark:text-rose-400 border border-rose-200/60 dark:border-rose-900/40 transition-colors cursor-pointer"
                 title="Test simulated error & retry workflow"
               >
                 Test Failure
@@ -207,7 +207,7 @@ export function ConnectorSetupModal({
           <div className="space-y-1">
             <label
               htmlFor="connector-name"
-              className="block text-xs font-medium text-zinc-700 dark:text-zinc-300"
+              className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300"
             >
               Name <span className="text-rose-500">*</span>
             </label>
@@ -221,16 +221,16 @@ export function ConnectorSetupModal({
               }}
               placeholder="e.g. GitHub Tools"
               disabled={isLoading}
-              className={`w-full text-xs sm:text-[13px] px-3 py-2 rounded-lg bg-white dark:bg-[#181524] border ${
+              className={`w-full text-xs sm:text-[13px] h-9 px-3 rounded-lg bg-white dark:bg-[#181524] border ${
                 errors.name
                   ? "border-rose-500 focus:border-rose-500"
                   : "border-zinc-200 dark:border-white/[0.08] focus:border-[#713CF4]"
               } text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 outline-none focus:ring-1 focus:ring-[#713CF4] transition-all`}
             />
             {errors.name ? (
-              <p className="text-[10.5px] text-rose-500">{errors.name}</p>
+              <p className="text-[10px] text-rose-500">{errors.name}</p>
             ) : (
-              <p className="text-[10.5px] text-zinc-400 dark:text-zinc-500">
+              <p className="text-[10px] text-zinc-400 dark:text-zinc-500 leading-tight">
                 Shown in the connector management and chat selection lists.
               </p>
             )}
@@ -240,7 +240,7 @@ export function ConnectorSetupModal({
           <div className="space-y-1">
             <label
               htmlFor="server-url"
-              className="block text-xs font-medium text-zinc-700 dark:text-zinc-300"
+              className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300"
             >
               MCP server URL <span className="text-rose-500">*</span>
             </label>
@@ -254,16 +254,16 @@ export function ConnectorSetupModal({
               }}
               placeholder="https://mcp.example.com/v1"
               disabled={isLoading}
-              className={`w-full text-xs sm:text-[13px] px-3 py-2 rounded-lg bg-white dark:bg-[#181524] border ${
+              className={`w-full text-xs sm:text-[13px] h-9 px-3 rounded-lg bg-white dark:bg-[#181524] border ${
                 errors.serverUrl
                   ? "border-rose-500 focus:border-rose-500"
                   : "border-zinc-200 dark:border-white/[0.08] focus:border-[#713CF4]"
               } text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 outline-none focus:ring-1 focus:ring-[#713CF4] transition-all font-mono`}
             />
             {errors.serverUrl ? (
-              <p className="text-[10.5px] text-rose-500">{errors.serverUrl}</p>
+              <p className="text-[10px] text-rose-500">{errors.serverUrl}</p>
             ) : (
-              <p className="text-[10.5px] text-zinc-400 dark:text-zinc-500">
+              <p className="text-[10px] text-zinc-400 dark:text-zinc-500 leading-tight">
                 The HTTPS address where the server accepts MCP requests.
               </p>
             )}
@@ -273,7 +273,7 @@ export function ConnectorSetupModal({
           <div className="space-y-1">
             <label
               htmlFor="auth-header"
-              className="block text-xs font-medium text-zinc-700 dark:text-zinc-300"
+              className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300"
             >
               Authorization header (optional)
             </label>
@@ -284,10 +284,10 @@ export function ConnectorSetupModal({
               onChange={(e) => setAuthHeader(e.target.value)}
               placeholder="Bearer your-token-here"
               disabled={isLoading}
-              className="w-full text-xs sm:text-[13px] px-3 py-2 rounded-lg bg-white dark:bg-[#181524] border border-zinc-200 dark:border-white/[0.08] text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 outline-none focus:border-[#713CF4] focus:ring-1 focus:ring-[#713CF4] transition-all font-mono"
+              className="w-full text-xs sm:text-[13px] h-9 px-3 rounded-lg bg-white dark:bg-[#181524] border border-zinc-200 dark:border-white/[0.08] text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 outline-none focus:border-[#713CF4] focus:ring-1 focus:ring-[#713CF4] transition-all font-mono"
             />
-            <p className="text-[10.5px] text-zinc-400 dark:text-zinc-500">
-              Only required if your MCP server requires an authorization secret.
+            <p className="text-[10px] text-zinc-400 dark:text-zinc-500 leading-tight">
+              Only required if your MCP server requires authentication.
             </p>
           </div>
 
@@ -302,22 +302,23 @@ export function ConnectorSetupModal({
           )}
 
           {/* Security Note */}
-          <div className="p-2.5 rounded-lg bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/60 dark:border-white/[0.06] text-[11px] text-zinc-500 dark:text-zinc-400 flex items-center gap-2">
+          <div className="p-2 rounded-lg bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/60 dark:border-white/[0.06] text-[10.5px] text-zinc-500 dark:text-zinc-400 flex items-center gap-2">
             <ShieldAlert className="size-3.5 shrink-0 text-amber-500" />
-            <p className="leading-snug">
-              Only connect servers you trust — exposed tools can execute actions on your behalf.
+            <p className="leading-tight">
+              Only connect servers you trust — tools can execute actions on your behalf.
             </p>
           </div>
         </form>
 
-        {/* Compact Modal Actions Footer */}
-        <div className="p-3.5 sm:p-4 border-t border-zinc-100 dark:border-white/[0.08] bg-zinc-50/70 dark:bg-white/[0.02] flex items-center justify-end gap-2.5 shrink-0">
+        {/* Compact Modal Actions Footer (Always visible at bottom) */}
+        <div className="px-4 py-3 sm:px-5 sm:py-3.5 border-t border-zinc-100 dark:border-white/[0.08] bg-zinc-50/70 dark:bg-white/[0.02] flex items-center justify-end gap-2 shrink-0">
           <Button
             type="button"
             variant="ghost"
             size="sm"
             onClick={handleClose}
             disabled={isLoading}
+            className="h-8 px-3 text-xs"
           >
             Cancel
           </Button>
@@ -328,7 +329,7 @@ export function ConnectorSetupModal({
             size="sm"
             onClick={handleSubmit}
             isLoading={isLoading}
-            className="px-4 font-semibold shadow-xs"
+            className="h-8 px-4 text-xs font-semibold shadow-xs"
           >
             Continue
           </Button>
