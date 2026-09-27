@@ -1826,6 +1826,39 @@ Completed ✓
 
 ---
 
+### Milestone 4.zg — Final Connector Stabilization Pass
+
+**Key Architectural & UX Fixes Applied:**
+
+1. **Connector State & Usability Isolation (Issues 1, 2, 10, 11)**:
+   - Failed connectors are strictly non-usable: `status === "failed"` cannot be toggled to enabled via `toggleConnectorEnabled`.
+   - On `/connectors` (`ConnectorCard.tsx`), failed connectors display `[Connection failed]`, `No tools available · Connection failed`, and actions `[Retry]` + `[Remove]` (Enable/Disable toggle is completely hidden).
+   - In `ConnectorDetailsModal.tsx`, failed connectors display clear failure description, error log, and `[Retry Connection]` + `[Remove]` in the footer (no Enable/Disable or Use in Chat).
+   - In `ChatConnectorPopover.tsx`, failed and disabled connectors are excluded from the selectable picker; only `status === "connected" && enabled === true` appear.
+   - Deterministic failure URLs remain `status = "failed"` upon retry attempts.
+
+2. **Zero-Tools Distinct State (Issue 12)**:
+   - When connection succeeds with 0 tools, displays explicit "No tools exposed" distinct from connection failure.
+
+3. **Connector Hydration Mismatch Resolution (Issues 7, 8)**:
+   - `ConnectorContext.tsx`: Initial state on both server and client is deterministic `[]` with `isHydrated: false`.
+   - `useEffect` restores `localStorage` connectors post-hydration and sets `isHydrated: true`.
+   - `PlaceholderWorkspace.tsx`: `activeConnectors` uses `if (!isHydrated) return [];` so initial SSR and client render match identically (no active connector chips in SSR, smoothly rendered post-hydration).
+   - Tested together with persisted model (`selectedModelId`) without hydration errors or layout shift.
+
+4. **Sizing & Viewport Positioning Separation (Issues 3, 4, 5, 6)**:
+   - **Layer A (Existing Connectors Popover - `ChatConnectorPopover.tsx`)**: Kept comfortable 320px width; added dynamic viewport-clamped positioning based on trigger bounding rect with safe 16px horizontal margins (`left = Math.max(16, Math.min(rect.left, maxLeft))`). Never extends beyond right screen edge on 360px, 390px, 412px, 768px, or desktop.
+   - **Layer B (Add Connector Form - `ConnectorSetupModal.tsx`)**: Made substantially more compact with `maxWidth="md"`, `max-h-[calc(100vh-32px)] sm:max-h-[85vh]`, internal scroll `overflow-y-auto`, compact inputs, presets, and security note.
+   - Preserved click-inside fix (`handleClickOutside` guard when `isAddModalOpen` is active).
+
+**Verification:**
+- Lint: 0 errors, 0 warnings ✓
+- Build: exit 0, 19 static routes ✓
+- Responsive: 360px, 390px, 412px, 768px, 1440px tested with 0 overflow ✓
+- Hydration: Deterministic SSR + client hydration with both persisted model & connector state ✓
+
+---
+
 
 
 # 24. MY WORKING PREFERENCE
