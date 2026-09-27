@@ -34,61 +34,64 @@ export function ChatConnectorPopover({
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-  // Dynamic positioning state to clamp within viewport on all screen sizes (360px - 1440px)
-  const [positionStyle, setPositionStyle] = useState<React.CSSProperties>({
-    position: "fixed",
-    bottom: 80,
-    left: 16,
-    width: "calc(100vw - 32px)",
-    maxWidth: 320,
-  });
-
-  // Calculate position relative to trigger while guaranteeing >= 16px viewport margins
+  // Position & viewport containment:
+  // - Desktop (>= 1024px): anchored to trigger button with left-0 and w-96.
+  // - Mobile & Tablet (< 1024px): horizontally CENTERED in viewport, with height
+  //   strictly constrained so it never slides under the top header.
   useEffect(() => {
     if (!isOpen) return;
 
-    const updatePosition = () => {
-      if (!triggerRef.current) return;
-      const rect = triggerRef.current.getBoundingClientRect();
-      const margin = 16;
-      const targetWidth = Math.min(320, window.innerWidth - margin * 2);
-      const maxLeft = Math.max(margin, window.innerWidth - targetWidth - margin);
-      const left = Math.max(margin, Math.min(rect.left, maxLeft));
-      const bottom = Math.max(margin, window.innerHeight - rect.top + 8);
+    const clampMobilePosition = () => {
+      const popover = popoverRef.current;
+      const trigger = triggerRef.current;
+      if (!popover || !trigger) return;
 
-      setPositionStyle({
-        position: "fixed",
-        bottom: `${bottom}px`,
-        left: `${left}px`,
-        width: `${targetWidth}px`,
-        maxWidth: "calc(100vw - 32px)",
-      });
+      // On desktop (>= 1024px): reset inline styles so desktop CSS (left-0, lg:w-96) applies
+      if (window.innerWidth >= 1024) {
+        popover.style.left = "";
+        popover.style.width = "";
+        popover.style.maxHeight = "";
+        return;
+      }
+
+      const rect = trigger.getBoundingClientRect();
+
+      // Horizontally center on mobile and tablet
+      const targetWidth = Math.min(360, window.innerWidth - 24);
+      const screenLeft = (window.innerWidth - targetWidth) / 2;
+      const popoverLeft = screenLeft - rect.left;
+
+      popover.style.left = `${popoverLeft}px`;
+      popover.style.width = `${targetWidth}px`;
+
+      // Vertical safety: ensure top of popover never slides under top header
+      // (keep at least 68px clearance from top of viewport for MobileNav + Header)
+      const availableHeight = rect.top - 68;
+      if (availableHeight > 0) {
+        popover.style.maxHeight = `${Math.min(420, availableHeight)}px`;
+      }
     };
 
-    updatePosition();
-    window.addEventListener("resize", updatePosition);
-    window.addEventListener("scroll", updatePosition, true);
-
-    return () => {
-      window.removeEventListener("resize", updatePosition);
-      window.removeEventListener("scroll", updatePosition, true);
-    };
+    clampMobilePosition();
+    window.addEventListener("resize", clampMobilePosition);
+    return () => window.removeEventListener("resize", clampMobilePosition);
   }, [isOpen, triggerRef]);
 
-  // Close on Escape or click outside (but not when add modal is open)
+  // Close on Escape or click outside — but NOT when the Add Connector modal is open.
+  // The modal renders in a React portal (outside our DOM subtree), so we must skip
+  // the outside-click check while it is open to avoid false closures.
   useEffect(() => {
     if (!isOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        if (isAddModalOpen) return; // let modal handle its own escape
+        if (isAddModalOpen) return; // let modal handle Escape itself
         onClose();
       }
     };
 
     const handleClickOutside = (e: MouseEvent) => {
-      // When add modal is open, clicks inside the modal portal must not close the popover
-      if (isAddModalOpen) return;
+      if (isAddModalOpen) return; // portal click must not close popover
       if (
         popoverRef.current &&
         !popoverRef.current.contains(e.target as Node) &&
@@ -120,7 +123,7 @@ export function ChatConnectorPopover({
     setIsAddModalOpen(true);
   };
 
-  // Only show connectors that are connected and enabled (exclude failed and disabled)
+  // Only show connectors that are connected AND enabled (never show failed / disabled here)
   const usableConnectors = connectors.filter(
     (c) => c.status === "connected" && c.enabled
   );
@@ -128,75 +131,82 @@ export function ChatConnectorPopover({
   return (
     <>
       {/*
-        Popover panel:
-        - Uses fixed viewport-clamped positioning to prevent horizontal overflow on mobile
-        - Guaranteed 16px safe margins on both left and right edges
-        - Anchors seamlessly to the connector button on larger screens
+        Layer A — Existing Connector Picker.
+
+        Positioning strategy:
+        - `absolute bottom-full`: opens upward, anchored to its `position: relative`
+          parent wrapper in PlaceholderWorkspace.
+        - Desktop (>= 1024px): left-0 lg:w-96, anchored directly to trigger.
+        - Mobile & Tablet (< 1024px): horizontally CENTERED in viewport and vertically
+          capped below the top header.
+        - Animation: `fade-in zoom-in-95` only — clean and subtle with no horizontal translate.
       */}
       <div
         ref={popoverRef}
         role="dialog"
         aria-modal="false"
         aria-label="Connectors"
-        style={positionStyle}
-        className="rounded-xl bg-white dark:bg-[#15131F] border border-zinc-200 dark:border-white/[0.1] shadow-2xl z-50 overflow-hidden font-lexend animate-in fade-in zoom-in-95 duration-150"
+        className="absolute bottom-full left-0 mb-2 w-80 lg:w-96 max-w-[calc(100vw-1.5rem)] max-h-[calc(100dvh-120px)] rounded-2xl bg-white dark:bg-[#15131F] border border-zinc-200 dark:border-white/[0.1] shadow-2xl z-50 overflow-hidden font-lexend animate-in fade-in zoom-in-95 duration-150 flex flex-col"
       >
         {/* Compact Header */}
-        <div className="px-3.5 pt-3 pb-2 border-b border-zinc-100 dark:border-white/[0.08] flex items-center justify-between gap-2">
-          <div className="min-w-0">
-            <h3 className="text-[13px] font-bold text-zinc-900 dark:text-zinc-50 leading-tight">
-              Connectors
-            </h3>
-            <div className="text-[10.5px] font-medium text-zinc-400 dark:text-zinc-500 mt-0.5">
-              {isProUser ? (
-                <span className="text-emerald-500 dark:text-emerald-400 font-semibold">
-                  {connectedCount} connected · Pro
-                </span>
-              ) : (
-                <>
-                  <span>{connectedCount} of {quotaLimit} connected</span>
-                  {!isProUser && (
+        <div className="px-3.5 py-3 sm:px-4 sm:py-3.5 border-b border-zinc-100 dark:border-white/[0.08] bg-zinc-50/70 dark:bg-white/[0.02] shrink-0">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <h3 className="text-sm sm:text-base font-bold text-zinc-900 dark:text-zinc-50 leading-tight">
+                Connectors
+              </h3>
+              <p className="text-[11px] sm:text-xs text-zinc-500 dark:text-zinc-400 mt-0.5 leading-snug">
+                Select an active MCP connector to use in this chat.
+              </p>
+              <div className="text-[10px] sm:text-[10.5px] font-medium text-zinc-400 dark:text-zinc-500 mt-1 flex items-center gap-1">
+                {isProUser ? (
+                  <span className="text-emerald-500 dark:text-emerald-400 font-semibold">
+                    {connectedCount} connected · EchoGPT Pro Active
+                  </span>
+                ) : (
+                  <>
+                    <span>{connectedCount} of {quotaLimit} connected</span>
                     <button
                       type="button"
                       onClick={() =>
                         openUpgradeModal("Upgrade to EchoGPT Pro for unlimited MCP server connectors.")
                       }
-                      className="ml-1 text-[#713CF4] dark:text-[#a78bfa] hover:underline cursor-pointer"
+                      className="text-[#713CF4] dark:text-[#a78bfa] hover:underline cursor-pointer"
                     >
-                      · upgrade
+                      · upgrade for unlimited
                     </button>
-                  )}
-                </>
-              )}
+                  </>
+                )}
+              </div>
             </div>
-          </div>
 
-          <button
-            type="button"
-            onClick={onClose}
-            className="size-6 rounded-md text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors flex items-center justify-center shrink-0 cursor-pointer"
-            aria-label="Close connectors panel"
-          >
-            <X className="size-3.5" />
-          </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="size-7 rounded-lg text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors flex items-center justify-center shrink-0 cursor-pointer"
+              aria-label="Close connectors panel"
+            >
+              <X className="size-4" />
+            </button>
+          </div>
         </div>
 
-        {/* Scrollable usable connector list (failed and disabled are excluded) */}
-        <div className="max-h-48 overflow-y-auto custom-scrollbar px-2 py-2">
+        {/* Scrollable connector list — constrained so it never pushes popover under header */}
+        <div className="p-2 sm:p-3 overflow-y-auto custom-scrollbar flex-1 min-h-0 max-h-52 sm:max-h-60">
           {usableConnectors.length === 0 ? (
-            <div className="py-6 px-3 text-center space-y-1.5">
-              <div className="size-8 rounded-xl mx-auto flex items-center justify-center bg-zinc-100 dark:bg-white/[0.04] text-zinc-400">
-                <McpBranchIcon className="size-4" />
+            <div className="py-7 text-center space-y-2">
+              <div className="size-9 rounded-xl mx-auto flex items-center justify-center bg-zinc-100 dark:bg-white/[0.04] text-zinc-400">
+                <McpBranchIcon className="size-4.5" />
               </div>
               <p className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
                 No active connectors
               </p>
               <p className="text-[11px] text-zinc-400 dark:text-zinc-500 leading-snug">
-                Connect an MCP server to use its tools in chat.
+                Connect an MCP server and its tools become available in chat.
               </p>
             </div>
           ) : (
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               {usableConnectors.map((conn) => {
                 const isActive = activeConnectorIds.includes(conn.id);
 
@@ -204,32 +214,30 @@ export function ChatConnectorPopover({
                   <div
                     key={conn.id}
                     onClick={() => toggleActiveConnectorInChat(conn.id)}
-                    className={`flex items-center justify-between px-2.5 py-2 rounded-lg border transition-all cursor-pointer ${
+                    className={`flex items-center gap-2.5 px-3 py-2 rounded-xl border cursor-pointer transition-all ${
                       isActive
                         ? "bg-[#713CF4]/10 dark:bg-[#713CF4]/15 border-[#713CF4]/30"
-                        : "bg-transparent border-transparent hover:bg-zinc-100/70 dark:hover:bg-white/[0.04]"
+                        : "bg-white dark:bg-white/[0.02] border-zinc-200/70 dark:border-white/[0.06] hover:border-zinc-300 dark:hover:border-white/[0.12] hover:bg-zinc-50/80 dark:hover:bg-white/[0.04]"
                     }`}
                   >
-                    <div className="flex items-center gap-2 min-w-0 pr-1.5">
-                      <div className="size-6 rounded-md flex items-center justify-center bg-white dark:bg-[#251E38] border border-zinc-200/80 dark:border-white/[0.08] text-zinc-800 dark:text-zinc-200 shrink-0">
-                        <ConnectorServerIcon
-                          url={conn.serverUrl}
-                          name={conn.name}
-                          className="size-3.5"
-                        />
-                      </div>
-
-                      <div className="min-w-0">
-                        <h4 className="text-[12px] font-semibold text-zinc-900 dark:text-zinc-100 truncate leading-tight">
-                          {conn.name}
-                        </h4>
-                        <p className="text-[10.5px] text-zinc-400 dark:text-zinc-500 truncate">
-                          {conn.tools.length} {conn.tools.length === 1 ? "tool" : "tools"} available
-                        </p>
-                      </div>
+                    <div className="size-6.5 rounded-lg flex items-center justify-center bg-white dark:bg-[#251E38] border border-zinc-200/80 dark:border-white/[0.08] text-zinc-800 dark:text-zinc-200 shrink-0">
+                      <ConnectorServerIcon
+                        url={conn.serverUrl}
+                        name={conn.name}
+                        className="size-3.5"
+                      />
                     </div>
 
-                    {/* Checkbox */}
+                    <div className="min-w-0 flex-1">
+                      <h4 className="text-[12px] sm:text-[12.5px] font-semibold text-zinc-900 dark:text-zinc-100 truncate leading-tight">
+                        {conn.name}
+                      </h4>
+                      <p className="text-[10px] sm:text-[10.5px] text-zinc-400 dark:text-zinc-500 truncate">
+                        {conn.tools.length} {conn.tools.length === 1 ? "tool" : "tools"} available
+                      </p>
+                    </div>
+
+                    {/* Checkbox indicator */}
                     <div
                       className={`size-4 rounded border flex items-center justify-center shrink-0 transition-colors ${
                         isActive
@@ -247,14 +255,14 @@ export function ChatConnectorPopover({
         </div>
 
         {/* Compact Footer */}
-        <div className="px-3 py-2 border-t border-zinc-100 dark:border-white/[0.08] flex items-center justify-between gap-2 bg-zinc-50/50 dark:bg-white/[0.02]">
+        <div className="px-3.5 py-2.5 sm:px-4 sm:py-3 border-t border-zinc-100 dark:border-white/[0.08] bg-zinc-50/70 dark:bg-white/[0.02] flex items-center justify-between gap-3 shrink-0">
           <button
             type="button"
             onClick={() => {
               onClose();
               router.push("/connectors");
             }}
-            className="text-[11px] font-semibold text-[#713CF4] dark:text-[#a78bfa] hover:underline cursor-pointer whitespace-nowrap"
+            className="text-xs font-semibold text-[#713CF4] dark:text-[#a78bfa] hover:underline cursor-pointer whitespace-nowrap"
           >
             Manage connectors
           </button>
@@ -263,15 +271,15 @@ export function ChatConnectorPopover({
             variant="primary"
             size="sm"
             onClick={handleOpenAddModal}
-            leftIcon={<Plus className="size-3" />}
-            className="text-[11px] font-semibold h-7 px-2.5 shadow-xs"
+            leftIcon={<Plus className="size-3.5" />}
+            className="text-xs font-semibold shadow-xs shrink-0 h-7.5 px-3"
           >
             Add connector
           </Button>
         </div>
       </div>
 
-      {/* Add connector modal — renders in a portal, safe from outside-click detection */}
+      {/* Layer B — Add Connector Setup Modal */}
       <ConnectorSetupModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
