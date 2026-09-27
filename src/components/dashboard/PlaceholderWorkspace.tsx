@@ -931,13 +931,13 @@ export function PlaceholderWorkspace({
               </div>
             )}
 
-            {/* ── Active Connector Chips ── */}
+            {/* ── Active Connector Chips (Single-line horizontal scroll on mobile to conserve vertical space) ── */}
             {activeConnectors.length > 0 && (
-              <div className="flex flex-wrap items-center gap-1.5 px-3.5 pt-2.5 pb-0">
+              <div className="flex flex-nowrap overflow-x-auto no-scrollbar sm:flex-wrap items-center gap-1.5 px-3.5 pt-2 pb-0.5">
                 {activeConnectors.map((c) => (
                   <div
                     key={c.id}
-                    className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-[#713CF4]/10 dark:bg-[#713CF4]/20 border border-[#713CF4]/30 text-xs text-[#713CF4] dark:text-[#a78bfa] font-medium"
+                    className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-[#713CF4]/10 dark:bg-[#713CF4]/20 border border-[#713CF4]/30 text-xs text-[#713CF4] dark:text-[#a78bfa] font-medium shrink-0 whitespace-nowrap"
                   >
                     <McpBranchIcon className="size-3" />
                     <span>{c.name}</span>
