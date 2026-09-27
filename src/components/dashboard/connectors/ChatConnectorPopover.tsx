@@ -34,6 +34,47 @@ export function ChatConnectorPopover({
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
+  // Dynamic positioning state to clamp within viewport on all screen sizes (360px - 1440px)
+  const [positionStyle, setPositionStyle] = useState<React.CSSProperties>({
+    position: "fixed",
+    bottom: 80,
+    left: 16,
+    width: "calc(100vw - 32px)",
+    maxWidth: 320,
+  });
+
+  // Calculate position relative to trigger while guaranteeing >= 16px viewport margins
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const updatePosition = () => {
+      if (!triggerRef.current) return;
+      const rect = triggerRef.current.getBoundingClientRect();
+      const margin = 16;
+      const targetWidth = Math.min(320, window.innerWidth - margin * 2);
+      const maxLeft = Math.max(margin, window.innerWidth - targetWidth - margin);
+      const left = Math.max(margin, Math.min(rect.left, maxLeft));
+      const bottom = Math.max(margin, window.innerHeight - rect.top + 8);
+
+      setPositionStyle({
+        position: "fixed",
+        bottom: `${bottom}px`,
+        left: `${left}px`,
+        width: `${targetWidth}px`,
+        maxWidth: "calc(100vw - 32px)",
+      });
+    };
+
+    updatePosition();
+    window.addEventListener("resize", updatePosition);
+    window.addEventListener("scroll", updatePosition, true);
+
+    return () => {
+      window.removeEventListener("resize", updatePosition);
+      window.removeEventListener("scroll", updatePosition, true);
+    };
+  }, [isOpen, triggerRef]);
+
   // Close on Escape or click outside (but not when add modal is open)
   useEffect(() => {
     if (!isOpen) return;
@@ -79,22 +120,26 @@ export function ChatConnectorPopover({
     setIsAddModalOpen(true);
   };
 
+  // Only show connectors that are connected and enabled (exclude failed and disabled)
+  const usableConnectors = connectors.filter(
+    (c) => c.status === "connected" && c.enabled
+  );
+
   return (
     <>
       {/*
-        Popover panel.
-        - bottom-full: opens upward above the trigger
-        - left-0: anchored to left of trigger container
-        - On mobile: full-width minus safe margins, clamped to viewport
-        - On desktop: fixed width
-        - max-w-[calc(100vw-2rem)] prevents horizontal overflow at any screen size
+        Popover panel:
+        - Uses fixed viewport-clamped positioning to prevent horizontal overflow on mobile
+        - Guaranteed 16px safe margins on both left and right edges
+        - Anchors seamlessly to the connector button on larger screens
       */}
       <div
         ref={popoverRef}
         role="dialog"
         aria-modal="false"
         aria-label="Connectors"
-        className="absolute bottom-full left-0 mb-2 w-72 max-w-[calc(100vw-2rem)] rounded-xl bg-white dark:bg-[#15131F] border border-zinc-200 dark:border-white/[0.1] shadow-2xl z-50 overflow-hidden font-lexend animate-in fade-in zoom-in-95 duration-150"
+        style={positionStyle}
+        className="rounded-xl bg-white dark:bg-[#15131F] border border-zinc-200 dark:border-white/[0.1] shadow-2xl z-50 overflow-hidden font-lexend animate-in fade-in zoom-in-95 duration-150"
       >
         {/* Compact Header */}
         <div className="px-3.5 pt-3 pb-2 border-b border-zinc-100 dark:border-white/[0.08] flex items-center justify-between gap-2">
@@ -136,34 +181,30 @@ export function ChatConnectorPopover({
           </button>
         </div>
 
-        {/* Scrollable connector list */}
+        {/* Scrollable usable connector list (failed and disabled are excluded) */}
         <div className="max-h-48 overflow-y-auto custom-scrollbar px-2 py-2">
-          {connectors.length === 0 ? (
-            <div className="py-6 text-center space-y-1.5">
+          {usableConnectors.length === 0 ? (
+            <div className="py-6 px-3 text-center space-y-1.5">
               <div className="size-8 rounded-xl mx-auto flex items-center justify-center bg-zinc-100 dark:bg-white/[0.04] text-zinc-400">
                 <McpBranchIcon className="size-4" />
               </div>
-              <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
-                No connectors yet.
+              <p className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+                No active connectors
+              </p>
+              <p className="text-[11px] text-zinc-400 dark:text-zinc-500 leading-snug">
+                Connect an MCP server to use its tools in chat.
               </p>
             </div>
           ) : (
             <div className="space-y-1">
-              {connectors.map((conn) => {
+              {usableConnectors.map((conn) => {
                 const isActive = activeConnectorIds.includes(conn.id);
-                const isUsable = conn.status === "connected" && conn.enabled;
 
                 return (
                   <div
                     key={conn.id}
-                    onClick={() => {
-                      if (isUsable) {
-                        toggleActiveConnectorInChat(conn.id);
-                      }
-                    }}
-                    className={`flex items-center justify-between px-2.5 py-2 rounded-lg border transition-all ${
-                      isUsable ? "cursor-pointer" : "cursor-not-allowed opacity-50"
-                    } ${
+                    onClick={() => toggleActiveConnectorInChat(conn.id)}
+                    className={`flex items-center justify-between px-2.5 py-2 rounded-lg border transition-all cursor-pointer ${
                       isActive
                         ? "bg-[#713CF4]/10 dark:bg-[#713CF4]/15 border-[#713CF4]/30"
                         : "bg-transparent border-transparent hover:bg-zinc-100/70 dark:hover:bg-white/[0.04]"
@@ -183,9 +224,7 @@ export function ChatConnectorPopover({
                           {conn.name}
                         </h4>
                         <p className="text-[10.5px] text-zinc-400 dark:text-zinc-500 truncate">
-                          {conn.status === "failed" ? "Connection failed" :
-                           conn.status === "disabled" ? "Disabled" :
-                           `${conn.tools.length} tools · ${conn.status}`}
+                          {conn.tools.length} {conn.tools.length === 1 ? "tool" : "tools"} available
                         </p>
                       </div>
                     </div>
@@ -208,7 +247,7 @@ export function ChatConnectorPopover({
         </div>
 
         {/* Compact Footer */}
-        <div className="px-3 py-2 border-t border-zinc-100 dark:border-white/[0.08] flex items-center justify-between gap-2">
+        <div className="px-3 py-2 border-t border-zinc-100 dark:border-white/[0.08] flex items-center justify-between gap-2 bg-zinc-50/50 dark:bg-white/[0.02]">
           <button
             type="button"
             onClick={() => {
@@ -225,9 +264,9 @@ export function ChatConnectorPopover({
             size="sm"
             onClick={handleOpenAddModal}
             leftIcon={<Plus className="size-3" />}
-            className="text-[11px] font-semibold h-7 px-2.5"
+            className="text-[11px] font-semibold h-7 px-2.5 shadow-xs"
           >
-            Add
+            Add connector
           </Button>
         </div>
       </div>
