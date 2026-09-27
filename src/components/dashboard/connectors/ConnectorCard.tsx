@@ -230,11 +230,11 @@ export function ConnectorCard({
               )}
             </div>
           </div>
-        ) : (
+        ) : connector.status !== "failed" ? (
           <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-3 italic">
-            No tools exposed or connection failed.
+            Connected but no tools were exposed by this server.
           </p>
-        )}
+        ) : null}
 
         {/* Meta badges: Auth protected, Demo simulated */}
         <div className="flex items-center gap-2 mt-4 pt-3 border-t border-zinc-100 dark:border-white/[0.06] text-[11px] text-zinc-400">

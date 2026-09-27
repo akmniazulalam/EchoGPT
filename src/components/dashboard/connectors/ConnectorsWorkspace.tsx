@@ -86,7 +86,7 @@ export function ConnectorsWorkspace() {
         breadcrumbs={[{ label: "Workspace" }, { label: "Connectors" }]}
         subtitle="Connect an MCP server and its tools become available while you chat."
         actions={
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 flex-wrap">
             {/* Quota Indicator (Matching Screenshot 1) */}
             <span className="text-xs text-zinc-500 dark:text-zinc-400 font-medium">
               {isProUser ? (
@@ -112,10 +112,10 @@ export function ConnectorsWorkspace() {
             {/* Primary Action Button (Matching Screenshot 1) */}
             <Button
               variant="primary"
-              size="md"
+              size="sm"
               onClick={handleOpenAddModal}
-              leftIcon={<Plus className="size-4" />}
-              className="font-semibold shadow-md shadow-[#713CF4]/20"
+              leftIcon={<Plus className="size-3.5" />}
+              className="font-semibold shadow-md shadow-[#713CF4]/20 whitespace-nowrap shrink-0"
             >
               Add connector
             </Button>
@@ -280,11 +280,10 @@ export function ConnectorsWorkspace() {
 
       {/* Details Modal */}
       <ConnectorDetailsModal
-        connector={selectedConnectorForDetails}
+        connectorId={selectedConnectorForDetails?.id ?? null}
         isOpen={Boolean(selectedConnectorForDetails)}
         onClose={() => setSelectedConnectorForDetails(null)}
         onUseInChat={handleUseInChat}
-        onToggleEnabled={toggleConnectorEnabled}
         onRemove={(conn) => {
           setSelectedConnectorForDetails(null);
           setConnectorToRemove(conn);
