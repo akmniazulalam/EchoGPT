@@ -1769,8 +1769,60 @@ ConnectorProvider (AppShell.tsx)
 Status:
 Completed ✓
 
-Next milestone:
-Pending mentor instructions
+---
+
+### Milestone 4.zg-fix — Connectors Bug-Fix & Polish Pass
+
+**Fixes applied (all in same session, lint ✓ build ✓):**
+
+#### 1. Details Modal Live State (Bug: stale after enable/disable)
+- `ConnectorDetailsModal` now accepts `connectorId: string | null` instead of a snapshot `Connector` object
+- Inside the modal, `useConnectors().connectors.find(c => c.id === connectorId)` always reflects current context state
+- Enable/Disable and Retry buttons now update the modal UI immediately without closing/reopening
+
+#### 2. Enable/Disable State Machine (Bugs: failed→connected confusion)
+- `toggleConnectorEnabled` in `ConnectorContext.tsx` no longer overwrites `status` when `status === "failed"`
+- Failed connectors: only `enabled` boolean toggles; `status` stays `"failed"` until a successful `retryConnection`
+- Connected/disabled connectors: still transition `"connected" ↔ "disabled"` correctly
+
+#### 3. ConnectorCard Failed State Display (Bug: contradictory messaging)
+- `tools.length === 0` on a `failed` connector → renders `null` (the error banner above already explains failure)
+- `tools.length === 0` on a connected connector → "Connected but no tools were exposed by this server."
+- No more "No tools exposed or connection failed" mixing both states
+
+#### 4. Hydration Mismatch Fix (Bug: server/client subtitle mismatch)
+- `PlaceholderWorkspace.tsx` `selectedModelId` lazy initializer no longer reads `localStorage` during first render
+- SSR and initial client render both use deterministic default `"echogpt"`
+- Post-hydration `useEffect` (empty deps, runs once after mount) restores persisted model from `localStorage`
+- Model persistence, conversation restore, and initialModelId prop all still work correctly
+
+#### 5. Layout Script Warning Fix (Bug: "Encountered a script tag while rendering")
+- `src/app/layout.tsx`: replaced raw `<script dangerouslySetInnerHTML>` with `<Script id="theme-init" strategy="beforeInteractive">` from `next/script`
+- Anti-FOUC behavior preserved: theme class set on `<html>` before hydration
+- Added `suppressHydrationWarning` to `<body>` for browser extension attribute injection (e.g., `cz-shortcut-listen`)
+
+#### 6. Chat Popover Click-Outside Bug (Bug: popover closes inside Add Connector modal)
+- `handleClickOutside` in `ChatConnectorPopover` returns early when `isAddModalOpen === true`
+- `isAddModalOpen` added to `useEffect` dependency array
+- Modal renders in a React portal outside the popover DOM; the guard prevents false outside-click detection
+
+#### 7. Popover Mobile Responsive Fix (Bug: off-screen on 360–412px)
+- Popover width: `w-72 max-w-[calc(100vw-2rem)]` — clamps to viewport with 16px safe margins on both sides
+- No horizontal overflow at 360px, 390px, 412px, 768px, or 1440px
+
+#### 8. Compact Popover Redesign (Bug: oversized/too tall)
+- Tighter padding (px-3.5/py-2), compact 13px heading, max-h-48 scrollable list
+- Footer: `Manage connectors` link + compact `Add` button
+- Status text in list items distinguishes failed/disabled/connected clearly
+
+#### 9. Add Connector Button No-Wrap (Bug: two-line button on mobile)
+- `ConnectorsWorkspace` header button: `size="sm"`, `whitespace-nowrap shrink-0`
+- Actions wrapper: `flex-wrap` to allow graceful reflow on small screens
+
+**Files changed:** `ConnectorDetailsModal.tsx`, `ConnectorContext.tsx`, `ConnectorCard.tsx`, `PlaceholderWorkspace.tsx`, `src/app/layout.tsx`, `ChatConnectorPopover.tsx`, `ConnectorsWorkspace.tsx`
+
+**Lint:** 0 errors, 0 warnings ✓  
+**Build:** exit 0, 19 static routes ✓
 
 ---
 
