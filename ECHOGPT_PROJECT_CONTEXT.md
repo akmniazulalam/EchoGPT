@@ -1931,3 +1931,42 @@ The goal is to complete this assignment by 29 September 2026 with a polished, re
 - Build: exit 0, 19 static routes ? (TypeScript clean, no hydration errors)
 
 **Files changed:** `LandingPage.tsx` (rewritten) + 14 new component files in `src/components/landing/`
+
+---
+
+### Milestone 6 — Landing Page Final Polish & Production Hardening
+
+**Goal:** Targeted final polish pass for public production readiness without modifying existing copy, previews, or layout structure.
+
+1. **Footer Refinement**:
+   - Removed internal assignment reference: `"AppifyDevs Frontend Redesign"`.
+   - Removed fake functional links (`Terms & Licensing` pointing to `/subscriptions` and `System Health` pointing to `/support`).
+   - Retained only verified platform routes in bottom bar: Support Center (`/support`), Pricing & Pro (`/subscriptions`), and API Platform (`/api-platform`).
+   - Clean copyright: `© {new Date().getFullYear()} EchoGPT. Built for modern AI productivity & creation.`
+
+2. **Social Icon Buttons**:
+   - Replaced plain text links (Facebook, Instagram, LinkedIn) with icon-first button controls (`size-8.5 rounded-xl`).
+   - Embedded clean SVGs matching `SupportWorkspace.tsx` standard.
+   - Distinct brand-aware hover accents: Facebook (`#1877F2`), Instagram (`#E4405F`), LinkedIn (`#0A66C2`).
+   - Fully accessible: `aria-label`, `title`, keyboard `focus-visible:ring-2 focus-visible:ring-[#713CF4]`, `motion-reduce` safe.
+
+3. **Floating Back-to-Top Button (`LandingBackToTop.tsx`)**:
+   - Fixed position at `bottom-6 right-6 sm:bottom-8 sm:right-8 z-40`.
+   - Brand purple `#713CF4` with subtle shadow elevation.
+   - Smooth scroll to top on click with `prefers-reduced-motion` check (`auto` fallback).
+   - Dynamically fades/scales in after user scrolls past 400px; hidden at top of page.
+
+4. **Global Scrollbar Consistency**:
+   - Extended custom EchoGPT scrollbar (`globals.css`) from `.custom-scrollbar` class to `html, body, .custom-scrollbar`.
+   - Reuses identical 4px slim track and linear purple gradient `#7c3aed` token.
+   - Landing page now seamlessly matches inner workspace scrollbar styling in both light and dark modes without duplicate CSS.
+
+5. **Card Hover Polish & Motion Safety**:
+   - Applied subtle, differentiated hover micro-interactions across capability strip, core features, models catalog, tasks, MCP connectors, why pillars, and pricing plans.
+   - Micro translateY (`-translate-y-0.5`), restrained purple borders, icon scale (`scale-105`), and arrow nudges.
+   - Zero layout shifts, strictly guarded with `motion-reduce:hover:translate-y-0` and `motion-reduce:transition-none`.
+   - Preserved all manual user adjustments (including `group-hover:text-primary` in `LandingWhySection.tsx`).
+
+**Validation:**
+- `npm run lint`: 0 errors, 0 warnings
+- `npm run build`: exit 0, 19 static routes compiled cleanly
