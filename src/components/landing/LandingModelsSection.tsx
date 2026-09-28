@@ -84,10 +84,10 @@ export function LandingModelsSection() {
               <div
                 key={model.id}
                 onClick={() => setSelectedModelId(model.id)}
-                className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between space-y-3 ${
+                className={`p-4 rounded-2xl border transition-all duration-200 cursor-pointer flex flex-col justify-between space-y-3 group ${
                   isSelected
                     ? "bg-[#713CF4]/6 dark:bg-[#713CF4]/12 border-[#713CF4]/40 shadow-xs ring-1 ring-[#713CF4]/30"
-                    : "bg-white dark:bg-[#12111A] border-zinc-200/80 dark:border-white/[0.08] hover:border-zinc-300 dark:hover:border-white/[0.16] hover:bg-zinc-50/60 dark:hover:bg-white/[0.03]"
+                    : "bg-white dark:bg-[#12111A] border-zinc-200/80 dark:border-white/[0.08] hover:border-[#713CF4]/30 dark:hover:border-[#713CF4]/30 hover:shadow-md hover:shadow-[#713CF4]/5 hover:-translate-y-0.5 motion-reduce:hover:translate-y-0 hover:bg-zinc-50/60 dark:hover:bg-white/[0.03]"
                 }`}
               >
                 <div className="space-y-2">
@@ -112,7 +112,7 @@ export function LandingModelsSection() {
                   </div>
 
                   <div>
-                    <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100 truncate">
+                    <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100 truncate group-hover:text-[#713CF4] dark:group-hover:text-[#a78bfa] transition-colors">
                       {model.name}
                     </h3>
                     <p className="text-[11px] text-zinc-400 dark:text-zinc-500 font-mono">
