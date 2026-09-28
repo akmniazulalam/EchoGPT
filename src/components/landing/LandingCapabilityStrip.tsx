@@ -51,11 +51,14 @@ export function LandingCapabilityStrip() {
           {CAPABILITIES.map((cap) => {
             const Icon = cap.icon;
             return (
-              <div key={cap.title} className="flex flex-col items-center text-center space-y-1.5">
-                <div className="size-9 rounded-xl bg-[#713CF4]/10 dark:bg-[#713CF4]/15 border border-[#713CF4]/20 flex items-center justify-center text-[#713CF4] dark:text-[#a78bfa] shadow-2xs">
+              <div
+                key={cap.title}
+                className="flex flex-col items-center text-center space-y-1.5 group p-2 rounded-xl transition-all duration-200 hover:-translate-y-0.5 motion-reduce:hover:translate-y-0 cursor-default"
+              >
+                <div className="size-9 rounded-xl bg-[#713CF4]/10 dark:bg-[#713CF4]/15 border border-[#713CF4]/20 flex items-center justify-center text-[#713CF4] dark:text-[#a78bfa] shadow-2xs group-hover:scale-105 group-hover:border-[#713CF4]/40 group-hover:shadow-xs transition-all duration-200 motion-reduce:group-hover:scale-100">
                   <Icon className="size-4" />
                 </div>
-                <h4 className="text-xs font-bold text-zinc-900 dark:text-zinc-100 leading-tight">
+                <h4 className="text-xs font-bold text-zinc-900 dark:text-zinc-100 leading-tight group-hover:text-[#713CF4] dark:group-hover:text-[#a78bfa] transition-colors">
                   {cap.title}
                 </h4>
                 <p className="text-[11px] text-zinc-500 dark:text-zinc-400 font-normal leading-snug">

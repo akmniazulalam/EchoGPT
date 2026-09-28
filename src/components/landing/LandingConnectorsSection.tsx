@@ -144,16 +144,16 @@ export function LandingConnectorsSection() {
           {SAMPLE_CONNECTORS.map((conn) => (
             <div
               key={conn.name}
-              className="p-5 rounded-2xl border border-zinc-200/80 dark:border-white/[0.08] bg-white dark:bg-[#12111A] flex flex-col justify-between space-y-4"
+              className="p-5 rounded-2xl border border-zinc-200/80 dark:border-white/[0.08] bg-white dark:bg-[#12111A] flex flex-col justify-between space-y-4 hover:border-[#713CF4]/40 hover:shadow-lg hover:shadow-[#713CF4]/5 hover:-translate-y-0.5 motion-reduce:hover:translate-y-0 transition-all duration-200 group"
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2.5">
-                    <div className="size-8 rounded-xl bg-zinc-100 dark:bg-white/[0.05] border border-zinc-200 dark:border-white/[0.08] flex items-center justify-center text-zinc-800 dark:text-zinc-200">
+                    <div className="size-8 rounded-xl bg-zinc-100 dark:bg-white/[0.05] border border-zinc-200 dark:border-white/[0.08] flex items-center justify-center text-zinc-800 dark:text-zinc-200 group-hover:scale-105 group-hover:border-[#713CF4]/30 transition-all duration-200 motion-reduce:group-hover:scale-100">
                       <ConnectorServerIcon url={conn.url} name={conn.name} className="size-4.5" />
                     </div>
                     <div>
-                      <h4 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
+                      <h4 className="text-sm font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-[#713CF4] dark:group-hover:text-[#a78bfa] transition-colors">
                         {conn.name}
                       </h4>
                       <p className="text-[10px] text-zinc-400 font-mono truncate max-w-[160px]">
@@ -193,9 +193,10 @@ export function LandingConnectorsSection() {
                 <span className="text-[11px] text-zinc-400">1-Click Test Preset</span>
                 <Link
                   href="/connectors"
-                  className="font-semibold text-[#713CF4] dark:text-[#a78bfa] hover:underline"
+                  className="font-semibold text-[#713CF4] dark:text-[#a78bfa] hover:underline inline-flex items-center gap-0.5"
                 >
-                  Manage →
+                  <span>Manage</span>
+                  <span className="group-hover:translate-x-0.5 transition-transform motion-reduce:group-hover:translate-x-0">→</span>
                 </Link>
               </div>
             </div>
