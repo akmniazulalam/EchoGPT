@@ -401,7 +401,7 @@ ${report.interviewTips.map((t) => `- ${t}`).join("\n")}
                 <button
                   type="button"
                   onClick={handleCopyReport}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4]"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-600 dark:text-zinc-300 hover:text-primary dark:hover:text-primary hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4]"
                 >
                   {copied ? (
                     <>
@@ -419,7 +419,7 @@ ${report.interviewTips.map((t) => `- ${t}`).join("\n")}
                 <button
                   type="button"
                   onClick={handleReset}
-                  className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs text-zinc-500 hover:text-primary dark:text-zinc-400 dark:hover:text-primary hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
                   aria-label="Reset Analysis"
                 >
                   <RotateCcw className="size-3.5" />
@@ -805,7 +805,7 @@ ${report.interviewTips.map((t) => `- ${t}`).join("\n")}
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                       activeTab === "all"
                         ? "bg-[#713CF4] text-white"
-                        : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"
+                        : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary"
                     }`}
                   >
                     All Insights
@@ -816,7 +816,7 @@ ${report.interviewTips.map((t) => `- ${t}`).join("\n")}
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                       activeTab === "description"
                         ? "bg-[#713CF4] text-white"
-                        : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"
+                        : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary"
                     }`}
                   >
                     1. Job Requirements
@@ -827,7 +827,7 @@ ${report.interviewTips.map((t) => `- ${t}`).join("\n")}
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                       activeTab === "resume"
                         ? "bg-[#713CF4] text-white"
-                        : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"
+                        : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary"
                     }`}
                   >
                     2. Tailor Resume & ATS
@@ -838,7 +838,7 @@ ${report.interviewTips.map((t) => `- ${t}`).join("\n")}
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                       activeTab === "skills"
                         ? "bg-[#713CF4] text-white"
-                        : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"
+                        : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary"
                     }`}
                   >
                     3. Skill Gap Matrix
@@ -849,7 +849,7 @@ ${report.interviewTips.map((t) => `- ${t}`).join("\n")}
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                       activeTab === "interviews"
                         ? "bg-[#713CF4] text-white"
-                        : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"
+                        : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary"
                     }`}
                   >
                     4. Interview Prep
