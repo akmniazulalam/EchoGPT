@@ -164,14 +164,14 @@ export function CompareWorkspace() {
         actions={
           <div className="flex items-center gap-2 flex-wrap">
             {/* View Switcher: Compare (Grid) vs Focus Mode */}
-            <div className="flex items-center p-1 rounded-xl bg-zinc-100 dark:bg-white/[0.04] border border-zinc-200/80 dark:border-white/[0.06]">
+            <div className="flex items-center p-1 rounded-xl bg-zinc-100 dark:bg-white/4 border border-zinc-200/80 dark:border-white/6">
               <button
                 type="button"
                 onClick={() => setIsFocusMode(false)}
                 className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
                   !isFocusMode
                     ? "bg-[#713CF4] text-white shadow-2xs font-semibold"
-                    : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200"
+                    : "text-zinc-500 dark:text-zinc-400 hover:text-primary dark:hover:text-zinc-200"
                 }`}
               >
                 <Grid className="size-3.5" />
@@ -184,7 +184,7 @@ export function CompareWorkspace() {
                 className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
                   isFocusMode
                     ? "bg-[#713CF4] text-white shadow-2xs font-semibold"
-                    : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200"
+                    : "text-zinc-500 dark:text-zinc-400 hover:text-primary dark:hover:text-zinc-200"
                 }`}
               >
                 <Maximize2 className="size-3.5" />
@@ -208,7 +208,7 @@ export function CompareWorkspace() {
       />
 
       {/* 2. Secondary Strip: Active Model Chips or Focus Model Tabs */}
-      <div className="shrink-0 px-4 sm:px-6 py-2.5 bg-white/60 dark:bg-[#111018]/60 border-b border-zinc-200/60 dark:border-white/[0.06] backdrop-blur-xs flex items-center justify-between gap-3 overflow-x-auto custom-scrollbar">
+      <div className="shrink-0 px-4 sm:px-6 py-2.5 bg-white/60 dark:bg-[#111018]/60 border-b border-zinc-200/60 dark:border-white/6 backdrop-blur-xs flex items-center justify-between gap-3 overflow-x-auto custom-scrollbar">
         {isFocusMode ? (
           /* Focus Mode Model Tabs (Matches Screenshot 3) */
           <div className="flex items-center gap-2 mx-auto sm:mx-0 overflow-x-auto">
@@ -226,7 +226,7 @@ export function CompareWorkspace() {
                   className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all cursor-pointer border ${
                     isSelected
                       ? "border-[#713CF4] bg-[#713CF4]/10 dark:bg-[#713CF4]/20 text-[#713CF4] dark:text-[#c4b5fd] font-semibold shadow-2xs"
-                      : "border-zinc-200 dark:border-white/[0.08] bg-white dark:bg-[#161520] text-zinc-600 dark:text-zinc-400 hover:border-zinc-300"
+                      : "border-zinc-200 dark:border-white/8 bg-white dark:bg-[#161520] text-zinc-600 dark:text-zinc-400 hover:border-zinc-300"
                   }`}
                 >
                   <span>{model?.name || id}</span>
@@ -250,7 +250,7 @@ export function CompareWorkspace() {
               return (
                 <div
                   key={id}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-white dark:bg-[#161520] border border-zinc-200/80 dark:border-white/[0.08] text-zinc-800 dark:text-zinc-200 shadow-2xs group"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-white dark:bg-[#161520] border border-zinc-200/80 dark:border-white/8 text-zinc-800 dark:text-zinc-200 shadow-2xs group"
                 >
                   <span>{model?.name || id}</span>
                   {model?.isPro && (
@@ -297,7 +297,7 @@ export function CompareWorkspace() {
       <div className="flex-1 overflow-y-auto custom-scrollbar p-4 sm:p-6 lg:p-7">
         <div className="max-w-6xl mx-auto space-y-6">
           {/* Centered / Focused Prompt Card (Matches Screenshots 2 & 3) */}
-          <div className="rounded-2xl border border-zinc-200/90 dark:border-white/[0.08] bg-white dark:bg-[#121118] p-4 sm:p-5 shadow-xs space-y-3 focus-within:border-[#713CF4]/60 focus-within:ring-2 focus-within:ring-[#713CF4]/15 transition-all">
+          <div className="rounded-2xl border border-zinc-200/90 dark:border-white/8 bg-white dark:bg-[#121118] p-4 sm:p-5 shadow-xs space-y-3 focus-within:border-[#713CF4]/60 focus-within:ring-2 focus-within:ring-[#713CF4]/15 transition-all">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
                 Message {selectedModelIds.length} Models
@@ -316,7 +316,7 @@ export function CompareWorkspace() {
                 </button>
 
                 {showBenchmarkPopover && (
-                  <div className="absolute right-0 top-full mt-1.5 w-76 sm:w-88 rounded-xl border border-zinc-200 dark:border-white/[0.08] bg-white dark:bg-[#1b1926] shadow-xl p-2 z-30 animate-in fade-in zoom-in-95">
+                  <div className="absolute right-0 top-full mt-1.5 w-76 sm:w-88 rounded-xl border border-zinc-200 dark:border-white/8 bg-white dark:bg-[#1b1926] shadow-xl p-2 z-30 animate-in fade-in zoom-in-95">
                     <div className="text-[10.5px] font-semibold uppercase tracking-wider text-zinc-400 px-2 py-1">
                       Curated Benchmarks
                     </div>
@@ -329,7 +329,7 @@ export function CompareWorkspace() {
                             setPrompt(b);
                             setShowBenchmarkPopover(false);
                           }}
-                          className="w-full text-left p-2 rounded-lg text-xs text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/[0.06] transition-colors leading-relaxed line-clamp-2 cursor-pointer"
+                          className="w-full text-left p-2 rounded-lg text-xs text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/6 transition-colors leading-relaxed line-clamp-2 cursor-pointer"
                         >
                           {b}
                         </button>
@@ -350,7 +350,7 @@ export function CompareWorkspace() {
             />
 
             {/* Prompt Card Bottom Bar */}
-            <div className="pt-2.5 border-t border-zinc-100 dark:border-white/[0.06] flex items-center justify-between gap-3 flex-wrap">
+            <div className="pt-2.5 border-t border-zinc-100 dark:border-white/6 flex items-center justify-between gap-3 flex-wrap">
               <span className="text-[11px] text-zinc-400 dark:text-zinc-500">
                 5 of 5 comparisons left today · resets in a day · upgrade for unlimited
               </span>
@@ -378,9 +378,9 @@ export function CompareWorkspace() {
               const isBest = bestModelId === focusedModelId;
 
               return (
-                <div className="rounded-2xl border border-zinc-200/90 dark:border-white/[0.08] bg-white dark:bg-[#121118] overflow-hidden shadow-sm animate-in fade-in duration-150">
+                <div className="rounded-2xl border border-zinc-200/90 dark:border-white/8 bg-white dark:bg-[#121118] overflow-hidden shadow-sm animate-in fade-in duration-150">
                   {/* Focus Header */}
-                  <div className="p-4 sm:p-5 border-b border-zinc-100 dark:border-white/[0.06] flex items-center justify-between gap-3 flex-wrap bg-zinc-50/50 dark:bg-white/[0.01]">
+                  <div className="p-4 sm:p-5 border-b border-zinc-100 dark:border-white/6 flex items-center justify-between gap-3 flex-wrap bg-zinc-50/50 dark:bg-white/1">
                     <div className="flex items-center gap-2.5">
                       <div className="size-8 rounded-xl bg-[#713CF4]/10 dark:bg-[#713CF4]/20 text-[#713CF4] dark:text-[#a78bfa] flex items-center justify-center font-bold text-xs">
                         {model?.name?.charAt(0) || "AI"}
@@ -416,7 +416,7 @@ export function CompareWorkspace() {
                         className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                           isBest
                             ? "bg-[#713CF4]/15 text-[#713CF4] font-semibold"
-                            : "bg-zinc-100 dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-400 hover:text-zinc-900"
+                            : "bg-zinc-100 dark:bg-white/4 text-zinc-600 dark:text-zinc-400 hover:text-primary"
                         }`}
                       >
                         <ThumbsUp className="size-3.5" />
@@ -426,7 +426,7 @@ export function CompareWorkspace() {
                       <button
                         type="button"
                         onClick={() => handleCopy(focusedModelId, response || "")}
-                        className="p-2 rounded-lg bg-zinc-100 dark:bg-white/[0.04] hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-400 transition-colors cursor-pointer"
+                        className="p-2 rounded-lg bg-zinc-100 dark:bg-white/4 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-400 transition-colors cursor-pointer"
                         title="Copy Response"
                       >
                         {copiedId === focusedModelId ? (
@@ -440,7 +440,7 @@ export function CompareWorkspace() {
                         type="button"
                         onClick={() => handleRegenerate(focusedModelId)}
                         disabled={isComparing}
-                        className="p-2 rounded-lg bg-zinc-100 dark:bg-white/[0.04] hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-400 transition-colors cursor-pointer"
+                        className="p-2 rounded-lg bg-zinc-100 dark:bg-white/4 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-400 transition-colors cursor-pointer"
                         title="Regenerate"
                       >
                         <RotateCcw
@@ -461,7 +461,7 @@ export function CompareWorkspace() {
                   </div>
 
                   {/* Focus Response Content */}
-                  <div className="p-6 sm:p-8 text-[14px] leading-relaxed text-zinc-800 dark:text-zinc-200 min-h-[300px] max-w-4xl mx-auto">
+                  <div className="p-6 sm:p-8 text-[14px] leading-relaxed text-zinc-800 dark:text-zinc-200 min-h-75 max-w-4xl mx-auto">
                     {isComparing ? (
                       <div className="space-y-3 py-6 animate-pulse">
                         <div className="h-5 bg-zinc-200 dark:bg-zinc-800 rounded-md w-3/4" />
@@ -479,7 +479,7 @@ export function CompareWorkspace() {
                   </div>
 
                   {/* Focus Metadata Footer */}
-                  <div className="px-6 py-3 bg-zinc-50/70 dark:bg-white/[0.02] border-t border-zinc-100 dark:border-white/[0.06] flex items-center justify-between text-xs text-zinc-400">
+                  <div className="px-6 py-3 bg-zinc-50/70 dark:bg-white/2 border-t border-zinc-100 dark:border-white/6 flex items-center justify-between text-xs text-zinc-400">
                     <div className="flex items-center gap-4">
                       <span className="flex items-center gap-1">
                         <Clock className="size-3.5" />
@@ -517,11 +517,11 @@ export function CompareWorkspace() {
                     className={`flex flex-col rounded-2xl border transition-all duration-150 overflow-hidden shadow-xs ${
                       isBest
                         ? "border-[#713CF4]/60 ring-1 ring-[#713CF4]/20 bg-white dark:bg-[#121118]"
-                        : "border-zinc-200/90 dark:border-white/[0.08] bg-white dark:bg-[#121118]"
+                        : "border-zinc-200/90 dark:border-white/8 bg-white dark:bg-[#121118]"
                     }`}
                   >
                     {/* Model Card Header */}
-                    <div className="flex items-center justify-between p-3.5 border-b border-zinc-100 dark:border-white/[0.06] shrink-0">
+                    <div className="flex items-center justify-between p-3.5 border-b border-zinc-100 dark:border-white/6 shrink-0">
                       <div className="flex items-center gap-2 min-w-0">
                         <span className="text-[13px] font-bold text-zinc-900 dark:text-zinc-100 truncate">
                           {model?.name || id}
@@ -556,7 +556,7 @@ export function CompareWorkspace() {
                     </div>
 
                     {/* Model Response Body */}
-                    <div className="flex-1 p-4 overflow-y-auto custom-scrollbar text-[12.5px] leading-relaxed text-zinc-700 dark:text-zinc-300 min-h-[220px]">
+                    <div className="flex-1 p-4 overflow-y-auto custom-scrollbar text-[12.5px] leading-relaxed text-zinc-700 dark:text-zinc-300 min-h-55">
                       {isComparing ? (
                         <div className="space-y-2.5 py-2 animate-pulse">
                           <div className="h-4 bg-zinc-200 dark:bg-zinc-800 rounded-md w-3/4" />
@@ -574,7 +574,7 @@ export function CompareWorkspace() {
                     </div>
 
                     {/* Model Card Footer */}
-                    <div className="flex items-center justify-between px-3.5 py-2 border-t border-zinc-100 dark:border-white/[0.06] shrink-0 text-xs bg-zinc-50/50 dark:bg-white/[0.01]">
+                    <div className="flex items-center justify-between px-3.5 py-2 border-t border-zinc-100 dark:border-white/6 shrink-0 text-xs bg-zinc-50/50 dark:bg-white/1">
                       <button
                         type="button"
                         onClick={() => {
