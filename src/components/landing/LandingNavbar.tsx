@@ -127,7 +127,7 @@ export function LandingNavbar() {
           <button
             type="button"
             onClick={toggleTheme}
-            className="size-8.5 rounded-lg flex items-center justify-center text-zinc-500 hover:text-primary dark:text-zinc-400 dark:hover:text-primary hover:bg-zinc-100 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
+            className="size-8.5 rounded-lg flex items-center justify-center text-zinc-500 hover:text-primary dark:text-zinc-400 dark:hover:text-primary hover:bg-zinc-100 dark:hover:bg-white/6 transition-colors cursor-pointer"
             aria-label="Toggle theme"
           >
             {mounted && theme === "dark" ? (
@@ -140,18 +140,18 @@ export function LandingNavbar() {
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            className="size-8.5 rounded-lg flex items-center justify-center text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
+            className="size-8.5 p-1.5 border border-[#2a2536] rounded-lg flex items-center justify-center text-primary dark:text-primary hover:bg-zinc-100 dark:hover:bg-white/6 transition-colors cursor-pointer"
             aria-label="Toggle navigation menu"
             aria-expanded={open}
           >
-            {open ? <X className="size-5" /> : <Menu className="size-5" />}
+            {open ? <X className="size-5.5" /> : <Menu className="size-5.5" />}
           </button>
         </div>
       </div>
 
       {/* Mobile Drawer Menu */}
       {open && (
-        <div className="lg:hidden border-t border-zinc-200/80 dark:border-white/[0.08] bg-white/98 dark:bg-[#090A0F]/98 backdrop-blur-xl animate-in slide-in-from-top-2 duration-150">
+        <div className="lg:hidden border-t border-zinc-200/80 dark:border-white/8 bg-white/98 dark:bg-[#090A0F]/98 backdrop-blur-xl animate-in slide-in-from-top-2 duration-150">
           <div className="max-w-6xl mx-auto px-4 py-3.5 space-y-1">
             {NAV_LINKS.map((link) => (
               <button

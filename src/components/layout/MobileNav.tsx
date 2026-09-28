@@ -64,12 +64,12 @@ export function MobileNav({
   return (
     <>
       {/* Top Mobile Bar (visible only below md breakpoint) */}
-      <header className="md:hidden sticky top-0 z-30 flex items-center justify-between h-12 px-3.5 bg-white/95 dark:bg-[#111217]/95 backdrop-blur-md border-b border-zinc-200/80 dark:border-zinc-800/80 select-none">
+      <header className="md:hidden sticky top-0 z-30 flex items-center justify-between h-14 px-3.5 bg-white/95 dark:bg-[#111217]/95 backdrop-blur-md border-b border-zinc-200/80 dark:border-zinc-800/80 select-none">
         <div className="flex items-center gap-2.5">
           <button
             type="button"
             onClick={onOpen}
-            className="flex items-center justify-center size-9 rounded-lg text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/60 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] cursor-pointer"
+            className="flex items-center justify-center size-8 p-1.5 border border-[#2a2536] rounded-lg text-primary dark:text-primary hover:bg-zinc-100 dark:hover:bg-zinc-800/60 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] cursor-pointer"
             aria-label="Open navigation menu"
             aria-expanded={isOpen}
           >
@@ -140,10 +140,10 @@ export function MobileNav({
             <button
               type="button"
               onClick={onClose}
-              className="flex items-center justify-center size-8 rounded-lg text-zinc-500 hover:text-primary dark:text-zinc-400 dark:hover:text-primary hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] cursor-pointer"
+              className="flex items-center justify-center size-8 p-1.5 border border-[#2a2536] rounded-lg text-primary hover:text-primary dark:text-primary dark:hover:text-primary hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] cursor-pointer"
               aria-label="Close navigation menu"
             >
-              <X className="size-4.5" />
+              <X className="size-5" />
             </button>
           </div>
 
