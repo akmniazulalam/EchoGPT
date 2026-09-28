@@ -547,7 +547,7 @@ ${sopDoc.failureModes.map((f) => `- ${f}`).join("\n")}
                 <button
                   type="button"
                   onClick={handleCopyMarkdown}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4]"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-600 dark:text-zinc-300 hover:text-primary dark:hover:text-primary hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4]"
                 >
                   {copied ? (
                     <>
@@ -565,7 +565,7 @@ ${sopDoc.failureModes.map((f) => `- ${f}`).join("\n")}
                 <button
                   type="button"
                   onClick={handleDownload}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4]"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-600 dark:text-zinc-300 hover:text-primary dark:hover:text-primary hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4]"
                 >
                   {downloaded ? (
                     <>
@@ -583,7 +583,7 @@ ${sopDoc.failureModes.map((f) => `- ${f}`).join("\n")}
                 <button
                   type="button"
                   onClick={handleReset}
-                  className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs text-zinc-500 hover:text-primary dark:text-zinc-400 dark:hover:text-primary hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
                   aria-label="Back to Templates"
                 >
                   <RotateCcw className="size-3.5" />
@@ -903,7 +903,7 @@ What specific edge cases or automation improvements would you recommend?`;
                       className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-[#713CF4] ${
                         selectedCategory === cat
                           ? "bg-[#713CF4] text-white shadow-2xs"
-                          : "bg-white dark:bg-[#111217] border border-zinc-200/80 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"
+                          : "bg-white dark:bg-[#111217] border border-zinc-200/80 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary"
                       }`}
                     >
                       {cat}
