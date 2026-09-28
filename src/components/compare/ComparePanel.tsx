@@ -91,7 +91,7 @@ export function ComparePanel({
       </div>
 
       {/* Response Body */}
-      <div className="flex-1 p-4 overflow-y-auto custom-scrollbar text-[13px] leading-relaxed text-zinc-700 dark:text-zinc-300 min-h-[180px]">
+      <div className="flex-1 p-4 overflow-y-auto custom-scrollbar text-[13px] leading-relaxed text-zinc-700 dark:text-zinc-300 min-h-45">
         {isLoading ? (
           <div className="space-y-2.5 py-2 animate-pulse">
             <div className="h-4 bg-zinc-200 dark:bg-zinc-800 rounded-md w-3/4" />
@@ -117,7 +117,7 @@ export function ComparePanel({
           className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-md transition-colors cursor-pointer outline-none ${
             isBest
               ? "bg-[#713CF4]/10 text-[#713CF4] font-semibold"
-              : "text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+              : "text-zinc-500 hover:text-primary dark:hover:text-primary hover:bg-zinc-100 dark:hover:bg-zinc-800"
           }`}
           title="Vote as best output"
         >
