@@ -22,34 +22,67 @@ export function LandingNavbar() {
   const { theme, toggleTheme, mounted } = useTheme();
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const container = document.getElementById(
+    "landing-scroll-container"
+  );
+
+  if (!container) return;
+
+  const handleScroll = () => {
+    setScrolled(container.scrollTop > 20);
+  };
+
+  container.addEventListener("scroll", handleScroll, {
+    passive: true,
+  });
+
+  handleScroll();
+
+  return () => {
+    container.removeEventListener("scroll", handleScroll);
+  };
+}, []);
 
   const handleNavClick = (href: string) => {
-    setOpen(false);
-    if (href.startsWith("#")) {
-      const el = document.getElementById(href.slice(1));
-      if (el) {
-        const offset = 80;
-        const bodyRect = document.body.getBoundingClientRect().top;
-        const elementRect = el.getBoundingClientRect().top;
-        const elementPosition = elementRect - bodyRect;
-        const offsetPosition = elementPosition - offset;
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: "smooth",
-        });
-      }
+  setOpen(false);
+
+  if (href.startsWith("#")) {
+    const el = document.getElementById(href.slice(1));
+
+    const container = document.getElementById(
+      "landing-scroll-container"
+    );
+
+    if (el && container) {
+      const offset = 80;
+
+      const containerRect =
+        container.getBoundingClientRect();
+
+      const elementRect =
+        el.getBoundingClientRect();
+
+      const elementPosition =
+        elementRect.top -
+        containerRect.top +
+        container.scrollTop;
+
+      const offsetPosition =
+        elementPosition - offset;
+
+      container.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
     }
-  };
+  }
+};
 
   return (
     <header
       className={`fixed top-0 inset-x-0 z-40 transition-all duration-200 ${
         scrolled
-          ? "bg-white/90 dark:bg-[#16131f] backdrop-blur-md border-b border-zinc-200/80 dark:border-white/[0.08] shadow-xs"
+          ? "bg-white/90 dark:bg-[#16131f] backdrop-blur-md border-b border-zinc-200/80 dark:border-white/8 shadow-xs"
           : "bg-white/70 dark:bg-[#16131f] border-transparent"
       }`}
     >
@@ -158,13 +191,13 @@ export function LandingNavbar() {
                 key={link.label}
                 type="button"
                 onClick={() => handleNavClick(link.href)}
-                className="block w-full text-left px-3 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-primary dark:hover:text-zinc-50 hover:bg-zinc-100 dark:hover:bg-white/[0.06] rounded-xl transition-colors cursor-pointer"
+                className="block w-full text-left px-3 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-primary dark:hover:text-zinc-50 hover:bg-zinc-100 dark:hover:bg-white/6 rounded-xl transition-colors cursor-pointer"
               >
                 {link.label}
               </button>
             ))}
 
-            <div className="pt-3 pb-1 border-t border-zinc-100 dark:border-white/[0.08] flex flex-col gap-2">
+            <div className="pt-3 pb-1 border-t border-zinc-100 dark:border-white/8 flex flex-col gap-2">
               <Link
                 href="/chat"
                 onClick={() => setOpen(false)}
