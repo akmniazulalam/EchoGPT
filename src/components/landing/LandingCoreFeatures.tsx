@@ -134,11 +134,11 @@ export function LandingCoreFeatures() {
               <Link
                 key={feat.title}
                 href={feat.href}
-                className="group relative flex flex-col justify-between p-6 rounded-2xl border border-zinc-200/80 dark:border-white/[0.08] bg-white dark:bg-[#12111A] hover:border-[#713CF4]/40 hover:shadow-lg hover:shadow-[#713CF4]/5 hover:-translate-y-0.5 transition-all duration-200"
+                className="group relative flex flex-col justify-between p-6 rounded-2xl border border-zinc-200/80 dark:border-white/[0.08] bg-white dark:bg-[#12111A] hover:border-[#713CF4]/40 hover:shadow-lg hover:shadow-[#713CF4]/5 hover:-translate-y-0.5 motion-reduce:hover:translate-y-0 transition-all duration-200"
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between gap-2">
-                    <div className="size-10 rounded-xl bg-[#713CF4]/10 dark:bg-[#713CF4]/15 border border-[#713CF4]/20 flex items-center justify-center text-[#713CF4] dark:text-[#a78bfa] group-hover:scale-105 transition-transform">
+                    <div className="size-10 rounded-xl bg-[#713CF4]/10 dark:bg-[#713CF4]/15 border border-[#713CF4]/20 flex items-center justify-center text-[#713CF4] dark:text-[#a78bfa] group-hover:scale-105 group-hover:border-[#713CF4]/40 transition-all duration-200 motion-reduce:group-hover:scale-100">
                       <Icon className="size-5" />
                     </div>
                     <span
@@ -163,7 +163,7 @@ export function LandingCoreFeatures() {
 
                 <div className="pt-4 mt-4 border-t border-zinc-100 dark:border-white/[0.06] flex items-center justify-between text-xs font-semibold text-[#713CF4] dark:text-[#a78bfa]">
                   <span>Explore workspace</span>
-                  <ArrowRight className="size-3.5 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="size-3.5 group-hover:translate-x-1 transition-transform motion-reduce:group-hover:translate-x-0" />
                 </div>
               </Link>
             );
