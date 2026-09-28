@@ -18,11 +18,15 @@ import { LandingFaqSection } from "./LandingFaqSection";
 import { LandingCtaSection } from "./LandingCtaSection";
 import { LandingFooter } from "./LandingFooter";
 import { LandingBackToTop } from "./LandingBackToTop";
+import MobileScrollbar from "../ui/MobileScrollbar";
 
 export function LandingPage() {
   return (
     <UpgradeModalProvider>
-      <div className="min-h-screen bg-white dark:bg-[#090A0F] text-zinc-900 dark:text-zinc-100 font-lexend selection:bg-[#713CF4]/20 selection:text-[#713CF4] custom-scrollbar">
+      <div
+        id="landing-scroll-container"
+        className="h-screen overflow-y-auto custom-scrollbar bg-white dark:bg-[#090A0F] text-zinc-900 dark:text-zinc-100 font-lexend selection:bg-[#713CF4]/20 selection:text-[#713CF4]"
+      >
         {/* 1. Premium SaaS Navbar with Theme Toggle */}
         <LandingNavbar />
 
@@ -30,48 +34,51 @@ export function LandingPage() {
           {/* 2. Hero Section with Authentic EchoGPT UI Preview */}
           <LandingHero />
 
-          {/* 3. Product Capability Strip (Real Features, No Fake Stats) */}
+          {/* 3. Product Capability Strip */}
           <LandingCapabilityStrip />
 
-          {/* 4. Interactive Workspace Preview (Chat, Image, Video, Tasks, Compare) */}
+          {/* 4. Interactive Workspace Preview */}
           <LandingProductPreview />
 
           {/* 5. Core Value Propositions & Features */}
           <LandingCoreFeatures />
 
-          {/* 6. Multi-Model Showcase (Live AI_MODELS with ModelLogo & Specs) */}
+          {/* 6. Multi-Model Showcase */}
           <LandingModelsSection />
 
-          {/* 7. Creative Studios: Image Synthesis & AI Video Pipelines */}
+          {/* 7. Creative Studios */}
           <LandingCreativeStudio />
 
-          {/* 8. AI Tasks & Productivity Blueprints (24 Curated Workflows) */}
+          {/* 8. AI Tasks & Productivity Blueprints */}
           <LandingTasksSection />
 
-          {/* 9. Live MCP Connectors & Extensible Tools Ecosystem */}
+          {/* 9. Live MCP Connectors */}
           <LandingConnectorsSection />
 
-          {/* 10. Why EchoGPT: Architectural & Productivity Pillars */}
+          {/* 10. Why EchoGPT */}
           <LandingWhySection />
 
-          {/* 11. Transparent Pricing & Pro Demo Simulator */}
+          {/* 11. Pricing */}
           <LandingPricingSection />
 
-          {/* 12. Frequently Asked Questions (Accessible Accordion) */}
+          {/* 12. FAQ */}
           <LandingFaqSection />
 
-          {/* 13. Final Action Call to Action */}
+          {/* 13. Final CTA */}
           <LandingCtaSection />
         </main>
 
-        {/* 14. Professional SaaS Footer */}
+        {/* 14. Footer */}
         <LandingFooter />
 
-        {/* 15. Polished Floating Back to Top Button */}
+        {/* 15. Back To Top */}
         <LandingBackToTop />
 
         {/* Global Demo Pro Upgrade Modal */}
         <UpgradeProModal />
+
+        {/* Mobile Custom Scrollbar */}
+        <MobileScrollbar />
       </div>
     </UpgradeModalProvider>
   );
