@@ -645,7 +645,7 @@ export function VideoStudioWorkspace() {
                         className={`px-2.5 py-1 rounded-md text-[11px] font-semibold cursor-pointer outline-none transition-colors focus-visible:ring-1 focus-visible:ring-[#713CF4] ${
                           duration === d
                             ? "bg-[#713CF4] text-white shadow-xs"
-                            : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"
+                            : "text-zinc-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary"
                         }`}
                       >
                         {d}
@@ -664,7 +664,7 @@ export function VideoStudioWorkspace() {
                         className={`px-2.5 py-1 rounded-md text-[11px] font-semibold cursor-pointer outline-none transition-colors focus-visible:ring-1 focus-visible:ring-[#713CF4] ${
                           ratio === r.id
                             ? "bg-[#713CF4] text-white shadow-xs"
-                            : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"
+                            : "text-zinc-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary"
                         }`}
                       >
                         {r.label}
@@ -1061,11 +1061,11 @@ export function VideoStudioWorkspace() {
                   {/* COMPLETE: Video Player */}
                   {genState === "complete" && (
                     <div
-                      className={`w-full relative bg-gradient-to-br ${activeProject.colorGrad} flex flex-col justify-between`}
+                      className={`w-full relative bg-linear-to-br ${activeProject.colorGrad} flex flex-col justify-between`}
                       style={{ minHeight: 300 }}
                     >
                       {/* subtle scanline */}
-                      <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0)_50%,rgba(0,0,0,0.18)_50%)] bg-[length:100%_4px] pointer-events-none opacity-20" />
+                      <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0)_50%,rgba(0,0,0,0.18)_50%)] bg-size-[100%_4px] pointer-events-none opacity-20" />
 
                       {/* top overlay */}
                       <div className="relative flex items-center justify-between p-4 z-10">
@@ -1096,7 +1096,7 @@ export function VideoStudioWorkspace() {
                       </div>
 
                       {/* bottom player */}
-                      <div className="relative z-10 bg-gradient-to-t from-black/70 to-transparent px-4 pb-4 pt-8 space-y-2">
+                      <div className="relative z-10 bg-linear-to-t from-black/70 to-transparent px-4 pb-4 pt-8 space-y-2">
                         {/* scrubber */}
                         <div
                           role="slider"
@@ -1138,7 +1138,7 @@ export function VideoStudioWorkspace() {
                     >
                       New Scene
                     </Button>
-                    <span className="ml-auto text-[10.5px] text-zinc-400 truncate max-w-[200px] sm:max-w-xs hidden sm:block">
+                    <span className="ml-auto text-[10.5px] text-zinc-400 truncate max-w-50 sm:max-w-xs hidden sm:block">
                       {activeProject.prompt}
                     </span>
                   </div>
