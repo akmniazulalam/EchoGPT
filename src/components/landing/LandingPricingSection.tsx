@@ -27,7 +27,7 @@ export function LandingPricingSection() {
         {/* Pricing Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch max-w-4xl mx-auto">
           {/* ── 1. FREE PLAN ── */}
-          <div className="flex flex-col justify-between p-6 sm:p-7 rounded-2xl border border-zinc-200/80 dark:border-white/[0.08] bg-white dark:bg-[#12111A] space-y-6">
+          <div className="flex flex-col justify-between p-6 sm:p-7 rounded-2xl border border-zinc-200/80 dark:border-white/8 bg-white dark:bg-[#12111A] space-y-6 hover:border-zinc-300 dark:hover:border-white/[0.16] hover:shadow-lg hover:shadow-zinc-500/5 hover:-translate-y-0.5 motion-reduce:hover:translate-y-0 transition-all duration-200">
             <div className="space-y-4">
               <div>
                 <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-100">
@@ -45,7 +45,7 @@ export function LandingPricingSection() {
                 <span className="text-xs text-zinc-400">/ forever free</span>
               </div>
 
-              <ul className="space-y-2.5 pt-2 border-t border-zinc-100 dark:border-white/[0.06] text-xs sm:text-[13px] text-zinc-600 dark:text-zinc-300">
+              <ul className="space-y-2.5 pt-2 border-t border-zinc-100 dark:border-white/6 text-xs sm:text-[13px] text-zinc-600 dark:text-zinc-300">
                 <li className="flex items-start gap-2.5">
                   <Check className="size-4 text-emerald-500 shrink-0 mt-0.5" />
                   <span>EchoGPT, Gemini Flash 2.0 & DeepSeek-V3</span>
@@ -75,14 +75,14 @@ export function LandingPricingSection() {
 
             <Link
               href="/chat"
-              className="block text-center py-3 rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-white/[0.05] dark:hover:bg-white/[0.09] text-zinc-800 dark:text-zinc-200 font-semibold text-xs transition-colors"
+              className="block text-center py-3 rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-white/5 dark:hover:bg-white/[0.09] text-zinc-800 dark:text-zinc-200 font-semibold text-xs transition-colors"
             >
               Start Free Workspace
             </Link>
           </div>
 
           {/* ── 2. PRO PLAN ── */}
-          <div className="relative flex flex-col justify-between p-6 sm:p-7 rounded-2xl border border-[#713CF4] bg-white dark:bg-[#12111A] space-y-6 shadow-xl shadow-[#713CF4]/10 ring-1 ring-[#713CF4]/30">
+          <div className="relative flex flex-col justify-between p-6 sm:p-7 rounded-2xl border border-[#713CF4] bg-white dark:bg-[#12111A] space-y-6 shadow-xl shadow-[#713CF4]/10 ring-1 ring-[#713CF4]/30 hover:shadow-2xl hover:shadow-[#713CF4]/15 hover:-translate-y-0.5 motion-reduce:hover:translate-y-0 transition-all duration-200">
             {/* Badge */}
             <div className="absolute -top-3 left-1/2 -translate-x-1/2">
               <span className="px-3 py-1 rounded-full bg-[#713CF4] text-white text-[10.5px] font-bold shadow-xs">

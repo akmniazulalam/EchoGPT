@@ -66,7 +66,7 @@ export function LandingTasksSection() {
           {filteredTasks.map((task) => (
             <div
               key={task.id}
-              className="p-5 rounded-2xl border border-zinc-200/80 dark:border-white/[0.08] bg-white dark:bg-[#12111A] hover:border-[#713CF4]/40 hover:shadow-md transition-all flex flex-col justify-between space-y-4"
+              className="p-5 rounded-2xl border border-zinc-200/80 dark:border-white/[0.08] bg-white dark:bg-[#12111A] hover:border-[#713CF4]/40 hover:shadow-md hover:shadow-[#713CF4]/5 hover:-translate-y-0.5 motion-reduce:hover:translate-y-0 transition-all duration-200 flex flex-col justify-between space-y-4 group"
             >
               <div className="space-y-2.5">
                 <div className="flex items-center justify-between gap-2">
@@ -75,7 +75,7 @@ export function LandingTasksSection() {
                       {task.iconEmoji || "⚡"}
                     </span>
                     <div>
-                      <h4 className="text-sm font-bold text-zinc-900 dark:text-zinc-100 leading-tight">
+                      <h4 className="text-sm font-bold text-zinc-900 dark:text-zinc-100 leading-tight group-hover:text-[#713CF4] dark:group-hover:text-[#a78bfa] transition-colors">
                         {task.title}
                       </h4>
                       <p className="text-[11px] text-zinc-400 font-mono capitalize">
@@ -122,7 +122,7 @@ export function LandingTasksSection() {
                   className="inline-flex items-center gap-1 text-xs font-semibold text-[#713CF4] dark:text-[#a78bfa] hover:underline"
                 >
                   <span>Launch Task</span>
-                  <ChevronRight className="size-3.5" />
+                  <ChevronRight className="size-3.5 group-hover:translate-x-0.5 transition-transform motion-reduce:group-hover:translate-x-0" />
                 </Link>
               </div>
             </div>
