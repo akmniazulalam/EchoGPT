@@ -31,7 +31,7 @@ export function LandingCtaSection() {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
               <Link
-                href="/chat"
+                href="/signup"
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-white text-[#713CF4] font-bold text-sm hover:bg-violet-50 transition-colors shadow-lg shadow-black/10"
               >
                 <Sparkles className="size-4" />

@@ -140,14 +140,14 @@ export function LandingNavbar() {
           </button>
 
           <Link
-            href="/chat"
+            href="/signin"
             className="px-3.5 py-1.5 text-xs font-semibold text-zinc-700 dark:text-zinc-300 hover:text-primary dark:hover:text-primary rounded-lg hover:bg-zinc-100 dark:hover:bg-white/6 transition-colors"
           >
-            Open App
+            Sign In
           </Link>
 
           <Link
-            href="/chat"
+            href="/signup"
             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#713CF4] hover:bg-[#602ee0] active:bg-[#5223c7] text-white text-xs font-semibold transition-all shadow-sm shadow-[#713CF4]/20 hover:shadow-md hover:shadow-[#713CF4]/30"
           >
             <span>Start Free</span>
@@ -199,14 +199,14 @@ export function LandingNavbar() {
 
             <div className="pt-3 pb-1 border-t border-zinc-100 dark:border-white/8 flex flex-col gap-2">
               <Link
-                href="/chat"
+                href="/signin"
                 onClick={() => setOpen(false)}
                 className="block text-center py-2.5 text-sm font-semibold text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-800 rounded-xl hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
               >
-                Open Workspace
+                Sign In
               </Link>
               <Link
-                href="/chat"
+                href="/signup"
                 onClick={() => setOpen(false)}
                 className="block text-center py-2.5 text-sm font-semibold bg-[#713CF4] hover:bg-[#602ee0] text-white rounded-xl transition-colors shadow-sm"
               >

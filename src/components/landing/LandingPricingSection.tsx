@@ -74,7 +74,7 @@ export function LandingPricingSection() {
             </div>
 
             <Link
-              href="/chat"
+              href="/signup"
               className="block text-center py-3 rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-white/5 dark:hover:bg-white/[0.09] text-zinc-800 dark:text-zinc-200 font-semibold text-xs transition-colors"
             >
               Start Free Workspace
