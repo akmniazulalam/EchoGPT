@@ -519,7 +519,7 @@ export function UpgradeProModal() {
                       className={`relative py-2 px-2 rounded-lg text-xs font-medium transition-colors duration-300 ease-in-out flex flex-col items-center justify-center gap-0.5 cursor-pointer select-none outline-none border ${
                         isActive
                           ? "bg-white dark:bg-[#1e1c2a] text-zinc-900 dark:text-white shadow-xs font-semibold border-zinc-200/80 dark:border-white/10"
-                          : "border-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200"
+                          : "border-transparent text-zinc-500 dark:text-zinc-400 hover:text-primary dark:hover:text-zinc-200"
                       }`}
                     >
                       <span>{plan.label}</span>
