@@ -55,7 +55,7 @@ export function NavItem({
         } ${
           isActive
             ? "text-[#713CF4] dark:text-[#a78bfa]"
-            : "text-zinc-500 dark:text-zinc-400 group-hover:text-zinc-800 dark:group-hover:text-zinc-200"
+            : "text-zinc-500 dark:text-zinc-400 group-hover:text-[#713CF4] dark:group-hover:text-primary"
         }`}
         strokeWidth={isActive ? 2.2 : 1.8}
         aria-hidden="true"
