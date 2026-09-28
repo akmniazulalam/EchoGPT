@@ -7,6 +7,7 @@ Act as my senior frontend technical mentor and execution planner for this projec
 Your job is NOT to blindly generate a large amount of code.
 
 You should:
+
 - inspect the current state before suggesting changes
 - work milestone-by-milestone
 - give small, targeted changes
@@ -69,9 +70,9 @@ Current source structure at the beginning of the implementation:
 
 src/
 └── app/
-    ├── globals.css
-    ├── layout.tsx
-    └── page.tsx
+├── globals.css
+├── layout.tsx
+└── page.tsx
 
 ---
 
@@ -219,25 +220,24 @@ Do NOT make the whole website purple.
 The visual hierarchy should be:
 
 Purple accent
-+
-White/zinc neutral surfaces
-+
-Strong typography
-+
-Subtle borders
-+
-Minimal shadows
 
----
+- White/zinc neutral surfaces
+- Strong typography
+- Subtle borders
+- Minimal shadows
+
+  ***
 
 # 8. EXISTING ECHOGPT SIDEBAR
 
 The existing EchoGPT web app sidebar currently contains:
 
 Primary:
+
 - New Chat
 
 ENGAGEMENT:
+
 - Image Studio [PRO]
 - Video Studio [PRO]
 - Compare
@@ -249,6 +249,7 @@ ENGAGEMENT:
 - AI SOP Builder
 
 HELP & SUPPORT:
+
 - Support
 - Newsletter
 - Subscriptions
@@ -256,6 +257,7 @@ HELP & SUPPORT:
 - Discord
 
 There is also:
+
 - a Pro upgrade card
 - bottom utility navigation
 
@@ -275,6 +277,7 @@ Status:
 Implemented and verified.
 
 Completed components & scope:
+
 - AppShell (`src/components/layout/AppShell.tsx`)
 - Sidebar (`src/components/layout/Sidebar.tsx`)
 - NavItem (`src/components/layout/NavItem.tsx`)
@@ -287,6 +290,7 @@ Completed components & scope:
 - Calibrated Lexend typography system
 
 We are NOT implementing yet:
+
 - individual feature pages
 - landing page
 - Chrome extension
@@ -303,26 +307,26 @@ Preferred structure:
 
 src/
 ├── types/
-│   └── navigation.ts
+│ └── navigation.ts
 │
 ├── config/
-│   └── navigation.ts
+│ └── navigation.ts
 │
 ├── components/
-│   ├── layout/
-│   │   ├── AppShell.tsx
-│   │   ├── Sidebar.tsx
-│   │   ├── NavItem.tsx
-│   │   ├── UpgradeCard.tsx
-│   │   └── MobileNav.tsx
-│   │
-│   └── dashboard/
-│       └── PlaceholderWorkspace.tsx
+│ ├── layout/
+│ │ ├── AppShell.tsx
+│ │ ├── Sidebar.tsx
+│ │ ├── NavItem.tsx
+│ │ ├── UpgradeCard.tsx
+│ │ └── MobileNav.tsx
+│ │
+│ └── dashboard/
+│ └── PlaceholderWorkspace.tsx
 │
 └── app/
-    ├── globals.css
-    ├── layout.tsx
-    └── page.tsx
+├── globals.css
+├── layout.tsx
+└── page.tsx
 
 Navigation data should be separated from UI components.
 
@@ -331,14 +335,17 @@ Navigation data should be separated from UI components.
 # 11. RESPONSIVE REQUIREMENTS
 
 Desktop:
+
 - persistent sidebar
 - approximately 260px wide
 - optional collapse to compact icon rail
 
 Tablet:
+
 - adaptive/collapsible sidebar
 
 Mobile:
+
 - sidebar hidden by default
 - hamburger menu
 - slide-in drawer
@@ -421,6 +428,7 @@ Never invent:
 - company claims
 
 For example, do NOT use:
+
 - "EchoGPT Pro 4.5"
 - "v2.0"
 - "Good evening, Alex"
@@ -440,25 +448,32 @@ However, visible frontend controls should behave realistically.
 Examples:
 
 New Chat:
+
 - reset/create a local mock chat
 
 Model selector:
+
 - open dropdown
 - update selected state
 
 History:
+
 - local/mock conversation selection
 
 Copy:
+
 - copy text to clipboard
 
 Toggle:
+
 - actual local state change
 
 Loading:
+
 - show loading state
 
 Buttons:
+
 - should not be completely dead when an interaction is expected
 
 Use local state/mock data where appropriate.
@@ -593,6 +608,7 @@ Implemented and verified ✓
 ### Milestone 4.x: Image Studio & Compare Visual Refinement
 
 #### Reference-Driven UX Decisions
+
 - Deep study of the 3 original EchoGPT screenshots:
   - Original Image Studio: Clean top prompt card with inline controls (aspect ratio, batch, model dropdown, primary Generate button) and spacious output area.
   - Original Compare page: Clean top toggle (`[ ⊞ Compare ]` | `[ ↗ Focus ]`), focused prompt container with multi-model dropdown, and side-by-side reading cards.
@@ -603,6 +619,7 @@ Implemented and verified ✓
   - Adopted progressive disclosure: Primary controls always visible; secondary blueprints in popovers; advanced parameters (negative prompt, CFG, seed) in clean collapsibles.
 
 #### Image Studio Redesign
+
 1. **Focused Prompt & Control Area**:
    - Clean prompt textarea with live character counter (`prompt.length / 1000`).
    - Integrated inline bottom toolbar inside the prompt card:
@@ -629,6 +646,7 @@ Implemented and verified ✓
    - Mobile (< 1024px): Seamless vertical flow without horizontal overflow.
 
 #### Compare Page Redesign
+
 1. **WorkspaceHeader & View Switcher**:
    - Breadcrumb: `WORKSPACE / COMPARE`
    - Title: `Compare AI Models`
@@ -666,6 +684,7 @@ Implemented and verified ✓
    - Zero horizontal scroll bleed or layout breaking.
 
 #### Verification
+
 - `npm run lint` → 0 errors, 0 warnings ✓
 - `npx next build --webpack` → 17 static routes prerendered, 0 errors ✓
 - HTTP 200 OK verified on `/image-studio` and `/compare` ✓
@@ -675,22 +694,26 @@ Implemented and verified ✓
 ### Milestone 4 (Full): EchoGPT Product UI System + Core UX Polish
 
 #### Brand & Sidebar Polish
+
 1. **Logo hover scale removed**: `group-hover:scale-105` eliminated from logo Image element.
 2. **Clean horizontal brand lockup**: Logo mark + EchoGPT wordmark — `text-[17px] font-semibold tracking-[-0.025em]` (no gradient text — restrained and premium).
 3. **Sidebar utility grid stays inside bounds**: Replaced `justify-between px-1` flex row with `grid grid-cols-4 gap-1 w-full` — utility items never overflow.
 4. **Keyboard shortcut updated**: `Ctrl+K` → `Ctrl+Shift+K` (Windows/Linux), `⌘K` → `⌘⇧K` (macOS) — shortcut badge reflects new binding. Global listener updated in AppShell.tsx.
 
 #### Custom Scrollbar Update
+
 - EchoGPT purple gradient (`#713CF4` tints) scrollbar replaces neutral gray.
 - Dark mode compatible — `.dark .custom-scrollbar` rules in globals.css.
 
 #### Global UI Primitives Created
+
 - `src/components/ui/Badge.tsx` — Pro/default/success/outline badges.
 - `src/components/ui/Button.tsx` — Primary/secondary/outline/ghost/danger variants with loading state.
 - `src/components/ui/Modal.tsx` — Accessible modal with Escape, backdrop, body scroll lock.
 - `src/components/ui/Toast.tsx` — `ToastContainer` + `showToast()` global notification system.
 
 #### UpgradeProModal Redesign (Visual Reference Elevation)
+
 - **High-End 2-Column Responsive Architecture**:
   - Modal container expanded to `5xl` with bespoke squircle backdrop blur and hair-line border accents (`dark:border-white/[0.08]`).
   - Desktop (≥ 1024px): 58% Features column on left, 42% Billing/Pricing/Models column on right.
@@ -712,20 +735,24 @@ Implemented and verified ✓
   - Money-back guarantee trust badge and "Maybe later" dismissal link.
 
 #### Global Model Catalog
+
 - `src/config/models.ts` — 11 realistic AI models: EchoGPT (free), GPT-4o mini (free), DeepSeek-V3 (free), GPT-5 (PRO), GPT-4o (PRO), Gemini Advanced (PRO), Claude 4 Sonnet (PRO), Claude Opus (PRO), DeepSeek R1 (PRO), Grok 4 (PRO), Mistral Pro (PRO).
 - Organized by provider, category (Flagship/Reasoning/Fast/Open Source), with contextWindow and isPro flags.
 
 #### Rebuilt ModelSelector
+
 - Full rebuild of `src/components/dashboard/ModelSelector.tsx`.
 - Searchable popover with category group headers, PRO badges, provider labels, context window sizes.
 - Lock icon for PRO models. Selecting PRO model → `openUpgradeModal()` (no PRO response generated).
 - Removed all legacy neutral model IDs.
 
 #### Chat Protection Flow
+
 - `PlaceholderWorkspace.tsx`: If user selects a PRO model and tries to send → UpgradeProModal opens instead of response.
 - Free model selection → simulated mock response as before.
 
 #### Chat Persistence Overhaul
+
 - `src/lib/chatStorage.ts` completely rewritten:
   - Keys: `echogpt:current-chat`, `echogpt:chat-history`, `echogpt:selected-model`
   - Full `CurrentChatData` object: id, title, modelId, messages[], createdAt, updatedAt
@@ -736,20 +763,25 @@ Implemented and verified ✓
   - Seed history updated with realistic EchoGPT/DeepSeek/GPT-4o model names
 
 #### Workspace Layout Components Created
+
 - `src/components/workspace/WorkspaceHeader.tsx` — Reusable responsive workspace header: breadcrumb/title left, actions right. Mobile: wraps cleanly. Subtitle, badge optional.
 - `src/components/workspace/WorkspaceLayout.tsx` — Simple page wrapper component.
 - `src/components/workspace/WorkspaceToolbar.tsx` — Secondary toolbar for left/right content.
 
 #### Studio Components Created
+
 - `src/components/studio/StudioPrompt.tsx` — Prompt input with blueprint templates, character counter, and Generate button.
 - `src/components/studio/StudioPreview.tsx` — Studio output canvas: header, isGenerating animation, metadata bar, Download/Copy/Regenerate actions.
 
 #### Compare Components Created
+
 - `src/components/compare/CompareToolbar.tsx` — Compare prompt + Focus Mode toggle toolbar.
 - `src/components/compare/ComparePanel.tsx` — Individual model comparison panel with metrics, Vote Best, Regenerate, Copy, Focus actions.
 
 #### Feature Workspaces Updated
+
 All major workspaces updated with:
+
 - `WorkspaceHeader` component (consistent responsive header pattern)
 - Two-column studio layouts (controls left, preview right on desktop; vertical stack on mobile)
 
@@ -778,10 +810,12 @@ All major workspaces updated with:
 5. **AI Job Analysis** + **AI SOP Builder** — Updated headers only (WorkspaceHeader integration).
 
 #### MobileNav Polish
+
 - Brand lockup in mobile header matches Sidebar: `size-7` logo container + `text-[17px] font-semibold tracking-[-0.025em]`.
 - Logo container has proper border and bg in both light/dark.
 
 #### AppShell Composition
+
 - `UpgradeModalProvider` wraps entire app shell.
 - `<UpgradeProModal />` rendered globally.
 - `<ToastContainer />` rendered globally (bottom-right, max 3 toasts).
@@ -790,6 +824,7 @@ All major workspaces updated with:
 ## FILES CREATED / MODIFIED (Milestone 4 Full)
 
 **New Files:**
+
 - `src/config/models.ts`
 - `src/components/ui/Badge.tsx`
 - `src/components/ui/Button.tsx`
@@ -806,6 +841,7 @@ All major workspaces updated with:
 - `src/components/compare/ComparePanel.tsx`
 
 **Updated Files:**
+
 - `src/app/globals.css` — Purple gradient scrollbar, dark mode scrollbar rules
 - `src/lib/chatStorage.ts` — Overhauled with new keys and CurrentChatData type
 - `src/components/layout/AppShell.tsx` — UpgradeModalProvider, ToastContainer, Ctrl+Shift+K
@@ -846,6 +882,7 @@ All major workspaces updated with:
 ### Milestone 4.x: Video Studio Visual Refinement
 
 #### Architecture Decisions
+
 - Added `VIDEO_MODELS` array to `src/config/models.ts` (4 engines: Veo 3.1 fast [free], Sora [PRO], Kling v1.5 [PRO], Runway Gen-3 [PRO])
 - Added `DEFAULT_VIDEO_MODEL_ID = "veo-3-fast"` constant
 - `WAVEFORM_BARS` pre-computed at module level to satisfy `react-hooks/purity` (no `Math.random()` in render)
@@ -854,23 +891,27 @@ All major workspaces updated with:
 - Export button → `openUpgradeModal()` (ProRes export gated)
 
 #### Progressive Disclosure Layout
+
 1. **PRIMARY (always visible)**: Scene prompt textarea, inline bottom toolbar (Duration segments `3s/5s/10s`, Ratio pills `16:9/9:16/1:1`, ModelSelector popover, Generate CTA)
 2. **SECONDARY**: Camera Motion card (4 options: Drone Pan, Orbital 360, Kinetic Push, Static Close-up) — compact icon+label buttons
 3. **TERTIARY**: Advanced Settings collapsible (Motion Intensity slider, Speed segments, Quality segments, Seed input)
 
 #### Scene Templates Popover
+
 - `[ ✨ Scene Templates ▾ ]` button in prompt card header
 - 4 curated templates: Cinematic city night, Product 360 orbit, Biophilic interior, Abstract particles
 - Clicking a template populates textarea and closes popover
 - Click-outside closes it (no useEffect setState — mousedown listener attached only when open)
 
 #### 3-State Generation Flow
+
 - **IDLE**: Minimal empty-state with Film icon ("Describe a scene above and click Generate")
 - **GENERATING**: Cinematic pulsing animation (ping + pulse rings), "Rendering cinematic scene…", live countdown timer (`formatCountdown()`), waveform bars
   - Countdown duration: `3s→12s`, `5s→15s`, `10s→18s` mocked render time
 - **COMPLETE**: Premium video player with gradient canvas, scanline texture, play/pause button, interactive scrubber, time display, mute toggle
 
 #### Premium Media Player (COMPLETE state)
+
 - Gradient canvas (changes per project)
 - CSS scanline texture overlay
 - Top bar: camera mode + ratio label, mute button
@@ -880,14 +921,16 @@ All major workspaces updated with:
 - Prompt snippet shown in footer
 
 #### Recent Video Library
+
 - Full-width grid below main editor (1 col mobile, 2 col tablet, 3 col desktop)
 - Each card: camera mode badge, ratio, duration, prompt snippet (2-line clamp), timestamp, model name
 - Active card: purple ring indicator dot (top-right)
-- Non-active cards: ×  dismiss button (appears on hover via `group-hover:opacity-100`)
+- Non-active cards: × dismiss button (appears on hover via `group-hover:opacity-100`)
 - Clicking card: restores to COMPLETE state with that project in player
 - Empty state: dashed border with `<MonitorPlay>` icon and "Nothing here yet" copy
 
 #### Verification
+
 - `npm run lint` → 0 errors, 0 warnings ✓
 - `npx next build --webpack` → 17 static routes prerendered, 0 errors ✓
 
@@ -902,6 +945,7 @@ All major workspaces updated with:
 **Fix**: Moved the ModelSelector OUTSIDE the prompt card entirely, into its own dedicated "Video Engine" row at the top of the controls column. This row has no `overflow-hidden` ancestor, so the dropdown popover opens freely and floats above all surrounding content. No changes to ModelSelector component itself were needed.
 
 #### PRIORITY 2 — Improved Prompt Experience
+
 - Prompt textarea now has `MAX_PROMPT_LENGTH = 800` character limit enforced on input
 - Character counter in `{current} / {MAX_PROMPT_LENGTH}` format, turns amber at 90% fill
 - Clear placeholder text explaining what to describe
@@ -909,6 +953,7 @@ All major workspaces updated with:
 - Disabled when prompt is empty, currently generating, or already enhancing
 
 #### PRIORITY 3 — Camera Motion
+
 - 4 primary presets always visible in 2-column grid (Drone Pan, Orbital 360, Kinetic Push, Static Close-up)
 - "More motions" popover trigger shows 6 additional presets (Dolly, Tracking, Crane, Handheld, Zoom, Arc)
 - Active camera shown in Badge above grid when it's a "More" preset
@@ -916,13 +961,17 @@ All major workspaces updated with:
 - Both primary and more cameras share `ALL_CAMERAS` array for label lookups
 
 #### PRIORITY 4 — Advanced Settings
+
 Three grouped sections (collapsed by default):
+
 - **Motion**: Motion Intensity slider (0–100), Camera Strength slider (0–100) with help text
 - **Output**: FPS segmented (`16fps`/`24fps`/`30fps`), Quality segmented (`Draft`/`High`/`4K ✦`) — 4K PRO-gated → UpgradeProModal
 - **Generation**: Seed number input with help text, Negative Prompt textarea
 
 #### PRIORITY 5 — Professional Generation States
+
 5-state flow: `idle → queued → generating → processing → complete` (+ `failed`):
+
 - **queued** (2s): "Your video is queued…"
 - **generating** (until 5s before end): "Creating your scene…" + live countdown
 - **processing** (3s): "Finishing your video…"
@@ -932,13 +981,16 @@ Three grouped sections (collapsed by default):
 - `genTimeoutRef` ref tracks all nested `setTimeout` handles for clean cancellation
 
 #### PRIORITY 6 — Video Preview
+
 - 3-state canvas: IDLE (Film icon empty state), GENERATING (subtle pulse ring + waveform bars + countdown + Cancel), COMPLETE (gradient canvas + player)
 - Player: play/pause button with hover-scale, clickable scrubber (also keyboard: ArrowLeft/Right), time display (`formatTime()`), mute toggle, Export button (PRO-gated)
 - `role="slider"` + `aria-valuemin/max/now` + keyboard on scrubber
 - `aria-label` on play/pause, mute, export
 
 #### PRIORITY 7 — Creation Card Overflow Menu
+
 Each non-active creation card has a `⋯` icon button (only visible, always accessible):
+
 - **Rename**: Opens inline input in the card title area; commits on blur/Enter, cancels on Escape
 - **Favorite**: Toggles `isFavorite` state — shows filled amber Star icon
 - **Duplicate**: Creates copy via setState updater (no `Date.now()` in render)
@@ -948,9 +1000,11 @@ Each non-active creation card has a `⋯` icon button (only visible, always acce
 - Danger-styled Delete row (red text/icon, red hover bg)
 
 #### PRIORITY 8 — New Scene
+
 `handleNewScene`: clears all timeouts, resets prompt, duration, ratio, camera, advancedOpen, genState, countdown, playing, progress. Appears as "New Scene" footer button and in empty state.
 
 #### PRIORITY 9 — Visual Polish
+
 - Removed all `overflow-hidden` from control cards that contain popovers/selectors
 - Consistent `rounded-2xl` cards, `shadow-xs`, `border-zinc-200/80 dark:border-zinc-800`
 - Prompt card footer: thin separator + info text
@@ -959,6 +1013,7 @@ Each non-active creation card has a `⋯` icon button (only visible, always acce
 - Player: fade-from-black gradient over bottom controls for readability
 
 #### PRIORITY 10 — Responsive Design
+
 - Desktop: 5-col controls / 7-col preview
 - Model selector row full-width at top (flex-wrap for mobile)
 - Mobile: single column, all sections stack vertically
@@ -966,6 +1021,7 @@ Each non-active creation card has a `⋯` icon button (only visible, always acce
 - Popovers use `z-50` / `z-40` appropriately with proper offset positioning
 
 #### Accessibility
+
 - `aria-expanded` on all popover triggers
 - `aria-pressed` on all segmented pill buttons
 - `aria-label` on textarea, all icon buttons (mute, play/pause, new scene, more options)
@@ -975,16 +1031,19 @@ Each non-active creation card has a `⋯` icon button (only visible, always acce
 - Focus-visible rings on all interactive elements
 
 #### Verification
+
 - `npm run lint` → 0 errors, 0 warnings ✓
 - `npx next build --webpack` → 17 static routes, 0 errors ✓
 
 #### Known Limitations (Intentionally Deferred)
+
 - No actual video generation (all mocked with setTimeout)
 - No real model API calls
 - No actual audio/playback (player is a simulated scrubber)
 - Image-to-video, storyboard, audio, multi-scene, real download — all deferred to future
 
 #### Files Changed in This Milestone
+
 - `src/components/dashboard/VideoStudioWorkspace.tsx` — Full redesign
 - `ECHOGPT_PROJECT_CONTEXT.md` — Updated
 
@@ -993,6 +1052,7 @@ Each non-active creation card has a `⋯` icon button (only visible, always acce
 ### Milestone 4.x: Image Studio UX Polish (Full Redesign)
 
 #### PRIORITY 1 — Model Selector UX & Grouping
+
 - **Root Cause & Fix**: ModelSelector was previously tucked inside the bottom toolbar of the prompt card, which had layout constraints and could awkwardly overlap or clip. Moved ModelSelector to a dedicated "Neural Engine" header row above the prompt card, outside any `overflow-hidden` containers.
 - **Enhanced ModelSelector Component**:
   - Added `groupByTier?: boolean` prop: When enabled, groups models into `Free Models (Included)` and `Pro Models (Frontier)`.
@@ -1002,6 +1062,7 @@ Each non-active creation card has a `⋯` icon button (only visible, always acce
   - Dropdown uses `z-50`, natural alignment, and cleans up search and tier filter state on close/Escape.
 
 #### PRIORITY 2 — Prompt Experience & Transformation Actions
+
 - 1000-character limit with a subtle character counter (`prompt.length / 1000`) turning amber at 90% capacity.
 - Comfortable textarea with focused `#713CF4` ring.
 - **3 AI Transformation Mock Actions**:
@@ -1011,27 +1072,32 @@ Each non-active creation card has a `⋯` icon button (only visible, always acce
   - All actions feature interactive loading spinners (~700ms) and toast notifications.
 
 #### PRIORITY 3 — Explore Prompts
+
 - Compact popover trigger with `Compass` icon and curated blueprint library.
 - Categorized by `All`, `Product`, `Portrait`, `Landscape`, `Architecture`, `Illustration`, `Marketing`, `Creative`.
 - Real-time search filter inside popover.
 - 1-click prompt loading into editor with clean toast feedback and popover auto-close.
 
 #### PRIORITY 4 — Style Selector
+
 - 6 high-value artistic styles: `3D Isometric`, `Photorealistic`, `Cinematic`, `Product Studio`, `Digital Anime`, `Illustration`.
 - Rendered as a compact 3-column visual card selector with style-specific Lucide icons and descriptions.
 - Clear active state with `#713CF4` border, background tint, and focus ring.
 
 #### PRIORITY 5 — Essential Options
+
 - **Aspect Ratio**: Segmented pill group (`1:1 Square`, `16:9 Cinema`, `9:16 Story`, `4:3 Classic`).
 - **Batch Count**: Segmented control (`1 Image`, `2 Images`, `4 Images`).
 
 #### PRIORITY 6 — Advanced Options Collapsible
+
 - Grouped logically and collapsed by default:
   - **Generation Controls**: Guidance Scale (CFG slider 1.0–20.0 with live display), Diffusion Steps (20/30/50), Random Seed input with help text.
   - **Quality & Lighting**: Detail Level dropdown (Draft, High, Ultra), Lighting Mode dropdown (Studio Softbox, Natural, Dramatic, Ambient).
   - **Prompt Control**: Negative Prompt textarea to exclude unwanted visual elements.
 
 #### PRIORITY 7 & 8 — Generation Workflow & Error UX
+
 - 5-state generation flow: `IDLE → GENERATING → PROCESSING → COMPLETE` (+ `ERROR`).
 - Animated neural synthesis state with ping/pulse rings and realistic progress bar.
 - State messages: "Synthesizing latent neural space…" → "Refining micro-textures & upscaling…" → "Your image is ready."
@@ -1039,6 +1105,7 @@ Each non-active creation card has a `⋯` icon button (only visible, always acce
 - Dedicated `Error` state with clear status, retry instructions, and a `Retry Generation` button.
 
 #### PRIORITY 9 & 10 — Dominant Preview Canvas & Export
+
 - Large, prominent artwork canvas (7 columns on desktop) with aspect-ratio-accurate container and subtle grid overlay.
 - Idle state with clean empty illustration.
 - Interactive **Zoom Controls**: Fit, 100%, Zoom In (up to 150%), Zoom Out (down to 75%).
@@ -1049,6 +1116,7 @@ Each non-active creation card has a `⋯` icon button (only visible, always acce
 - `New Artwork` button in canvas footer to start fresh.
 
 #### PRIORITY 11 & 12 — Your Creations Gallery & Empty State
+
 - Gallery grid with aspect-ratio previews, style badges, and timestamps.
 - Card overflow menu (`⋯`) on each creation:
   - `Rename`: Inline prompt editing with Enter/Escape handlers.
@@ -1059,16 +1127,19 @@ Each non-active creation card has a `⋯` icon button (only visible, always acce
 - Dedicated empty state when gallery is empty with icon, guidance, and "Generate your first image" CTA.
 
 #### Responsive & Accessibility
+
 - Responsive layout: 5/7 split on desktop, clean single-column flow on tablet/mobile.
 - Zero `overflow-hidden` on parent containers holding popovers or dropdowns.
 - Full keyboard accessibility: Escape closes popovers/menus, arrow keys for sliders, visible focus rings.
 - Semantic HTML and ARIA labels throughout.
 
 #### Verification
+
 - `npm run lint` → 0 errors, 0 warnings ✓
 - `npx next build --webpack` → 17 static routes prerendered, 0 errors ✓
 
 #### Files Changed in This Milestone
+
 - `src/components/dashboard/ModelSelector.tsx` — Added `groupByTier`, tier filter pills, and PRO upgrade indicator
 - `src/components/dashboard/ImageStudioWorkspace.tsx` — Complete redesign
 - `ECHOGPT_PROJECT_CONTEXT.md` — Updated
@@ -1078,10 +1149,12 @@ Each non-active creation card has a `⋯` icon button (only visible, always acce
 ### Milestone 4.x: Studio Consistency & Creation Actions Menu Portal Fix
 
 #### Problem Addressed
+
 1. **Creation Card Overflow Menu Clipping**: On Video Studio, clicking the three-dot action menu (`⋯`) resulted in the menu being clipped or truncated. Root cause: The card wrapper had CSS `overflow: hidden` (`rounded-xl border overflow-hidden`), creating a clipping boundary that truncated any absolutely-positioned children regardless of `z-index`.
 2. **Inconsistent "Your Creations" Sections**: Image Studio and Video Studio had divergent creation card UI, metadata layouts, and separate inline dropdown implementations.
 
 #### Architecture & Implementation Solutions
+
 1. **Portal-Based Menu Architecture (`CreationActionsMenu.tsx`)**:
    - Uses `createPortal(..., document.body)` so menus render directly under `document.body`, completely escaping any parent container clipping rectangles.
    - Dynamic viewport-aware positioning: measures trigger via `getBoundingClientRect()`, calculates available space below vs. above (`placement: "bottom" | "top"`), and clamps `left` coordinate to viewport boundaries (`12px` margin).
@@ -1103,10 +1176,12 @@ Each non-active creation card has a `⋯` icon button (only visible, always acce
    - Cleaned up unused imports across both files.
 
 #### Verification
+
 - `npm run lint` → 0 errors, 0 warnings across all files ✓
 - `npm run build` (`next build --webpack`) → 17 static routes prerendered, 0 errors ✓
 
 #### Files Created / Changed
+
 - `src/components/dashboard/CreationActionsMenu.tsx` — **NEW** Portal-based viewport-aware action menu
 - `src/components/dashboard/CreationCard.tsx` — **NEW** Unified creation card component
 - `src/components/dashboard/VideoStudioWorkspace.tsx` — Updated to use `CreationCard`, removed old inline menu & unused imports
@@ -1120,14 +1195,16 @@ Each non-active creation card has a `⋯` icon button (only visible, always acce
 ### Milestone 4.x: Subscriptions & Plans Experience Redesign
 
 #### Reference-Driven UX Analysis & Transformation
+
 - **Reference Image Analysis**: Studied original EchoGPT Subscription page screenshot containing 4 plan columns (Monthly $9.99, Quarterly $29.99, Half-Yearly $59.99, Annual $99.99), each redundantly listing 40+ AI models inside every single card, along with 10 FAQ questions and a customer support email link.
 - **Flaws Eliminated from Original**:
-  1. *Repetitive 40-model dump*: Instead of duplicating 40 model names in every pricing card, models are now organized into a dedicated, searchable, categorized **Neural Engines Browser** section.
-  2. *Duplicate "Recommended" badges*: In the original, every plan had a "Recommended" badge. In our design, only the Annual Plan is highlighted as **Recommended (Best Value — Save 17%)**.
-  3. *Unstructured FAQ*: Replaced flat list with an accessible interactive accordion with real-time keyword search.
-  4. *Support link*: Transformed from plain text into an integrated **Customer Support Banner** navigating to the existing `/support` route.
+  1. _Repetitive 40-model dump_: Instead of duplicating 40 model names in every pricing card, models are now organized into a dedicated, searchable, categorized **Neural Engines Browser** section.
+  2. _Duplicate "Recommended" badges_: In the original, every plan had a "Recommended" badge. In our design, only the Annual Plan is highlighted as **Recommended (Best Value — Save 17%)**.
+  3. _Unstructured FAQ_: Replaced flat list with an accessible interactive accordion with real-time keyword search.
+  4. _Support link_: Transformed from plain text into an integrated **Customer Support Banner** navigating to the existing `/support` route.
 
 #### Architecture & Sections Implemented
+
 1. **Hero & Plan Overview**:
    - Compact hero with "Affordable Plans for Every Need" badge and strong heading.
    - Interactive segmented billing switcher: `All Durations`, `Monthly ($9.99/mo)`, `Annual ($99.99/yr — Save 17%)`.
@@ -1159,10 +1236,12 @@ Each non-active creation card has a `⋯` icon button (only visible, always acce
    - Simulates activation and updates the user's active plan with a success toast.
 
 #### Verification
+
 - `npm run lint` → 0 errors, 0 warnings across all files ✓
 - `npm run build` (`next build --webpack`) → 17 static routes prerendered, 0 errors ✓
 
 #### Files Created / Changed
+
 - `src/components/subscriptions/SubscriptionsWorkspace.tsx` — **NEW** Complete Subscriptions workspace component
 - `src/app/(app)/subscriptions/page.tsx` — Mounted `SubscriptionsWorkspace` with updated metadata
 - `ECHOGPT_PROJECT_CONTEXT.md` — Updated
@@ -1174,6 +1253,7 @@ Each non-active creation card has a `⋯` icon button (only visible, always acce
 #### Status: Complete ✓
 
 **Support Page** (`/support`):
+
 - Created `src/components/support/SupportWorkspace.tsx`
 - Email card (`mailto:appifydevs@gmail.com`) as primary/recommended channel with hover glow, response time badge, and arrow animation.
 - Social cards (Facebook, Instagram, LinkedIn) with official URLs and `target="_blank" rel="noopener noreferrer"`.
@@ -1181,6 +1261,7 @@ Each non-active creation card has a `⋯` icon button (only visible, always acce
 - Updated `src/app/(app)/support/page.tsx` to mount `SupportWorkspace`.
 
 **Newsletter Page** (`/newsletter`):
+
 - Created `src/components/newsletter/NewsletterWorkspace.tsx`
 - Email validation (regex), loading spinner, and success confirmation state.
 - Frontend mock only — no real API. Demo notice in footer.
@@ -1188,9 +1269,11 @@ Each non-active creation card has a `⋯` icon button (only visible, always acce
 - Updated `src/app/(app)/newsletter/page.tsx` to mount `NewsletterWorkspace`.
 
 **AI Job Analysis Page** (`/resume`):
+
 - `src/components/dashboard/JobAnalysisWorkspace.tsx` already complete from prior session. No changes needed.
 
 #### Verification
+
 - `npm run lint` → 0 errors, 0 warnings ✓
 - `npm run build` → 17 static routes prerendered, 0 errors ✓
 
@@ -1201,11 +1284,13 @@ Each non-active creation card has a `⋯` icon button (only visible, always acce
 #### Status: Complete ✓
 
 **Landing Page** (`/`):
+
 - Created `src/components/landing/LandingPage.tsx` — fully standalone marketing page (no AppShell/Sidebar).
 - Created `src/app/(landing)/layout.tsx` — minimal layout group (no AppShell) for landing routes.
 - Updated `src/app/page.tsx` — mounts `LandingPage` directly (replaced old redirect to /chat).
 
 **Sections built (all self-contained sub-components):**
+
 1. **Navbar** — sticky, scroll-aware, responsive with mobile hamburger menu and smooth anchor scrolling.
 2. **Hero** — animated gradient blob background, headline, subheadline, two CTA buttons (Start free / View pricing), trust line, and an app mockup preview card with fake browser chrome.
 3. **Stats bar** — 50K+ users, 11+ models, 4 studios, 99.9% uptime.
@@ -1219,15 +1304,18 @@ Each non-active creation card has a `⋯` icon button (only visible, always acce
 11. **Footer** — logo, nav links, social links (Facebook, Instagram, LinkedIn).
 
 **Technical decisions:**
+
 - FAQ accordion uses CSS `grid-template-rows: 0fr → 1fr` transition — avoids `ref.current` read during render (which is forbidden by this project's ESLint config).
 - `(landing)` route group layout isolates the landing page from AppShell — no sidebar rendered.
 - Page is `"use client"` due to Navbar scroll detection and FAQ state.
 
 #### Verification
+
 - `npm run lint` → 0 errors, 0 warnings ✓
 - `npm run build` → 17 static routes prerendered including `/`, 0 errors ✓
 
 #### Files Created / Changed
+
 - `src/components/landing/LandingPage.tsx` — **NEW** (~930 lines)
 - `src/app/(landing)/layout.tsx` — **NEW** (minimal layout group)
 - `src/app/page.tsx` — Updated (removed redirect, mounts LandingPage)
@@ -1242,7 +1330,9 @@ Each non-active creation card has a `⋯` icon button (only visible, always acce
 > **Important Note:** The Landing Page at `/` already exists and was **intentionally left completely untouched** during this milestone.
 
 #### Context & Objectives
+
 The original EchoGPT reference screenshot (`media_1790401525130.png`) revealed that the `/resume` route features a dedicated AI Job Insight experience with:
+
 1. Centered header with the iconic **EchoGPT – AI Job Insight [Assistant]** badge.
 2. A 2x2 grid of 4 core feature cards:
    - **Analyze Job Description**: "Instantly get AI-powered insights for any job posting."
@@ -1253,10 +1343,12 @@ The original EchoGPT reference screenshot (`media_1790401525130.png`) revealed t
 4. Active candidate resume integration (`Alex Morgan – Senior Full-Stack & Frontend Engineer`) with an accessible **View Resume** verification modal.
 
 #### Routing & Navigation Consistency
+
 - **URL**: `http://localhost:3000/resume` (`src/app/(app)/resume/page.tsx`).
 - **Sidebar**: The navigation configuration (`src/config/navigation.ts`) maintains label `"AI Job Analysis"` pointing to `/resume`, matching the reference screenshot where the browser URL is `/resume` while the sidebar highlights "AI Job Analysis".
 
 #### Features & Improvements Implemented
+
 1. **Header & Hero Section**:
    - Matches original screenshot aesthetic: "EchoGPT – AI Job Insight" with a glowing purple `Assistant` badge pill.
    - Concise supporting text explaining the workflow without unnecessary dashboard clutter.
@@ -1280,11 +1372,11 @@ The original EchoGPT reference screenshot (`media_1790401525130.png`) revealed t
 6. **Structured Results Dashboard**:
    - Match Score card with Market Readiness percentage (e.g., 95%).
    - Filter tabs mapped directly to the 4 feature cards:
-     - *All Insights*
-     - *1. Job Requirements* (Deliverables & Responsibilities)
-     - *2. Tailor Resume & ATS* (Actionable tailoring advice + high-impact ATS keywords)
-     - *3. Skill Gap Matrix* (Required skills with match indicators + identified blindspots)
-     - *4. Interview Prep* (Targeted technical & behavioral interview questions with suggested angles)
+     - _All Insights_
+     - _1. Job Requirements_ (Deliverables & Responsibilities)
+     - _2. Tailor Resume & ATS_ (Actionable tailoring advice + high-impact ATS keywords)
+     - _3. Skill Gap Matrix_ (Required skills with match indicators + identified blindspots)
+     - _4. Interview Prep_ (Targeted technical & behavioral interview questions with suggested angles)
    - "Copy Report" to clipboard with toast/visual confirmation.
    - "Reset" button to analyze new postings.
 7. **Accessibility & Responsive Design**:
@@ -1294,10 +1386,12 @@ The original EchoGPT reference screenshot (`media_1790401525130.png`) revealed t
    - High-contrast text and surfaces verified in both light and dark themes.
 
 #### Verification
+
 - `npm run lint` → 0 errors, 0 warnings across all files ✓
 - `npm run build` (`next build --webpack`) → 17 static routes prerendered cleanly (including `/` and `/resume`), 0 errors ✓
 
 #### Files Changed
+
 - `src/components/dashboard/JobAnalysisWorkspace.tsx` — Redesigned according to original screenshot
 - `src/app/(app)/resume/page.tsx` — Verified and active
 - `ECHOGPT_PROJECT_CONTEXT.md` — Updated
@@ -1311,7 +1405,9 @@ The original EchoGPT reference screenshot (`media_1790401525130.png`) revealed t
 > **Important Note:** The Landing Page at `/` and the Resume page at `/resume` were **intentionally left completely untouched** during this milestone.
 
 #### Context & Objectives
+
 The original EchoGPT reference screenshot (`media_1790403341692.jpg`) revealed that the SOP Builder is designed as a focused, high-clarity operational procedure hub with:
+
 1. Centered hero featuring the glowing purple workflow badge, the bold title **AI-Powered SOP Builder**, clear subtitle, and 3 quick stat/feature pill cards:
    - **AI-Enhanced** ("Optimized for quality & speed")
    - **6 Categories** ("Covering diverse industries")
@@ -1328,11 +1424,13 @@ The original EchoGPT reference screenshot (`media_1790403341692.jpg`) revealed t
      2. **Draft in AI Chat →**: Transitions to `/chat?prompt=...` with a structured, prefilled prompt ready to iterate conversationally with the AI assistant.
 
 #### Route Migration & Clean URL
+
 - **Migrated URL**: `http://localhost:3000/sop` (`src/app/(app)/sop/page.tsx`).
 - **Backward Compatibility**: `src/app/(app)/ai-sop-builder/page.tsx` now performs an automatic, seamless redirect to `/sop`.
 - **Navigation Consistency**: `src/config/navigation.ts`, `PlaceholderWorkspace.tsx`, and internal links were updated to `/sop`.
 
 #### Features & Improvements Implemented
+
 1. **Hero & Header**:
    - Replaced cramped form layout with clean, centered hero matching the original screenshot.
    - 3 stat pills showing AI quality, category breadth, and pre-built frameworks.
@@ -1355,10 +1453,12 @@ The original EchoGPT reference screenshot (`media_1790403341692.jpg`) revealed t
    - Verified high-contrast readability in both light and dark themes.
 
 #### Verification
+
 - `npm run lint` → 0 errors, 0 warnings across all files ✓
 - `npm run build` (`next build --webpack`) → 18 static routes prerendered cleanly (including `/`, `/sop`, and `/ai-sop-builder` redirect), 0 errors ✓
 
 #### Files Created / Changed
+
 - `src/components/dashboard/SopBuilderWorkspace.tsx` — Complete redesign matching original screenshot
 - `src/app/(app)/sop/page.tsx` — **NEW** route at `/sop`
 - `src/app/(app)/ai-sop-builder/page.tsx` — Updated to redirect to `/sop`
@@ -1379,7 +1479,9 @@ The original EchoGPT reference screenshot (`media_1790403341692.jpg`) revealed t
 > **Important Note:** The Landing Page at `/`, the Resume page at `/resume`, and the SOP Builder at `/sop` were **intentionally left completely untouched** during this milestone.
 
 #### Context & Objectives
+
 The original EchoGPT reference screenshots (`media_1790417263993.png` and `media_1790417313735.png`) revealed that the **Store** and **New Chat** operate as a single connected product flow:
+
 1. **EchoGPT Store (`/store`)**:
    - A clean model marketplace featuring a centered hero ("EchoGPT Store"), subtitle, responsive search bar ("Search for the Apps"), category filter chips (`All Apps`, `Fast`, `Flagship`, `Reasoning`, `Open Source`), and a 3-column responsive card grid.
    - Each model card features an authentic, official vector `ModelLogo`, model name, PRO and context badges, concise description, and an actionable **`Try App`** button.
@@ -1394,6 +1496,7 @@ The original EchoGPT reference screenshots (`media_1790417263993.png` and `media
        - Bottom input row: Attachment icon, dynamic auto-expanding textarea with placeholder (`"Ask [Model Name] anything..."`), microphone dictation simulation, and circular purple send button `[ ✈ ]`.
 
 #### Model Catalog & Brand Logo System
+
 - **Single Source of Truth**: Extended `AI_MODELS` in `src/config/models.ts` with models from the reference screenshots (including `glm-5-3-flash`, `claude-3-5-sonnet`, `qwen-2-5-plus`, `kimi-k2-code`).
 - **Reusable `ModelLogo` (`src/components/ui/ModelLogo.tsx`)**:
   - Official vector marks for **EchoGPT** (native purple spark), **GLM / Zhipu** (iconic black square with white bold `Z`), **OpenAI** (spiral mark), **Anthropic / Claude** (star mark), **Google / Gemini** (4-point star), **DeepSeek** (whale wave), **xAI / Grok** (𝕏 mark), **Mistral** (orange chevron blocks), **Qwen** (polygon mark), **Kimi** (letter mark), and tasteful typographic fallbacks.
@@ -1401,15 +1504,18 @@ The original EchoGPT reference screenshots (`media_1790417263993.png` and `media
   - Reused consistently across Store cards, ModelSelector triggers, dropdown rows, chat hero, and message avatars.
 
 #### Model Persistence Architecture
+
 - Model choice is stored in `localStorage` (`echogpt:selected-model`) via `saveSelectedModel(id)`.
 - Validates model existence against `AI_MODELS`, safely falling back to `DEFAULT_MODEL_ID` (`"echogpt"`).
 - Emits and listens to `window.addEventListener("echogpt:selected-model-updated")` and `storage` events for instant synchronization across tabs and route changes without page reloads.
 
 #### Verification
+
 - `npm run lint` → 0 errors, 0 warnings across all files ✓
 - `npm run build` (`next build --webpack`) → 18 static routes prerendered cleanly (including `/`, `/store`, `/chat`, `/resume`, `/sop`), 0 errors ✓
 
 #### Files Created / Changed
+
 - `src/components/ui/ModelLogo.tsx` — **NEW** reusable official brand logo component
 - `src/components/dashboard/StoreWorkspace.tsx` — **NEW** complete Store marketplace component
 - `src/app/(app)/store/page.tsx` — Updated to render `StoreWorkspace`
@@ -1427,6 +1533,7 @@ The original EchoGPT reference screenshots (`media_1790417263993.png` and `media
 #### What Changed
 
 **1. `src/config/models.ts` — AI_MODELS expanded to 36 models**
+
 - Added new providers: `Meta`, `Cohere`, `NovaSky`
 - New models added:
   - GLM-4 Flash, Gemini 2.0 Flash (free)
@@ -1442,18 +1549,21 @@ The original EchoGPT reference screenshots (`media_1790417263993.png` and `media
   - Qwen 3 235B, GLM-5.2
 
 **2. `src/components/ui/ModelLogo.tsx` — Added Meta, Cohere, NovaSky, QwQ support**
+
 - Meta/Llama: sky-blue icon with llama silhouette path
 - Cohere: rose-accented "C" lettermark
 - NovaSky: indigo-to-sky gradient star polygon
 - Qwen condition extended to also match `qwq` model IDs
 
 **3. `src/components/dashboard/ModelSelector.tsx` — placement prop added**
+
 - New prop: `placement?: "bottom" | "top"` (default: `"bottom"`)
 - `placement="top"`: dropdown opens **upward** (`bottom-full mb-1.5`) — for in-composer use
 - `placement="bottom"`: existing behavior (`top-full mt-1.5`) — for header use
 - Fixes critical bug where in-composer ModelSelector was clipping below the viewport
 
 **4. `src/components/dashboard/PlaceholderWorkspace.tsx` — Full polish pass**
+
 - **Paperclip / File Attachment**: Now calls `openUpgradeModal()` with proper message (was a toast before) — correct Pro gate
 - **Voice Input (Web Speech API)**: Real implementation with states `idle | requesting | listening | unsupported | denied | error`
   - Self-contained `ISpeechRecognition*` interface shim (no external @types needed)
@@ -1471,10 +1581,12 @@ The original EchoGPT reference screenshots (`media_1790417263993.png` and `media
 - Attachment chip with file name, size, type icon, and remove button
 
 #### Verification
+
 - `npm run lint` → 0 errors, 0 warnings ✓
 - `npm run build` → 17 routes + `/` + `/_not-found` = exit 0 ✓
 
 #### Files Created / Changed
+
 - `src/config/models.ts` — Expanded to 36 AI_MODELS + 3 new providers
 - `src/components/ui/ModelLogo.tsx` — Added Meta/Llama, Cohere, NovaSky, QwQ logos
 - `src/components/dashboard/ModelSelector.tsx` — Added `placement` prop
@@ -1489,11 +1601,13 @@ The original EchoGPT reference screenshots (`media_1790417263993.png` and `media
 #### What Was Fixed & Implemented
 
 **1. Root Cause Analysis of Previous State Leakage**
+
 - Previously, `CURRENT_CHAT_KEY` stored a single active chat object globally in localStorage. When a user changed models in `ModelSelector` or clicked "Try App" from Store, only `selectedModelId` changed, leaving the previous model's messages visible on screen.
 - When messages were appended, the old messages were combined with the new model, corrupting conversation history.
 - On app restart or browser reload, `/chat` automatically restored the old conversation rather than starting with a fresh session.
 
 **2. New Conversation Architecture (`src/lib/chatStorage.ts`)**
+
 - Decoupled `conversationId` completely from `modelId`:
   - `selectedModelId`: controls the active AI model engine for new turns/sessions.
   - `activeConversationId`: unique session identity (`conv-${timestamp}-${rand}`).
@@ -1502,6 +1616,7 @@ The original EchoGPT reference screenshots (`media_1790417263993.png` and `media
 - **Immediate History Persistence**: As soon as the first user message is sent, the conversation is immediately created and saved in History with a clean deterministic title (e.g. "Explain Docker volumes") derived from the user prompt. Assistant replies update the same record immediately.
 
 **3. Strict Model Isolation & New Chat Flow**
+
 - Whenever the model is changed via `ModelSelector` or Store "Try App":
   - A brand new `conversationId` is generated.
   - Visible messages are set to `[]`.
@@ -1515,22 +1630,26 @@ The original EchoGPT reference screenshots (`media_1790417263993.png` and `media
 - Multiple chats with the SAME model (e.g. Claude Chat #1 and Claude Chat #2) have unique conversation IDs and appear as separate entries in History.
 
 **4. App Startup & Browser Reload Behavior**
+
 - Visiting `/chat` directly without URL parameters always starts with a fresh empty chat session. It does NOT automatically resume the previous conversation.
 - History remains fully accessible under `/history`.
 - Opening a historical conversation: User clicks an item in History → navigates to `/chat?c=${item.id}`. The specific conversation and its stored model are restored cleanly.
 - When chatting, `window.history.replaceState(null, "", '/chat?c=' + currentId)` ensures that if a user manually refreshes their active chat, it reloads that specific in-progress conversation.
 
 **5. Asynchronous Response Isolation**
+
 - When a user sends a prompt, the target conversation ID (`targetConvId`) is captured in closure.
 - When the 850ms mock AI response resolves, it persists the assistant message to `targetConvId` in History.
 - If the user switched models or started a new chat during that 850ms, the response is saved in History for the original conversation, but NEVER leaks into the newly active conversation.
 
 **6. History Page Model Logos (`src/components/dashboard/HistoryWorkspace.tsx`)**
+
 - Replaced generic lucide icons with `ModelLogo` for every history item.
 - Every History card renders `ModelLogo` using its OWN stored `item.modelId` (e.g. Claude displays Anthropic star, DeepSeek displays DeepSeek wave, Gemini displays Google star), NOT the currently selected active model.
 - Clicking an archived session navigates to `/chat?c=${item.id}` to restore that exact conversation.
 
 **7. Professional Pro Upgrade Flow (`UpgradeProModal.tsx` & `UpgradeModalContext.tsx`)**
+
 - Replaced fake "Upgrade successful" toast loop with a professional 2-step checkout flow matching the EchoGPT product structure:
   - **Step 1: Plan & Features Showcase**: Billing period tabs (Monthly, Quarterly, Semi-Annual, Annual), included models grid, categorized premium features. Clicking "Continue to Payment" proceeds to Step 2.
   - **Step 2: Choose Payment Method**:
@@ -1547,6 +1666,7 @@ The original EchoGPT reference screenshots (`media_1790417263993.png` and `media
   - Provides a "Reset Demo to Free Tier" button in the modal so testers can re-evaluate the upgrade flow anytime.
 
 #### Verification Results (All 10 Tests Passed)
+
 - **TEST 1 (Model Isolation)**: Switched from Claude to Gemini -> Gemini started with empty chat; Claude conversation remained intact in History.
 - **TEST 2 (Same Model New Chat)**: Created two Claude chats -> both appear as separate history items with unique IDs.
 - **TEST 3 (Sidebar New Chat)**: Clicking Sidebar New Chat creates fresh empty conversation with current model.
@@ -1559,6 +1679,7 @@ The original EchoGPT reference screenshots (`media_1790417263993.png` and `media
 - **TEST 10 (Repeated Upgrade)**: With Demo Pro active, selecting Pro models in ModelSelector works directly without repeating upgrade modal.
 
 #### Build Verification
+
 - `npm run lint` → 0 errors, 0 warnings ✓
 - `npm run build` → 18/18 static routes, exit code 0 ✓
 
@@ -1571,10 +1692,12 @@ The original EchoGPT reference screenshots (`media_1790417263993.png` and `media
 #### What Was Fixed & Implemented
 
 **1. Root Cause & Solution for BUG #1 (First Message Missing Response)**
+
 - **Root Cause**: In `ChatClient.tsx`, `<PlaceholderWorkspace>` was rendered with a dynamic `mountKey` (`conversationId ? c-${conversationId} : new-${sessionKey}-${modelId}`). When a user sent the very first message on `/chat`, `window.history.replaceState(null, "", '/chat?c=' + targetConvId)` ran to sync the URL. Next.js 16's `useSearchParams()` detected the query change, flipping `mountKey` from `new-default-default` to `c-${targetConvId}`. This forced React to unmount `PlaceholderWorkspace` right after the user sent their first prompt. The pending `setTimeout` assistant generator was aborted on the dead instance, and the newly mounted component had no active generation running, leaving the first message without a response. Subsequent messages worked because `mountKey` did not change again.
 - **Solution**: Removed destructive unmount-triggering `replaceState` during active chatting. `ChatClient` mounts cleanly using route entry parameters, preserving component lifecycle. Captured `targetConvId` and `targetModel` in local scope, immediately persisting user message to History, generating response via `setTimeout`, and safely updating UI and History. First message now reliably generates an assistant response across all 7 entry points.
 
 **2. Store → PRO Model Access Control (BUG #2)**
+
 - **Fixed**: In `StoreWorkspace.tsx`, clicking "Try App" on any PRO model now validates `isProUser` via `useUpgradeModal()`.
   - If user is FREE: `openUpgradeModal(...)` is displayed immediately. User remains in Store. No PRO conversation is created and no PRO model is activated.
   - If user is PRO (Demo Pro active): Navigates to `/chat` and creates fresh PRO chat session.
@@ -1582,17 +1705,21 @@ The original EchoGPT reference screenshots (`media_1790417263993.png` and `media
   - Clicking "Try App" never silently upgrades user to Pro.
 
 **3. Pro → Free Model Switching & Identity Updates (BUG #3)**
+
 - **Fixed**: In `PlaceholderWorkspace.tsx`, selecting a FREE model completely updates `selectedModelId`, `selectedModel`, `ModelLogo`, header subtitles, composer title, and message avatars. All visual and engine identities update to the FREE model. No stale PRO model state remains.
 
 **4. Reset Demo to Free Tier Safety (Section 14)**
+
 - **Fixed**: Added an active listener for `echogpt:pro-status-updated`. If a user resets Demo Pro to Free Tier while an active PRO model is selected, the workspace automatically falls back safely to `"echogpt"` (Free model), starts a fresh session, and alerts the user with a toast.
 
 **5. Send-Time Pro Validation (Section 15)**
+
 - **Fixed**: In `handleSendMessage`, before starting any generation, the handler checks `if (selectedModel.isPro && !isProUser)`. If an unauthorized PRO model is active, message generation is blocked, no simulated assistant reply is produced, and `openUpgradeModal` is displayed.
 
 #### Verification Results (All Test Matrices Passed)
 
 **First-Message Response Matrix (Section 18):**
+
 - **TEST A (Fresh /chat → EchoGPT)**: First message sent → user bubble appears → assistant response generates smoothly ✓
 - **TEST B (Fresh /chat → Claude)**: First message sent → user bubble appears → assistant response generates smoothly ✓
 - **TEST C (Store → Try App Gemini)**: Store navigates → fresh chat → first message gets response ✓
@@ -1602,6 +1729,7 @@ The original EchoGPT reference screenshots (`media_1790417263993.png` and `media
 - **TEST G (Composer + New Chat)**: Resets conversation → first message gets response ✓
 
 **Pro Access Test Matrix (Section 19):**
+
 - **TEST P1 (Free user → ModelSelector PRO model)**: Opens UpgradeProModal ✓
 - **TEST P2 (Free user → Store Try App on PRO model)**: Opens UpgradeProModal; user stays on Store; no chat created ✓
 - **TEST P3 (Free user → Store Try App on FREE model)**: Fresh chat created; first message gets response ✓
@@ -1611,6 +1739,7 @@ The original EchoGPT reference screenshots (`media_1790417263993.png` and `media
 - **TEST P7 (Send-time Pro check)**: If PRO model is somehow selected while Free, clicking Send blocks generation and opens UpgradeProModal ✓
 
 #### Build Verification
+
 - `npm run lint` → 0 errors, 0 warnings ✓
 - `npm run build` → 18/18 static routes prerendered, exit code 0 ✓
 
@@ -1623,60 +1752,66 @@ The original EchoGPT reference screenshots (`media_1790417263993.png` and `media
 #### What Was Implemented & Engineered
 
 **1. Canonical Routing Architecture & Navigation**
+
 - **Canonical Route**: Created `src/app/(app)/tasks/page.tsx` rendering the high-performance `TasksWorkspace`.
 - **Legacy URL Redirect**: Updated `src/app/(app)/ai-tasks/page.tsx` to automatically redirect (`redirect("/tasks")`), ensuring zero broken bookmarks or legacy links.
 - **Navigation Sync**: Updated `src/config/navigation.ts` sidebar item to point directly to `/tasks`.
 
 **2. Comprehensive 25-Task Catalog (`src/config/tasks.ts`)**
+
 - Faithfully modeled all 25 tasks from the 4 original EchoGPT reference screenshots across their 4 respective categories:
   - **Ideas (5 Tasks)**:
-    1. *Think Outside the Box* (Disruptive angles & challenge inverted assumptions)
-    2. *Startup* [PRO] (Venture incubator, business model canvas, 2-week MVP roadmap)
-    3. *Innovate and Elevate* (Feature modernization & competitive differentiation matrix)
-    4. *Unleashing Creativity* (SCAMPER method, sensory creative blocks breaker)
-    5. *Idea Sparks* (Rapid-fire viral marketing hooks & micro-concepts)
+    1. _Think Outside the Box_ (Disruptive angles & challenge inverted assumptions)
+    2. _Startup_ [PRO] (Venture incubator, business model canvas, 2-week MVP roadmap)
+    3. _Innovate and Elevate_ (Feature modernization & competitive differentiation matrix)
+    4. _Unleashing Creativity_ (SCAMPER method, sensory creative blocks breaker)
+    5. _Idea Sparks_ (Rapid-fire viral marketing hooks & micro-concepts)
   - **Work (5 Tasks)**:
-    1. *Max Productivity* (Deep-work time-blocking & energy management blueprint)
-    2. *Recruiting* [PRO] (Role scorecard, ATS job description, vetting rubric)
-    3. *CV Builder* (Quantified STAR achievement bullets & ATS keyword cloud)
-    4. *Email* (High-conversion business communications & follow-up sequence)
-    5. *Interview Tips* (Predicted tough questions, STAR answers, reverse questions)
+    1. _Max Productivity_ (Deep-work time-blocking & energy management blueprint)
+    2. _Recruiting_ [PRO] (Role scorecard, ATS job description, vetting rubric)
+    3. _CV Builder_ (Quantified STAR achievement bullets & ATS keyword cloud)
+    4. _Email_ (High-conversion business communications & follow-up sequence)
+    5. _Interview Tips_ (Predicted tough questions, STAR answers, reverse questions)
   - **Fun (5 Tasks)**:
-    1. *Gaming* (Loadout builds, boss battle walkthroughs, immersive lore deep-dive)
-    2. *Movie Time* (Film sommelier recommendations, thematic tropes, snack pairings)
-    3. *Cycling Day* (Pacing power zones, ride nutrition schedule, pre-ride check)
-    4. *Outdoor Activities* (Adventure itinerary, safety matrix, Leave No Trace protocols)
-    5. *Fun with buddies* (Original party games, lightning trivia, memorable challenges)
+    1. _Gaming_ (Loadout builds, boss battle walkthroughs, immersive lore deep-dive)
+    2. _Movie Time_ (Film sommelier recommendations, thematic tropes, snack pairings)
+    3. _Cycling Day_ (Pacing power zones, ride nutrition schedule, pre-ride check)
+    4. _Outdoor Activities_ (Adventure itinerary, safety matrix, Leave No Trace protocols)
+    5. _Fun with buddies_ (Original party games, lightning trivia, memorable challenges)
   - **Online Content (10 Tasks)**:
-    1. *X Posts* (280-char standalone posts + 5-part viral thread breakdown)
-    2. *YouTube Scripts* [PRO] (5s retention hooks, B-roll cues, multi-segment audio/visual script)
-    3. *TikTok Posts* (On-screen text directives, viral pacing, comment-trap questions)
-    4. *TikTok Captions* (SEO search-optimized descriptions & curated hashtag clusters)
-    5. *Insta Content* (Multi-slide carousel blueprints & save-driver checklists)
-    6. *Insta Reels* (Visual shot list, audio cues, voiceover timing markers)
-    7. *Insta Captions* (Storytelling micro-blogs & aesthetic short one-liners)
-    8. *LinkedIn Hiring* (Authentic culture-first hiring announcements)
-    9. *LinkedIn Job Search* (High-status recruiter InMails & networking templates)
-    10. *LinkedIn Profile* [PRO] (1-3-1 executive thought-leadership narratives)
+    1. _X Posts_ (280-char standalone posts + 5-part viral thread breakdown)
+    2. _YouTube Scripts_ [PRO] (5s retention hooks, B-roll cues, multi-segment audio/visual script)
+    3. _TikTok Posts_ (On-screen text directives, viral pacing, comment-trap questions)
+    4. _TikTok Captions_ (SEO search-optimized descriptions & curated hashtag clusters)
+    5. _Insta Content_ (Multi-slide carousel blueprints & save-driver checklists)
+    6. _Insta Reels_ (Visual shot list, audio cues, voiceover timing markers)
+    7. _Insta Captions_ (Storytelling micro-blogs & aesthetic short one-liners)
+    8. _LinkedIn Hiring_ (Authentic culture-first hiring announcements)
+    9. _LinkedIn Job Search_ (High-status recruiter InMails & networking templates)
+    10. _LinkedIn Profile_ [PRO] (1-3-1 executive thought-leadership narratives)
 
 **3. Visual & Interactive Tasks Marketplace (`TasksWorkspace.tsx` & `TaskCard.tsx`)**
+
 - **Hero & Search**: Matching original EchoGPT visual hierarchy with centered title, descriptive subtitle, and search bar supporting live filtering across task title, description, detailed overview, and keywords.
 - **Category Tabs**: Exact matching navigation tabs (`Ideas`, `Work`, `Fun`, `Online Content`) with active purple underline indicators.
 - **Branded Platform SVGs**: Custom vector logos for X, YouTube, TikTok, Instagram, and LinkedIn (`TaskIcons.tsx`).
 - **Responsive Card Grid**: 3-column desktop (`lg:grid-cols-3`), 2-column tablet (`md:grid-cols-2`), and 1-column mobile (`grid-cols-1`) layouts with smooth hover lift and keyboard navigation (`Enter` / `Space`).
 
 **4. Interactive Preview & Configuration Modal (`TaskConfigModal.tsx`)**
+
 - **Detailed Specifications**: Displays "What this task does", "What you'll need", "Expected output", and "Recommended Model" badge.
 - **Dynamic Input Schema**: Dynamically renders typed inputs (`text`, `textarea`, `select`) with form validation.
 - **Live Prompt Preview**: Collapsible prompt blueprint preview showing the exact compiled prompt sent to the LLM.
 - **Direct Chat Handoff**: Submitting hands off seamlessly to `/chat?prompt=...&new=...`, prefilling the prompt into the active chat session for immediate generation.
 
 **5. Unified Pro Gating**
+
 - Reuses existing `useUpgradeModal()` / `UpgradeProModal`.
 - Free users selecting Pro workflows (`Startup`, `Recruiting`, `YouTube Scripts`, `LinkedIn Profile`) trigger the Pro upgrade modal.
 - Active Demo Pro users seamlessly access and configure all 25 workflows.
 
 #### Build & Code Quality Verification
+
 - `npm run lint` → 0 errors, 0 warnings ✓
 - `npm run build` → 19/19 static routes prerendered, exit code 0 ✓
 
@@ -1698,31 +1833,32 @@ Pending mentor instructions (Do NOT proceed to Landing Page or README until requ
 ## Milestone 4.zg - Connectors (MCP) Experience (`/connectors` & Chat Integration)
 
 ### Overview
+
 A full SaaS-grade MCP (Model Context Protocol) Connector management experience. Users can connect external MCP servers, discover their tools, and activate those connectors directly inside the Chat composer. A shared React context powers both `/connectors` and `/chat`, guaranteeing a single source of truth.
 
 ### New Files Created
 
-| File | Purpose |
-|------|---------|
-| `src/types/connector.ts` | TypeScript types: `ConnectorStatus`, `MCPTool`, `Connector`, `AddConnectorInput` |
-| `src/lib/mockMcpService.ts` | `DEMO_PRESETS` (GitHub, PostgreSQL, Slack, Linear) + `simulateMcpHandshake()` (650ms latency, preset matching, failure detection, generic fallback) |
-| `src/lib/connectorStorage.ts` | `localStorage` helpers: `loadStoredConnectors`, `saveStoredConnectors`, `loadActiveChatConnectorIds`, `saveActiveChatConnectorIds`, `getSampleDemoConnectors` |
-| `src/context/ConnectorContext.tsx` | `ConnectorProvider` + `useConnectors()` hook with full state: connectors, activeConnectorIds, quota (1 free / unlimited Pro), add/remove/toggle/retry/loadSamples/clearAll |
-| `src/components/dashboard/connectors/ConnectorIcons.tsx` | `McpBranchIcon` (SVG), `ConnectorServerIcon` (GitHub/DB/Slack/fallback) |
-| `src/components/dashboard/connectors/ConnectorEmptyState.tsx` | Empty state with Add + Load Demo Connectors CTA |
-| `src/components/dashboard/connectors/ConnectorCard.tsx` | Connector management card: status badge, overflow menu, tool chips, enable toggle, use-in-chat |
-| `src/components/dashboard/connectors/ConnectorSetupModal.tsx` | Add connector modal: URL input, validation, quick preset buttons, 2-phase loading, security note, quota alert |
-| `src/components/dashboard/connectors/ConnectorDetailsModal.tsx` | Details modal with discovered tools list, enable/disable, use in chat, remove |
-| `src/components/dashboard/connectors/RemoveConnectorDialog.tsx` | Confirmation dialog before destructive removal |
-| `src/components/dashboard/connectors/ConnectorsWorkspace.tsx` | Full SaaS management workspace: How MCP Works explainer panel, search, grid of ConnectorCards, all modals wired |
-| `src/components/dashboard/connectors/ChatConnectorPopover.tsx` | Chat composer popover: list of connectors with checkbox selection, Add connector shortcut, Manage link |
-| `src/app/(app)/connectors/page.tsx` | Updated to render `ConnectorsWorkspace` |
+| File                                                            | Purpose                                                                                                                                                                    |
+| --------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/types/connector.ts`                                        | TypeScript types: `ConnectorStatus`, `MCPTool`, `Connector`, `AddConnectorInput`                                                                                           |
+| `src/lib/mockMcpService.ts`                                     | `DEMO_PRESETS` (GitHub, PostgreSQL, Slack, Linear) + `simulateMcpHandshake()` (650ms latency, preset matching, failure detection, generic fallback)                        |
+| `src/lib/connectorStorage.ts`                                   | `localStorage` helpers: `loadStoredConnectors`, `saveStoredConnectors`, `loadActiveChatConnectorIds`, `saveActiveChatConnectorIds`, `getSampleDemoConnectors`              |
+| `src/context/ConnectorContext.tsx`                              | `ConnectorProvider` + `useConnectors()` hook with full state: connectors, activeConnectorIds, quota (1 free / unlimited Pro), add/remove/toggle/retry/loadSamples/clearAll |
+| `src/components/dashboard/connectors/ConnectorIcons.tsx`        | `McpBranchIcon` (SVG), `ConnectorServerIcon` (GitHub/DB/Slack/fallback)                                                                                                    |
+| `src/components/dashboard/connectors/ConnectorEmptyState.tsx`   | Empty state with Add + Load Demo Connectors CTA                                                                                                                            |
+| `src/components/dashboard/connectors/ConnectorCard.tsx`         | Connector management card: status badge, overflow menu, tool chips, enable toggle, use-in-chat                                                                             |
+| `src/components/dashboard/connectors/ConnectorSetupModal.tsx`   | Add connector modal: URL input, validation, quick preset buttons, 2-phase loading, security note, quota alert                                                              |
+| `src/components/dashboard/connectors/ConnectorDetailsModal.tsx` | Details modal with discovered tools list, enable/disable, use in chat, remove                                                                                              |
+| `src/components/dashboard/connectors/RemoveConnectorDialog.tsx` | Confirmation dialog before destructive removal                                                                                                                             |
+| `src/components/dashboard/connectors/ConnectorsWorkspace.tsx`   | Full SaaS management workspace: How MCP Works explainer panel, search, grid of ConnectorCards, all modals wired                                                            |
+| `src/components/dashboard/connectors/ChatConnectorPopover.tsx`  | Chat composer popover: list of connectors with checkbox selection, Add connector shortcut, Manage link                                                                     |
+| `src/app/(app)/connectors/page.tsx`                             | Updated to render `ConnectorsWorkspace`                                                                                                                                    |
 
 ### Modified Files
 
-| File | What Changed |
-|------|-------------|
-| `src/components/layout/AppShell.tsx` | Added `ConnectorProvider` nested inside `UpgradeModalProvider` to wrap all app routes |
+| File                                                | What Changed                                                                                                                                                                                                                |
+| --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/components/layout/AppShell.tsx`                | Added `ConnectorProvider` nested inside `UpgradeModalProvider` to wrap all app routes                                                                                                                                       |
 | `src/components/dashboard/PlaceholderWorkspace.tsx` | Added `useConnectors()`, active connector chips above composer toolbar, replaced `GitBranch` button with `McpBranchIcon` + `ChatConnectorPopover`, updated `generateMockResponse` to reference active MCP tools in response |
 
 ### Architecture
@@ -1735,34 +1871,40 @@ ConnectorProvider (AppShell.tsx)
 ```
 
 **State flow:**
+
 - `ConnectorProvider` in `AppShell.tsx` wraps ALL app routes
 - `useConnectors()` is the single source of truth for both pages
 - `localStorage` keys: `echogpt:connectors` (connector list), `echogpt:active-chat-connectors` (active chat selections)
 - Storage events dispatched: `echogpt:connectors-updated`, `echogpt:active-chat-connectors-updated`
 
 **Pro quota:**
+
 - Free users: 1 connected connector max
 - Pro users: unlimited connectors
 - Quota checked in `ConnectorContext.tsx` via `useUpgradeModal()` → `isProUser`
 - `ConnectorProvider` MUST be INSIDE `UpgradeModalProvider` (dependency order)
 
 **MCP handshake simulation (`simulateMcpHandshake`):**
+
 - Waits 650ms to simulate real network latency
 - If URL or name contains "fail"/"error" → returns `{ success: false }` (Test Failure preset)
 - Else matches against 4 `DEMO_PRESETS`: github.com → GitHub, postgres → PostgreSQL, slack.com → Slack, linear.app → Linear
 - Else generates 3 generic tools from the URL hostname
 
 **Chat integration:**
+
 - `McpBranchIcon` button in composer toolbar opens `ChatConnectorPopover`
 - Purple dot badge appears on button when ≥1 connector is active
 - Active connectors shown as purple chips above the toolbar
 - `generateMockResponse()` mentions active MCP tool names in the demo response
 
 **Future real MCP integration boundary:**
+
 - Replace `simulateMcpHandshake()` in `src/lib/mockMcpService.ts` with a real `fetch()` call to an MCP gateway
 - The rest of the architecture (context, storage, UI) is production-ready as-is
 
 ### Lint & Build
+
 - Lint: 0 errors, 0 warnings ✓
 - Build: exit 0, 19 static routes prerendered ✓
 
@@ -1776,46 +1918,55 @@ Completed ✓
 **Fixes applied (all in same session, lint ✓ build ✓):**
 
 #### 1. Details Modal Live State (Bug: stale after enable/disable)
+
 - `ConnectorDetailsModal` now accepts `connectorId: string | null` instead of a snapshot `Connector` object
 - Inside the modal, `useConnectors().connectors.find(c => c.id === connectorId)` always reflects current context state
 - Enable/Disable and Retry buttons now update the modal UI immediately without closing/reopening
 
 #### 2. Enable/Disable State Machine (Bugs: failed→connected confusion)
+
 - `toggleConnectorEnabled` in `ConnectorContext.tsx` no longer overwrites `status` when `status === "failed"`
 - Failed connectors: only `enabled` boolean toggles; `status` stays `"failed"` until a successful `retryConnection`
 - Connected/disabled connectors: still transition `"connected" ↔ "disabled"` correctly
 
 #### 3. ConnectorCard Failed State Display (Bug: contradictory messaging)
+
 - `tools.length === 0` on a `failed` connector → renders `null` (the error banner above already explains failure)
 - `tools.length === 0` on a connected connector → "Connected but no tools were exposed by this server."
 - No more "No tools exposed or connection failed" mixing both states
 
 #### 4. Hydration Mismatch Fix (Bug: server/client subtitle mismatch)
+
 - `PlaceholderWorkspace.tsx` `selectedModelId` lazy initializer no longer reads `localStorage` during first render
 - SSR and initial client render both use deterministic default `"echogpt"`
 - Post-hydration `useEffect` (empty deps, runs once after mount) restores persisted model from `localStorage`
 - Model persistence, conversation restore, and initialModelId prop all still work correctly
 
 #### 5. Layout Script Warning Fix (Bug: "Encountered a script tag while rendering")
+
 - `src/app/layout.tsx`: replaced raw `<script dangerouslySetInnerHTML>` with `<Script id="theme-init" strategy="beforeInteractive">` from `next/script`
 - Anti-FOUC behavior preserved: theme class set on `<html>` before hydration
 - Added `suppressHydrationWarning` to `<body>` for browser extension attribute injection (e.g., `cz-shortcut-listen`)
 
 #### 6. Chat Popover Click-Outside Bug (Bug: popover closes inside Add Connector modal)
+
 - `handleClickOutside` in `ChatConnectorPopover` returns early when `isAddModalOpen === true`
 - `isAddModalOpen` added to `useEffect` dependency array
 - Modal renders in a React portal outside the popover DOM; the guard prevents false outside-click detection
 
 #### 7. Popover Mobile Responsive Fix (Bug: off-screen on 360–412px)
+
 - Popover width: `w-72 max-w-[calc(100vw-2rem)]` — clamps to viewport with 16px safe margins on both sides
 - No horizontal overflow at 360px, 390px, 412px, 768px, or 1440px
 
 #### 8. Compact Popover Redesign (Bug: oversized/too tall)
+
 - Tighter padding (px-3.5/py-2), compact 13px heading, max-h-48 scrollable list
 - Footer: `Manage connectors` link + compact `Add` button
 - Status text in list items distinguishes failed/disabled/connected clearly
 
 #### 9. Add Connector Button No-Wrap (Bug: two-line button on mobile)
+
 - `ConnectorsWorkspace` header button: `size="sm"`, `whitespace-nowrap shrink-0`
 - Actions wrapper: `flex-wrap` to allow graceful reflow on small screens
 
@@ -1846,7 +1997,7 @@ Completed ✓
    - `PlaceholderWorkspace.tsx`: `activeConnectors` uses `if (!isHydrated) return [];` so initial SSR and client render match identically (no active connector chips in SSR, smoothly rendered post-hydration).
    - Tested together with persisted model (`selectedModelId`) without hydration errors or layout shift.
 
-4. **Sizing & Viewport Positioning Separation (Issues 3, 4, 5, 6) � FINAL POLISH:**
+4. **Sizing & Viewport Positioning Separation (Issues 3, 4, 5, 6) � FINAL POLISH:**
    - **Layer A (Existing Connectors Popover - `ChatConnectorPopover.tsx`)**:
      - Desktop (>= 1024px): anchored to trigger button with `left-0` and `lg:w-96`.
      - Mobile & Tablet (< 1024px): mathematically centered horizontally in the viewport (`popoverLeft = (window.innerWidth - targetWidth) / 2 - rect.left`).
@@ -1861,6 +2012,7 @@ Completed ✓
    - **Dark Mode Anti-FOUC Reload Flash Elimination**: Replaced async `next/script` in `layout.tsx` with native synchronous inline `<script>` in `<head>` that evaluates before `<body>` is painted. Eliminates any millisecond light mode flash on page refresh.
 
 **Verification:**
+
 - Lint: 0 errors, 0 warnings ?
 - Build: exit 0, 19 static routes ?
 - Layer A: `w-80 lg:w-96` desktop, perfectly centered horizontally on mobile & tablet, guaranteed top clearance below header ?
@@ -1873,52 +2025,54 @@ Completed ✓
 Explain things in simple Bangla.
 
 When giving commands:
+
 - provide exact commands
 - explain briefly what each command does
 
 When giving AI-agent prompts:
+
 - provide a complete copy-paste prompt
 - clearly define scope
 - prevent unnecessary refactoring
 - prevent scope creep
 
-
 Do not overwhelm me with unnecessary theory.
 
-The goal is to complete this assignment by 29 September 2026 with a polished, recruiter-ready result.
----
+## The goal is to complete this assignment by 29 September 2026 with a polished, recruiter-ready result.
 
-### Milestone 5 � Landing Page Full Rebuild (Production-Quality SaaS Marketing Site)
+### Milestone 5 � Landing Page Full Rebuild (Production-Quality SaaS Marketing Site)
 
-**Goal:** Replace the 932-line monolithic `LandingPage.tsx` with a modular, production-quality SaaS marketing site that sells EchoGPT through its actual product UI � no fabricated data.
+**Goal:** Replace the 932-line monolithic `LandingPage.tsx` with a modular, production-quality SaaS marketing site that sells EchoGPT through its actual product UI � no fabricated data.
 
 **Content Credibility Rules Applied:**
-- REMOVED: Fake stats (`50K+ Active Users`, `99.9% Uptime SLA`) � replaced with real product capability strip
-- REMOVED: Fake testimonials (Sarah Chen, Marcus Okoye, Priya Sharma) � product speaks through UI previews
-- KEPT: Pricing ($0 Free / $9.99 Pro) � matches existing `UpgradeProModal.tsx` billing config
+
+- REMOVED: Fake stats (`50K+ Active Users`, `99.9% Uptime SLA`) � replaced with real product capability strip
+- REMOVED: Fake testimonials (Sarah Chen, Marcus Okoye, Priya Sharma) � product speaks through UI previews
+- KEPT: Pricing ($0 Free / $9.99 Pro) � matches existing `UpgradeProModal.tsx` billing config
 - ADDED: Demo transparency notice in PricingSection
 
 **New Modular Architecture (`src/components/landing/`):**
 
-| Component | Purpose | Key Data Sources |
-|-----------|---------|-----------------|
-| `LandingPage.tsx` | Thin orchestrator with `UpgradeModalProvider` wrapper | � |
-| `LandingNavbar.tsx` | SaaS navbar: theme toggle, smooth scroll anchors, mobile drawer | `useTheme()` |
-| `LandingHero.tsx` | Hero with authentic EchoGPT UI preview (MCP tool invocation) | `McpBranchIcon` |
-| `LandingCapabilityStrip.tsx` | 6 real product capabilities (no fake stats) | Presentational |
-| `LandingProductPreview.tsx` | 5-tab interactive workspace switcher (Chat/Image/Video/Tasks/Compare) | `useState<PreviewTab>` |
-| `LandingCoreFeatures.tsx` | 9-feature card grid linking to real app routes | Next.js `Link` |
-| `LandingModelsSection.tsx` | Live AI model catalog with tier filter + interactive selection | `AI_MODELS`, `ModelLogo`, `Badge` |
-| `LandingCreativeStudio.tsx` | Dual panel: Image Studio + Video Studio with real model data | `IMAGE_MODELS`, `VIDEO_MODELS` |
-| `LandingTasksSection.tsx` | 4-category tabs with live task blueprints | `TASK_CATEGORIES`, `AI_TASKS` |
-| `LandingConnectorsSection.tsx` | MCP architecture: 4-step flow + 3 sample connector cards | `ConnectorServerIcon`, `McpBranchIcon` |
-| `LandingWhySection.tsx` | 6-pillar value proposition grid | `McpBranchIcon` |
-| `LandingPricingSection.tsx` | Free vs Pro dual card with upgrade modal integration | `useUpgradeModal()` |
-| `LandingFaqSection.tsx` | 8-Q&A accessible accordion with CSS grid-template animation | `useState` |
-| `LandingCtaSection.tsx` | Final CTA linking to `/chat` and `/tasks` | Presentational |
-| `LandingFooter.tsx` | 5-column SaaS footer with all real app routes | Next.js `Link` |
+| Component                      | Purpose                                                               | Key Data Sources                       |
+| ------------------------------ | --------------------------------------------------------------------- | -------------------------------------- |
+| `LandingPage.tsx`              | Thin orchestrator with `UpgradeModalProvider` wrapper                 | �                                      |
+| `LandingNavbar.tsx`            | SaaS navbar: theme toggle, smooth scroll anchors, mobile drawer       | `useTheme()`                           |
+| `LandingHero.tsx`              | Hero with authentic EchoGPT UI preview (MCP tool invocation)          | `McpBranchIcon`                        |
+| `LandingCapabilityStrip.tsx`   | 6 real product capabilities (no fake stats)                           | Presentational                         |
+| `LandingProductPreview.tsx`    | 5-tab interactive workspace switcher (Chat/Image/Video/Tasks/Compare) | `useState<PreviewTab>`                 |
+| `LandingCoreFeatures.tsx`      | 9-feature card grid linking to real app routes                        | Next.js `Link`                         |
+| `LandingModelsSection.tsx`     | Live AI model catalog with tier filter + interactive selection        | `AI_MODELS`, `ModelLogo`, `Badge`      |
+| `LandingCreativeStudio.tsx`    | Dual panel: Image Studio + Video Studio with real model data          | `IMAGE_MODELS`, `VIDEO_MODELS`         |
+| `LandingTasksSection.tsx`      | 4-category tabs with live task blueprints                             | `TASK_CATEGORIES`, `AI_TASKS`          |
+| `LandingConnectorsSection.tsx` | MCP architecture: 4-step flow + 3 sample connector cards              | `ConnectorServerIcon`, `McpBranchIcon` |
+| `LandingWhySection.tsx`        | 6-pillar value proposition grid                                       | `McpBranchIcon`                        |
+| `LandingPricingSection.tsx`    | Free vs Pro dual card with upgrade modal integration                  | `useUpgradeModal()`                    |
+| `LandingFaqSection.tsx`        | 8-Q&A accessible accordion with CSS grid-template animation           | `useState`                             |
+| `LandingCtaSection.tsx`        | Final CTA linking to `/chat` and `/tasks`                             | Presentational                         |
+| `LandingFooter.tsx`            | 5-column SaaS footer with all real app routes                         | Next.js `Link`                         |
 
 **Responsive Behavior:**
+
 - Navbar: desktop horizontal links ? mobile slide-out drawer
 - Hero: stacked on mobile, side-by-side on lg+
 - Models: horizontal scroll filter pills on mobile, wraps on desktop
@@ -1927,6 +2081,7 @@ The goal is to complete this assignment by 29 September 2026 with a polished, re
 - FAQ: full-width single column, CSS grid-row animation (no JS height measurement)
 
 **Validation:**
+
 - Lint: 0 errors, 0 warnings ?
 - Build: exit 0, 19 static routes ? (TypeScript clean, no hydration errors)
 
@@ -1934,7 +2089,7 @@ The goal is to complete this assignment by 29 September 2026 with a polished, re
 
 ---
 
-### Milestone 6 � Landing Page Final Polish & Production Hardening
+### Milestone 6 � Landing Page Final Polish & Production Hardening
 
 **Goal:** Targeted final polish pass for public production readiness without modifying existing copy, previews, or layout structure.
 
@@ -1942,7 +2097,7 @@ The goal is to complete this assignment by 29 September 2026 with a polished, re
    - Removed internal assignment reference: `"AppifyDevs Frontend Redesign"`.
    - Removed fake functional links (`Terms & Licensing` pointing to `/subscriptions` and `System Health` pointing to `/support`).
    - Retained only verified platform routes in bottom bar: Support Center (`/support`), Pricing & Pro (`/subscriptions`), and API Platform (`/api-platform`).
-   - Clean copyright: `� {new Date().getFullYear()} EchoGPT. Built for modern AI productivity & creation.`
+   - Clean copyright: `� {new Date().getFullYear()} EchoGPT. Built for modern AI productivity & creation.`
 
 2. **Social Icon Buttons**:
    - Replaced plain text links (Facebook, Instagram, LinkedIn) with icon-first button controls (`size-8.5 rounded-xl`).
@@ -1968,5 +2123,69 @@ The goal is to complete this assignment by 29 September 2026 with a polished, re
    - Preserved all manual user adjustments (including `group-hover:text-primary` in `LandingWhySection.tsx`).
 
 **Validation:**
+
 - `npm run lint`: 0 errors, 0 warnings
 - `npm run build`: exit 0, 19 static routes compiled cleanly
+
+---
+
+### Milestone 7 - Authentication Entry Flow
+
+**Goal:** Add a polished, production-quality frontend auth experience connected to all landing page CTAs. No real backend lightweight demo flow using localStorage.
+
+#### New Routes
+
+| Route            | File                                       | Description                        |
+| ---------------- | ------------------------------------------ | ---------------------------------- |
+| /signin          | src/app/(landing)/signin/page.tsx          | Sign-in page (static, bare layout) |
+| /signup          | src/app/(landing)/signup/page.tsx          | Sign-up / create account page      |
+| /forgot-password | src/app/(landing)/forgot-password/page.tsx | Password reset request page        |
+
+All three pages live inside the (landing) route group (bare layout, no AppShell/sidebar).
+
+#### New Components
+
+| File                                       | Description                                                                                                                                                             |
+| ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| src/components/auth/AuthPageLayout.tsx     | Shared two-column layout: left branding panel (desktop) + right form card. Single-column on mobile. Theme toggle + EchoGPT logo header.                                 |
+| src/components/auth/SignInForm.tsx         | Email + password form with validation, Eye/EyeOff show/hide toggle, demo auth save, router.push('/chat') on success.                                                    |
+| src/components/auth/SignUpForm.tsx         | Name + email + password + confirm password form with full validation, password show/hide on both fields, demo auth save, router.push('/chat') on success.               |
+| src/components/auth/ForgotPasswordForm.tsx | Email form with success state showing confirmation UI; demo notice; back-to-signin link.                                                                                |
+| src/lib/authStorage.ts                     | localStorage helper: DemoAuthUser interface, loadDemoUser(), saveDemoUser(), clearDemoUser(). Fires 'echogpt:auth-changed' custom event. Key: 'echogpt:demo-auth-user'. |
+
+#### Demo Auth Behavior
+
+- **No real authentication** all form submissions are frontend-only
+- On valid sign-in/sign-up: calls saveDemoUser({ name?, email }), then
+  router.push('/chat')
+- Demo notice shown below submit button: _"Demo mode - authentication is represented in the frontend."_
+- Passwords are **never stored** - only { name, email, signedInAt } in localStorage
+- forgot-password shows success state after submit; no email is actually sent
+
+#### Landing CTA Updates
+
+| Component                                   | Old href | New href                      |
+| ------------------------------------------- | -------- | ----------------------------- |
+| LandingNavbar.tsx � Desktop "Open App"      | /chat    | /signin (relabeled "Sign In") |
+| LandingNavbar.tsx � Desktop "Start Free"    | /chat    | /signup                       |
+| LandingNavbar.tsx � Mobile "Open Workspace" | /chat    | /signin (relabeled "Sign In") |
+| LandingNavbar.tsx � Mobile "Start Free"     | /chat    | /signup                       |
+| LandingHero.tsx � Primary CTA               | /chat    | /signup                       |
+| LandingPricingSection.tsx � Free plan CTA   | /chat    | /signup                       |
+| LandingCtaSection.tsx � Primary CTA         | /chat    | /signup                       |
+
+Unchanged: Hero secondary CTA (#preview anchor), Pricing Pro CTA (openUpgradeModal), CTA section secondary (/tasks).
+
+#### Design Consistency
+
+- Uses font-lexend, #713CF4 brand color, existing dark/light theme via useTheme()
+- Inputs custom-styled (no shared Input component exists)
+- focus:ring-2 focus:ring-[#713CF4]/50 focus states
+- Auth card: bg-white dark:bg-[#12111A] with border border-zinc-200/80 dark:border-white/[0.08]
+- Desktop: two-column with left branding panel (logo, tagline, 4 feature bullets, ambient gradient block)
+- Mobile: full-width form card only, no decorative branding panel
+
+#### Validation
+
+- npm run lint: 0 errors, 0 warnings
+- npm run build: exit 0, **22 static routes** (up from 19)
