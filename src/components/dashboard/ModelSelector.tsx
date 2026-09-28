@@ -306,7 +306,7 @@ export function ModelSelector({
                     className={`px-2.5 py-0.5 rounded-md text-[10.5px] font-semibold transition-colors cursor-pointer ${
                       tierFilter === t
                         ? "bg-[#713CF4] text-white shadow-2xs"
-                        : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200 bg-zinc-100 dark:bg-zinc-800/80"
+                        : "text-zinc-500 hover:text-primary dark:text-zinc-400 dark:hover:text-zinc-200 bg-zinc-100 dark:bg-zinc-800/80"
                     }`}
                   >
                     {t === "all" ? "All Models" : t === "free" ? "Free" : "Pro"}
