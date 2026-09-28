@@ -672,7 +672,7 @@ export function ImageStudioWorkspace() {
                               className={`px-2 py-0.5 rounded-md text-[10px] font-medium whitespace-nowrap cursor-pointer transition-colors ${
                                 exploreCategory === cat
                                   ? "bg-[#713CF4] text-white"
-                                  : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"
+                                  : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary"
                               }`}
                             >
                               {cat}
@@ -858,7 +858,7 @@ export function ImageStudioWorkspace() {
                             className={`flex-1 py-1.5 text-center text-[11px] font-semibold rounded-md transition-colors cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-[#713CF4] ${
                               isSelected
                                 ? "bg-[#713CF4] text-white shadow-xs"
-                                : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"
+                                : "text-zinc-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary"
                             }`}
                           >
                             {r.id}
@@ -884,7 +884,7 @@ export function ImageStudioWorkspace() {
                             className={`flex-1 py-1.5 text-center text-[11px] font-semibold rounded-md transition-colors cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-[#713CF4] ${
                               isSelected
                                 ? "bg-[#713CF4] text-white shadow-xs"
-                                : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"
+                                : "text-zinc-600 dark:text-zinc-400 hover:text-primary dark:hover:text-primary"
                             }`}
                           >
                             {cnt} {cnt === 1 ? "Image" : "Images"}
@@ -1094,7 +1094,7 @@ export function ImageStudioWorkspace() {
                           <button
                             type="button"
                             onClick={() => setZoomLevel((z) => Math.max(75, z - 25))}
-                            className="p-1 rounded text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 cursor-pointer"
+                            className="p-1 rounded text-zinc-500 hover:text-primary dark:hover:text-primary cursor-pointer"
                             title="Zoom Out"
                           >
                             <ZoomOut className="size-3" />
@@ -1105,7 +1105,7 @@ export function ImageStudioWorkspace() {
                           <button
                             type="button"
                             onClick={() => setZoomLevel((z) => Math.min(150, z + 25))}
-                            className="p-1 rounded text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 cursor-pointer"
+                            className="p-1 rounded text-zinc-500 hover:text-primary dark:hover:text-primary cursor-pointer"
                             title="Zoom In"
                           >
                             <ZoomIn className="size-3" />
@@ -1204,7 +1204,7 @@ export function ImageStudioWorkspace() {
                 {/* ── CANVAS RENDER AREA ── */}
                 <div
                   ref={previewCanvasRef}
-                  className={`flex-1 min-h-[380px] sm:min-h-[440px] flex items-center justify-center p-6 sm:p-8 bg-zinc-950 relative overflow-hidden ${
+                  className={`flex-1 min-h-95 sm:min-h-110 flex items-center justify-center p-6 sm:p-8 bg-zinc-950 relative overflow-hidden ${
                     isFullscreen ? "fixed inset-0 z-50 p-12 min-h-screen" : ""
                   }`}
                 >
@@ -1311,13 +1311,13 @@ export function ImageStudioWorkspace() {
                           : activeImage.ratio === "4:3"
                           ? "[4/3]"
                           : "[16/9]"
-                      } rounded-2xl bg-gradient-to-br ${
+                      } rounded-2xl bg-linear-to-br ${
                         activeImage.colorGrad
                       } border border-white/10 shadow-2xl flex flex-col justify-between p-6 relative overflow-hidden group transition-transform duration-200`}
                       style={{ transform: `scale(${zoomLevel / 100})` }}
                     >
                       {/* Subtle Grid Canvas Overlay */}
-                      <div className="absolute inset-0 bg-[radial-gradient(#713cf4_1px,transparent_1px)] [background-size:16px_16px] opacity-25 pointer-events-none" />
+                      <div className="absolute inset-0 bg-[radial-gradient(#713cf4_1px,transparent_1px)] bg-size-[16px_16px] opacity-25 pointer-events-none" />
 
                       {/* Top Bar on artwork */}
                       <div className="flex items-center justify-between z-10">
