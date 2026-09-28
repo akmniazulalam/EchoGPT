@@ -7,23 +7,46 @@ export function LandingBackToTop() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    const container = document.getElementById(
+      "landing-scroll-container"
+    );
+
+    if (!container) return;
+
     const handleScroll = () => {
       // Reveal button after user scrolls past 400px
-      setIsVisible(window.scrollY > 400);
+      setIsVisible(container.scrollTop > 400);
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    container.addEventListener("scroll", handleScroll, {
+      passive: true,
+    });
+
+    // Check initial position
     handleScroll();
 
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      container.removeEventListener(
+        "scroll",
+        handleScroll
+      );
+    };
   }, []);
 
   const scrollToTop = () => {
+    const container = document.getElementById(
+      "landing-scroll-container"
+    );
+
+    if (!container) return;
+
     const isReducedMotion =
       typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
 
-    window.scrollTo({
+    container.scrollTo({
       top: 0,
       behavior: isReducedMotion ? "auto" : "smooth",
     });
