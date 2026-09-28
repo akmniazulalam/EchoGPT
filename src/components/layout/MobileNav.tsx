@@ -91,7 +91,7 @@ export function MobileNav({
                 priority
               />
             </div>
-            <span className="text-[17px] font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 leading-none">
+            <span className="font-bold leading-none text-[18px] tracking-[4px] bg-linear-to-r from-brand to-secondary bg-clip-text text-transparent">
               EchoGPT
             </span>
           </Link>
@@ -140,7 +140,7 @@ export function MobileNav({
             <button
               type="button"
               onClick={onClose}
-              className="flex items-center justify-center size-8 rounded-lg text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] cursor-pointer"
+              className="flex items-center justify-center size-8 rounded-lg text-zinc-500 hover:text-primary dark:text-zinc-400 dark:hover:text-primary hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] cursor-pointer"
               aria-label="Close navigation menu"
             >
               <X className="size-4.5" />
