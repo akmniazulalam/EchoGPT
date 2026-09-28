@@ -1886,3 +1886,48 @@ When giving AI-agent prompts:
 Do not overwhelm me with unnecessary theory.
 
 The goal is to complete this assignment by 29 September 2026 with a polished, recruiter-ready result.
+---
+
+### Milestone 5 — Landing Page Full Rebuild (Production-Quality SaaS Marketing Site)
+
+**Goal:** Replace the 932-line monolithic `LandingPage.tsx` with a modular, production-quality SaaS marketing site that sells EchoGPT through its actual product UI — no fabricated data.
+
+**Content Credibility Rules Applied:**
+- REMOVED: Fake stats (`50K+ Active Users`, `99.9% Uptime SLA`) — replaced with real product capability strip
+- REMOVED: Fake testimonials (Sarah Chen, Marcus Okoye, Priya Sharma) — product speaks through UI previews
+- KEPT: Pricing ($0 Free / $9.99 Pro) — matches existing `UpgradeProModal.tsx` billing config
+- ADDED: Demo transparency notice in PricingSection
+
+**New Modular Architecture (`src/components/landing/`):**
+
+| Component | Purpose | Key Data Sources |
+|-----------|---------|-----------------|
+| `LandingPage.tsx` | Thin orchestrator with `UpgradeModalProvider` wrapper | — |
+| `LandingNavbar.tsx` | SaaS navbar: theme toggle, smooth scroll anchors, mobile drawer | `useTheme()` |
+| `LandingHero.tsx` | Hero with authentic EchoGPT UI preview (MCP tool invocation) | `McpBranchIcon` |
+| `LandingCapabilityStrip.tsx` | 6 real product capabilities (no fake stats) | Presentational |
+| `LandingProductPreview.tsx` | 5-tab interactive workspace switcher (Chat/Image/Video/Tasks/Compare) | `useState<PreviewTab>` |
+| `LandingCoreFeatures.tsx` | 9-feature card grid linking to real app routes | Next.js `Link` |
+| `LandingModelsSection.tsx` | Live AI model catalog with tier filter + interactive selection | `AI_MODELS`, `ModelLogo`, `Badge` |
+| `LandingCreativeStudio.tsx` | Dual panel: Image Studio + Video Studio with real model data | `IMAGE_MODELS`, `VIDEO_MODELS` |
+| `LandingTasksSection.tsx` | 4-category tabs with live task blueprints | `TASK_CATEGORIES`, `AI_TASKS` |
+| `LandingConnectorsSection.tsx` | MCP architecture: 4-step flow + 3 sample connector cards | `ConnectorServerIcon`, `McpBranchIcon` |
+| `LandingWhySection.tsx` | 6-pillar value proposition grid | `McpBranchIcon` |
+| `LandingPricingSection.tsx` | Free vs Pro dual card with upgrade modal integration | `useUpgradeModal()` |
+| `LandingFaqSection.tsx` | 8-Q&A accessible accordion with CSS grid-template animation | `useState` |
+| `LandingCtaSection.tsx` | Final CTA linking to `/chat` and `/tasks` | Presentational |
+| `LandingFooter.tsx` | 5-column SaaS footer with all real app routes | Next.js `Link` |
+
+**Responsive Behavior:**
+- Navbar: desktop horizontal links ? mobile slide-out drawer
+- Hero: stacked on mobile, side-by-side on lg+
+- Models: horizontal scroll filter pills on mobile, wraps on desktop
+- Tasks: category tab pills scroll on mobile
+- Pricing: stacked on mobile, side-by-side on md+
+- FAQ: full-width single column, CSS grid-row animation (no JS height measurement)
+
+**Validation:**
+- Lint: 0 errors, 0 warnings ?
+- Build: exit 0, 19 static routes ? (TypeScript clean, no hydration errors)
+
+**Files changed:** `LandingPage.tsx` (rewritten) + 14 new component files in `src/components/landing/`
