@@ -693,7 +693,7 @@ export function PlaceholderWorkspace({
               <button
                 type="button"
                 onClick={handleShareChat}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800/60 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs text-zinc-500 hover:text-primary dark:text-zinc-400 dark:hover:text-primary hover:bg-zinc-100 dark:hover:bg-zinc-800/60 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] cursor-pointer"
                 title="Share conversation"
                 aria-label="Share this conversation"
               >
@@ -707,7 +707,7 @@ export function PlaceholderWorkspace({
               <button
                 type="button"
                 onClick={handleStartNewChat}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800/60 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs text-zinc-500 hover:text-primary dark:text-zinc-400 dark:hover:text-primary hover:bg-zinc-100 dark:hover:bg-zinc-800/60 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] cursor-pointer"
                 title="Archive and start new chat"
                 aria-label="Start new chat"
               >
@@ -1082,7 +1082,7 @@ export function PlaceholderWorkspace({
                 onKeyDown={handleKeyDown}
                 placeholder={`Ask ${selectedModel.name} anything...`}
                 rows={1}
-                className="flex-1 resize-none py-2 text-[13.5px] bg-transparent text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 outline-none leading-relaxed min-h-[40px] max-h-36 font-normal"
+                className="flex-1 resize-none py-2 text-[13.5px] bg-transparent text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 outline-none leading-relaxed min-h-10 max-h-36 font-normal"
                 aria-label="Message prompt input"
               />
 
