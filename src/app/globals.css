@@ -46,15 +46,27 @@ body {
 }
 
 /* Slim elegant custom scrollbar with subtle EchoGPT purple tint */
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
 .custom-scrollbar::-webkit-scrollbar {
   width: 3px;
-  height: 4px;
+  height: 5px;
   background-color: transparent;
 }
 
-.custom-scrollbar.scroll-top::-webkit-scrollbar-thumb, .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: linear-gradient(transparent,#7c3aed);
-    border-radius: 8px;
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+.custom-scrollbar.scroll-top::-webkit-scrollbar-thumb,
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(transparent, #7c3aed);
+  border-radius: 8px;
 }
 
 

@@ -17,11 +17,12 @@ import { LandingPricingSection } from "./LandingPricingSection";
 import { LandingFaqSection } from "./LandingFaqSection";
 import { LandingCtaSection } from "./LandingCtaSection";
 import { LandingFooter } from "./LandingFooter";
+import { LandingBackToTop } from "./LandingBackToTop";
 
 export function LandingPage() {
   return (
     <UpgradeModalProvider>
-      <div className="min-h-screen bg-white dark:bg-[#090A0F] text-zinc-900 dark:text-zinc-100 font-lexend selection:bg-[#713CF4]/20 selection:text-[#713CF4]">
+      <div className="min-h-screen bg-white dark:bg-[#090A0F] text-zinc-900 dark:text-zinc-100 font-lexend selection:bg-[#713CF4]/20 selection:text-[#713CF4] custom-scrollbar">
         {/* 1. Premium SaaS Navbar with Theme Toggle */}
         <LandingNavbar />
 
@@ -65,6 +66,9 @@ export function LandingPage() {
 
         {/* 14. Professional SaaS Footer */}
         <LandingFooter />
+
+        {/* 15. Polished Floating Back to Top Button */}
+        <LandingBackToTop />
 
         {/* Global Demo Pro Upgrade Modal */}
         <UpgradeProModal />
