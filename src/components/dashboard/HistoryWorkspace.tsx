@@ -179,7 +179,7 @@ export function HistoryWorkspace() {
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] ${
                     isSelected
                       ? "bg-[#713CF4] text-white shadow-2xs"
-                      : "bg-white dark:bg-[#111217] border border-zinc-200/80 dark:border-zinc-800/80 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200"
+                      : "bg-white dark:bg-[#111217] border border-zinc-200/80 dark:border-zinc-800/80 text-zinc-600 dark:text-zinc-400 hover:text-primary dark:hover:text-zinc-200"
                   }`}
                 >
                   {f.label}
