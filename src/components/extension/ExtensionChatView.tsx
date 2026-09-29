@@ -122,8 +122,8 @@ export function ExtensionChatView({
               </h2>
             </div>
 
-            {/* Quick Action Colorful Cards (2 columns, last item spans full if odd) */}
-            <div className="grid grid-cols-2 gap-2">
+            {/* Quick Action Colorful Cards (responsive to panel width) */}
+            <div className="grid grid-cols-2 @lg:grid-cols-3 @2xl:grid-cols-5 gap-2">
               {quickActions.map((action, i) => {
                 const isLastOdd = i === quickActions.length - 1 && quickActions.length % 2 !== 0;
                 return (
@@ -133,7 +133,7 @@ export function ExtensionChatView({
                     onClick={() => onSelectTab(action.tab)}
                     className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl border text-left transition-all hover:scale-[1.02] active:scale-[0.98] shadow-2xs hover:shadow-xs cursor-pointer ${
                       action.bg
-                    } ${isLastOdd ? "col-span-2" : ""}`}
+                    } ${isLastOdd ? "col-span-2 @lg:col-span-1" : ""}`}
                   >
                     <div className="size-7 rounded-lg bg-white/90 dark:bg-black/40 flex items-center justify-center shrink-0 shadow-2xs">
                       {action.icon}
