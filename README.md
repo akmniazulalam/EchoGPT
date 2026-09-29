@@ -2,7 +2,8 @@
 
 > A modern AI productivity workspace and Chrome Side Panel concept, redesigned as a frontend engineering take-home project.
 
-- **GitHub Repository**: [https://github.com/akmniazulalam/EchoGPT](https://github.com/akmniazulalam/EchoGPT)
+- **[Live Demo](https://echogpt-gamma.vercel.app/)**
+- **[GitHub Repository](https://github.com/akmniazulalam/EchoGPT)**
 
 ---
 
@@ -381,19 +382,42 @@ Beyond the foundational assignment requirements, several notable engineering fea
 
 ## 19. Demo & Screenshots
 
-To explore the application and Chrome Side Panel interactively, start the local development server:
+### Live Demo
 
-```bash
-npm run dev
-```
+**[Open the live demo](https://echogpt-gamma.vercel.app/)**
 
-Key URLs to test:
-- **Landing Page**: [http://localhost:3000](http://localhost:3000)
-- **Chrome Side Panel**: [http://localhost:3000/extension](http://localhost:3000/extension)
-- **AI Workspace**: [http://localhost:3000/chat](http://localhost:3000/chat)
-- **Model Comparison**: [http://localhost:3000/compare](http://localhost:3000/compare)
-- **Creative Studios**: [http://localhost:3000/image-studio](http://localhost:3000/image-studio) & [http://localhost:3000/video-studio](http://localhost:3000/video-studio)
-- **MCP Connectors**: [http://localhost:3000/connectors](http://localhost:3000/connectors)
+The live deployment includes the redesigned EchoGPT web experience,
+interactive AI workspaces, and the simulated Chrome Side Panel concept.
+
+### Screenshots
+
+#### Landing Page
+
+![EchoGPT Landing Page](./docs/screenshots/landing-page.png)
+
+#### Chat Workspace
+
+![EchoGPT Chat Workspace](./docs/screenshots/chat.png)
+
+#### Image Studio
+
+![EchoGPT Image Studio](./docs/screenshots/image-studio.png)
+
+#### Compare Workspace
+
+![EchoGPT Compare Workspace](./docs/screenshots/compare.png)
+
+#### MCP Connectors
+
+![EchoGPT MCP Connectors](./docs/screenshots/connectors.png)
+
+#### Chrome Side Panel
+
+![EchoGPT Chrome Side Panel](./docs/screenshots/extension-chat.png)
+
+#### Chrome Side Panel — Write
+
+![EchoGPT Chrome Side Panel Write](./docs/screenshots/extension-write.png)
 
 ---
 
