@@ -30,6 +30,15 @@ export interface ExtensionConversation {
   relativeTime: string;
   messages: ExtensionMessage[];
   modelId: string;
+  toolType?: ExtensionTab;
+}
+
+export interface ExtensionSettings {
+  defaultModel: string;
+  temperature: number;
+  streamResponses: boolean;
+  autoPageContext: boolean;
+  keyboardShortcuts: boolean;
 }
 
 export interface WriteOptions {
