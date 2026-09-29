@@ -82,7 +82,7 @@ export function ExtensionMcpView() {
               }`}
             >
               {/* Connector Card Top */}
-              <div className="flex items-center justify-between pb-2 border-b border-zinc-200/50 dark:border-white/[0.04]">
+              <div className="flex items-center justify-between pb-2 border-b border-zinc-200/50 dark:border-white/4">
                 <div className="flex items-center gap-2 min-w-0">
                   <div className="size-7 rounded-xl bg-white dark:bg-[#1A1725] border border-zinc-200 dark:border-white/[0.08] flex items-center justify-center text-zinc-700 dark:text-zinc-200 shrink-0">
                     <Terminal className="size-3.5 text-[#713CF4]" />
@@ -123,7 +123,7 @@ export function ExtensionMcpView() {
                   {c.tools.map((t) => (
                     <div
                       key={t.name}
-                      className="flex items-center justify-between p-1.5 rounded-lg bg-white dark:bg-black/20 border border-zinc-100 dark:border-white/[0.04] text-xs"
+                      className="flex items-center justify-between p-1.5 rounded-lg bg-white dark:bg-black/20 border border-zinc-100 dark:border-white/4 text-xs"
                     >
                       <div className="min-w-0 pr-1">
                         <p className="font-mono text-[11px] font-semibold text-zinc-800 dark:text-zinc-200 truncate">

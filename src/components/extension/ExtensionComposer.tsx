@@ -211,7 +211,7 @@ export function ExtensionComposer({
       )}
 
       {/* ── Top Bar: Model Selector + Toolbar Action Icons ── */}
-      <div className="flex items-center justify-between gap-1 px-2.5 pt-2 pb-1 border-b border-zinc-100 dark:border-white/[0.04]">
+      <div className="flex items-center justify-between gap-1 px-2.5 pt-2 pb-1 border-b border-zinc-100 dark:border-white/4">
         {/* Model Selector Pill */}
         <div className="relative">
           <button
@@ -520,7 +520,7 @@ export function ExtensionComposer({
       </div>
 
       {/* ── Bottom Bar: Search Toggle + Hint + Send Action ── */}
-      <div className="flex items-center justify-between px-3 py-1.5 border-t border-zinc-100 dark:border-white/[0.04] text-[11px] text-zinc-400">
+      <div className="flex items-center justify-between px-3 py-1.5 border-t border-zinc-100 dark:border-white/4 text-[11px] text-zinc-400">
         {/* Web Search Toggle */}
         <button
           type="button"

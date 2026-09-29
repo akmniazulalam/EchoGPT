@@ -153,7 +153,7 @@ export function ExtensionChatView({
                   key={idx}
                   type="button"
                   onClick={() => onSendMessage(suggestion)}
-                  className="w-full text-left px-3 py-2 rounded-xl bg-zinc-50 dark:bg-white/[0.03] hover:bg-zinc-100 dark:hover:bg-white/[0.06] border border-zinc-200/60 dark:border-white/[0.04] text-xs font-medium text-zinc-700 dark:text-zinc-300 transition-colors cursor-pointer truncate"
+                  className="w-full text-left px-3 py-2 rounded-xl bg-zinc-50 dark:bg-white/[0.03] hover:bg-zinc-100 dark:hover:bg-white/[0.06] border border-zinc-200/60 dark:border-white/4 text-xs font-medium text-zinc-700 dark:text-zinc-300 transition-colors cursor-pointer truncate"
                   title={suggestion}
                 >
                   {suggestion}
@@ -196,7 +196,7 @@ export function ExtensionChatView({
                   // AI Response Card
                   <div className="max-w-[94%] rounded-2xl rounded-tl-xs bg-zinc-50 dark:bg-[#16131F] border border-zinc-200/80 dark:border-white/[0.08] p-3 text-xs sm:text-sm text-zinc-800 dark:text-zinc-200 leading-relaxed shadow-xs space-y-2">
                     {/* Header with Model Logo */}
-                    <div className="flex items-center justify-between pb-1.5 border-b border-zinc-200/50 dark:border-white/[0.04]">
+                    <div className="flex items-center justify-between pb-1.5 border-b border-zinc-200/50 dark:border-white/4">
                       <div className="flex items-center gap-1.5">
                         <ModelLogo
                           modelId={msg.modelId || selectedModel.id}
@@ -215,7 +215,7 @@ export function ExtensionChatView({
                     </div>
 
                     {/* Action Bar (Copy, Thumbs, Retry) */}
-                    <div className="flex items-center justify-between pt-1 border-t border-zinc-200/50 dark:border-white/[0.04] text-zinc-400">
+                    <div className="flex items-center justify-between pt-1 border-t border-zinc-200/50 dark:border-white/4 text-zinc-400">
                       <div className="flex items-center gap-1">
                         <button
                           type="button"

@@ -156,7 +156,7 @@ export function ExtensionTranslateView({
   return (
     <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden bg-white dark:bg-[#0B0912]">
       {/* ── Top Bar: Dual Language Selectors + Swap ── */}
-      <div className="p-3 border-b border-zinc-100 dark:border-white/[0.04]">
+      <div className="p-3 border-b border-zinc-100 dark:border-white/4">
         <div className="flex items-center justify-between gap-2 relative">
           {/* Source Language Button */}
           <div ref={sourceDropdownRef} className="flex-1 relative">
@@ -308,7 +308,7 @@ export function ExtensionTranslateView({
         {/* Translation Result Card */}
         {translatedText && (
           <div className="p-3.5 rounded-2xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/80 dark:border-white/[0.08] space-y-3 animate-in fade-in">
-            <div className="flex items-center justify-between pb-2 border-b border-zinc-200/60 dark:border-white/[0.04]">
+            <div className="flex items-center justify-between pb-2 border-b border-zinc-200/60 dark:border-white/4">
               <span className="text-xs font-bold text-zinc-800 dark:text-zinc-200 flex items-center gap-1.5">
                 <Sparkles className="size-3.5 text-[#713CF4]" />
                 Translation ({targetLangObj.name})

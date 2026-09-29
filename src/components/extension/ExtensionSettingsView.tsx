@@ -82,7 +82,7 @@ export function ExtensionSettingsView({ onClearHistory }: ExtensionSettingsViewP
             </span>
           </div>
 
-          <div className="pt-2 border-t border-zinc-200/50 dark:border-white/[0.04] flex items-center justify-between">
+          <div className="pt-2 border-t border-zinc-200/50 dark:border-white/4 flex items-center justify-between">
             <Link
               href="/subscriptions"
               className="text-xs font-semibold text-[#713CF4] dark:text-[#a78bfa] hover:underline"
@@ -241,7 +241,7 @@ export function ExtensionSettingsView({ onClearHistory }: ExtensionSettingsViewP
             />
           </div>
 
-          <div className="pt-2 border-t border-zinc-200/50 dark:border-white/[0.04]">
+          <div className="pt-2 border-t border-zinc-200/50 dark:border-white/4">
             <button
               type="button"
               onClick={handleClearHistory}

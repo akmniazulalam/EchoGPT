@@ -131,7 +131,7 @@ export function ExtensionWriteView({
   return (
     <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden bg-white dark:bg-[#0B0912]">
       {/* ── Subtabs Switcher (Screenshot 2: Compose | Reply | Grammar) ── */}
-      <div className="p-3 border-b border-zinc-100 dark:border-white/[0.04]">
+      <div className="p-3 border-b border-zinc-100 dark:border-white/4">
         <div className="grid grid-cols-3 p-1 rounded-xl bg-zinc-100 dark:bg-white/[0.05] border border-zinc-200/60 dark:border-white/[0.06]">
           {(["compose", "reply", "grammar"] as const).map((tab) => (
             <button
@@ -305,7 +305,7 @@ export function ExtensionWriteView({
         {/* ── Generated Result State ── */}
         {generatedOutput && (
           <div className="p-3.5 rounded-2xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/80 dark:border-white/[0.08] space-y-3 animate-in fade-in">
-            <div className="flex items-center justify-between pb-2 border-b border-zinc-200/60 dark:border-white/[0.04]">
+            <div className="flex items-center justify-between pb-2 border-b border-zinc-200/60 dark:border-white/4">
               <span className="text-xs font-bold text-zinc-800 dark:text-zinc-200 flex items-center gap-1.5">
                 <Sparkles className="size-3.5 text-[#713CF4]" />
                 Generated Output
@@ -345,7 +345,7 @@ export function ExtensionWriteView({
               {generatedOutput}
             </div>
 
-            <div className="flex items-center justify-between pt-2 border-t border-zinc-200/60 dark:border-white/[0.04] text-[10.5px] text-zinc-400">
+            <div className="flex items-center justify-between pt-2 border-t border-zinc-200/60 dark:border-white/4 text-[10.5px] text-zinc-400">
               <span>
                 {generatedOutput.split(/\s+/).filter(Boolean).length} words ·{" "}
                 {generatedOutput.length} characters
