@@ -64,7 +64,7 @@ export function ExtensionSettingsView({ onClearHistory }: ExtensionSettingsViewP
       {/* ── Scrollable Body Area ── */}
       <div className="flex-1 overflow-y-auto custom-scrollbar p-3 sm:p-4 space-y-5 max-w-2xl w-full mx-auto">
         {/* ── 1. PROFILE SECTION ── */}
-        <div className="p-3.5 rounded-2xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/80 dark:border-white/8 space-y-3">
+        <div className="p-3.5 rounded-2xl bg-zinc-50 dark:bg-white/3 border border-zinc-200/80 dark:border-white/8 space-y-3">
           <div className="flex items-center gap-3">
             <div className="size-11 rounded-2xl bg-gradient-to-tr from-[#713CF4] to-[#9061F9] text-white font-extrabold text-base flex items-center justify-center shadow-xs shrink-0">
               {demoUser?.name?.charAt(0).toUpperCase() || "N"}
@@ -115,7 +115,7 @@ export function ExtensionSettingsView({ onClearHistory }: ExtensionSettingsViewP
               className={`flex items-center justify-center gap-2 p-2.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
                 theme === "light"
                   ? "bg-[#713CF4]/10 border-[#713CF4] text-[#713CF4]"
-                  : "bg-zinc-50 dark:bg-white/[0.03] border-zinc-200 dark:border-white/8 text-zinc-600 dark:text-zinc-400"
+                  : "bg-zinc-50 dark:bg-white/3 border-zinc-200 dark:border-white/8 text-zinc-600 dark:text-zinc-400"
               }`}
             >
               <Sun className="size-4" />
@@ -130,7 +130,7 @@ export function ExtensionSettingsView({ onClearHistory }: ExtensionSettingsViewP
               className={`flex items-center justify-center gap-2 p-2.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
                 theme === "dark"
                   ? "bg-[#713CF4]/10 border-[#713CF4] text-[#a78bfa]"
-                  : "bg-zinc-50 dark:bg-white/[0.03] border-zinc-200 dark:border-white/8 text-zinc-600 dark:text-zinc-400"
+                  : "bg-zinc-50 dark:bg-white/3 border-zinc-200 dark:border-white/8 text-zinc-600 dark:text-zinc-400"
               }`}
             >
               <Moon className="size-4" />

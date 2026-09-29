@@ -206,7 +206,7 @@ export function ExtensionCompareView({ onAddToHistory }: ExtensionCompareViewPro
             {comparisonResults.map((res) => (
               <div
                 key={res.modelId}
-                className="p-3.5 rounded-2xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/80 dark:border-white/8 space-y-2.5 shadow-xs"
+                className="p-3.5 rounded-2xl bg-zinc-50 dark:bg-white/3 border border-zinc-200/80 dark:border-white/8 space-y-2.5 shadow-xs"
               >
                 {/* Model Header */}
                 <div className="flex items-center justify-between pb-2 border-b border-zinc-200/60 dark:border-white/4">
@@ -253,7 +253,7 @@ export function ExtensionCompareView({ onAddToHistory }: ExtensionCompareViewPro
         )}
 
         {isComparing && (
-          <div className="p-4 rounded-2xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/80 dark:border-white/8 flex items-center justify-center gap-2 text-xs text-zinc-500 animate-pulse">
+          <div className="p-4 rounded-2xl bg-zinc-50 dark:bg-white/3 border border-zinc-200/80 dark:border-white/8 flex items-center justify-center gap-2 text-xs text-zinc-500 animate-pulse">
             <Sparkles className="size-4 text-[#713CF4] animate-spin" />
             <span>Querying {selectedModelIds.length} models simultaneously...</span>
           </div>
@@ -272,7 +272,7 @@ export function ExtensionCompareView({ onAddToHistory }: ExtensionCompareViewPro
               if (e.key === "Enter") handleRunComparison();
             }}
             placeholder={`Message ${selectedModelIds.length} models...`}
-            className="flex-1 h-10 px-3.5 rounded-xl border border-zinc-200 dark:border-white/[0.1] bg-white dark:bg-white/[0.03] text-xs sm:text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 outline-none focus:ring-2 focus:ring-[#713CF4]/40 focus:border-[#713CF4]"
+            className="flex-1 h-10 px-3.5 rounded-xl border border-zinc-200 dark:border-white/[0.1] bg-white dark:bg-white/3 text-xs sm:text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 outline-none focus:ring-2 focus:ring-[#713CF4]/40 focus:border-[#713CF4]"
           />
           <button
             type="button"

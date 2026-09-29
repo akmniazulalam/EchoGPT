@@ -153,7 +153,7 @@ export function ExtensionChatView({
                   key={idx}
                   type="button"
                   onClick={() => onSendMessage(suggestion)}
-                  className="w-full text-left px-3 py-2 rounded-xl bg-zinc-50 dark:bg-white/[0.03] hover:bg-zinc-100 dark:hover:bg-white/6 border border-zinc-200/60 dark:border-white/4 text-xs font-medium text-zinc-700 dark:text-zinc-300 transition-colors cursor-pointer truncate"
+                  className="w-full text-left px-3 py-2 rounded-xl bg-zinc-50 dark:bg-white/3 hover:bg-zinc-100 dark:hover:bg-white/6 border border-zinc-200/60 dark:border-white/4 text-xs font-medium text-zinc-700 dark:text-zinc-300 transition-colors cursor-pointer truncate"
                   title={suggestion}
                 >
                   {suggestion}

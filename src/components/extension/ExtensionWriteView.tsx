@@ -168,7 +168,7 @@ export function ExtensionWriteView({
                 : "The topic you want to write about..."
             }
             rows={3}
-            className="w-full p-3 rounded-xl border border-zinc-200 dark:border-white/[0.1] bg-white dark:bg-white/[0.03] text-xs sm:text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 outline-none focus:ring-2 focus:ring-[#713CF4]/40 focus:border-[#713CF4] leading-relaxed resize-none custom-scrollbar"
+            className="w-full p-3 rounded-xl border border-zinc-200 dark:border-white/[0.1] bg-white dark:bg-white/3 text-xs sm:text-sm text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 outline-none focus:ring-2 focus:ring-[#713CF4]/40 focus:border-[#713CF4] leading-relaxed resize-none custom-scrollbar"
           />
         </div>
 
@@ -253,7 +253,7 @@ export function ExtensionWriteView({
           <button
             type="button"
             onClick={() => setIsLangOpen((v) => !v)}
-            className="w-full flex items-center justify-between px-3 py-2 rounded-xl border border-zinc-200 dark:border-white/[0.1] bg-white dark:bg-white/[0.03] text-xs sm:text-sm text-zinc-800 dark:text-zinc-200 hover:border-zinc-300 dark:hover:border-white/[0.18] transition-colors cursor-pointer"
+            className="w-full flex items-center justify-between px-3 py-2 rounded-xl border border-zinc-200 dark:border-white/[0.1] bg-white dark:bg-white/3 text-xs sm:text-sm text-zinc-800 dark:text-zinc-200 hover:border-zinc-300 dark:hover:border-white/[0.18] transition-colors cursor-pointer"
           >
             <span className="flex items-center gap-2">
               <Globe className="size-3.5 text-[#713CF4]" />
@@ -304,7 +304,7 @@ export function ExtensionWriteView({
 
         {/* ── Generated Result State ── */}
         {generatedOutput && (
-          <div className="p-3.5 rounded-2xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/80 dark:border-white/8 space-y-3 animate-in fade-in">
+          <div className="p-3.5 rounded-2xl bg-zinc-50 dark:bg-white/3 border border-zinc-200/80 dark:border-white/8 space-y-3 animate-in fade-in">
             <div className="flex items-center justify-between pb-2 border-b border-zinc-200/60 dark:border-white/4">
               <span className="text-xs font-bold text-zinc-800 dark:text-zinc-200 flex items-center gap-1.5">
                 <Sparkles className="size-3.5 text-[#713CF4]" />

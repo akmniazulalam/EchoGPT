@@ -159,7 +159,7 @@ export function ExtensionReadView({
                 placeholder="Enter a web page link (https://...)"
                 value={webLink}
                 onChange={(e) => setWebLink(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl border border-zinc-200 dark:border-white/[0.1] bg-white dark:bg-white/[0.03] text-xs sm:text-sm text-zinc-800 dark:text-zinc-200 placeholder:text-zinc-400 outline-none focus:ring-2 focus:ring-[#713CF4]/40 focus:border-[#713CF4]"
+                className="w-full px-3 py-2 rounded-xl border border-zinc-200 dark:border-white/[0.1] bg-white dark:bg-white/3 text-xs sm:text-sm text-zinc-800 dark:text-zinc-200 placeholder:text-zinc-400 outline-none focus:ring-2 focus:ring-[#713CF4]/40 focus:border-[#713CF4]"
               />
             </div>
             <button
@@ -202,14 +202,14 @@ export function ExtensionReadView({
 
         {/* ── Loading Skeleton / Result ── */}
         {isAnalyzing && (
-          <div className="p-4 rounded-2xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/80 dark:border-white/8 flex items-center justify-center gap-2 text-xs text-zinc-500 animate-pulse">
+          <div className="p-4 rounded-2xl bg-zinc-50 dark:bg-white/3 border border-zinc-200/80 dark:border-white/8 flex items-center justify-center gap-2 text-xs text-zinc-500 animate-pulse">
             <Sparkles className="size-4 text-[#713CF4] animate-spin" />
             <span>Analyzing content with EchoGPT...</span>
           </div>
         )}
 
         {analysisResult && !isAnalyzing && (
-          <div className="p-3.5 rounded-2xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/80 dark:border-white/8 space-y-3 animate-in fade-in">
+          <div className="p-3.5 rounded-2xl bg-zinc-50 dark:bg-white/3 border border-zinc-200/80 dark:border-white/8 space-y-3 animate-in fade-in">
             <div className="flex items-center justify-between pb-2 border-b border-zinc-200/60 dark:border-white/4">
               <span className="text-xs font-bold text-zinc-800 dark:text-zinc-200 flex items-center gap-1.5">
                 <CheckCircle className="size-3.5 text-emerald-500" />

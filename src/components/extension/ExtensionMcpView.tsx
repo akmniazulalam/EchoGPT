@@ -77,7 +77,7 @@ export function ExtensionMcpView() {
               key={c.id}
               className={`p-3 rounded-2xl border transition-all ${
                 c.enabled
-                  ? "bg-zinc-50 dark:bg-white/[0.03] border-zinc-200/80 dark:border-white/8"
+                  ? "bg-zinc-50 dark:bg-white/3 border-zinc-200/80 dark:border-white/8"
                   : "bg-zinc-50/50 dark:bg-white/[0.01] border-zinc-200/40 dark:border-white/[0.03] opacity-60"
               }`}
             >
