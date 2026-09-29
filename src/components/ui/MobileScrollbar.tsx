@@ -1,130 +1,213 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-interface ScrollbarState {
-  height: number;
-  top: number;
-}
+import React, { useEffect, useRef } from "react";
 
 export default function MobileScrollbar() {
-  const [scrollbar, setScrollbar] =
-    useState<ScrollbarState>({
-      height: 0,
-      top: 0,
-    });
+  const thumbRef = useRef<HTMLDivElement>(null);
+
+  const isDraggingRef = useRef(false);
+  const dragStartYRef = useRef(0);
+  const dragStartScrollTopRef = useRef(0);
+
+  const metricsRef = useRef({
+    clientHeight: 0,
+    scrollHeight: 0,
+    maxScroll: 0,
+    thumbHeight: 0,
+    maxThumbTop: 0,
+  });
 
   useEffect(() => {
     const container = document.getElementById(
       "landing-scroll-container"
     );
 
-    if (!container) return;
+    const thumb = thumbRef.current;
 
-    const updateScrollbar = () => {
-      const {
-        scrollTop,
-        scrollHeight,
-        clientHeight,
-      } = container;
+    if (!container || !thumb) return;
 
-      const maxScroll =
-        scrollHeight - clientHeight;
+    const updateMetrics = () => {
+      const clientHeight = container.clientHeight;
+      const scrollHeight = container.scrollHeight;
+      const maxScroll = scrollHeight - clientHeight;
 
-      // No scrolling available
       if (maxScroll <= 0) {
-        setScrollbar({
-          height: 0,
-          top: 0,
-        });
+        thumb.style.display = "none";
+
+        metricsRef.current = {
+          clientHeight,
+          scrollHeight,
+          maxScroll: 0,
+          thumbHeight: 0,
+          maxThumbTop: 0,
+        };
+
         return;
       }
 
-      /*
-       * Thumb height is proportional to:
-       * visible area / total content
-       */
-      const calculatedHeight =
-        (clientHeight / scrollHeight) *
-        clientHeight;
+      thumb.style.display = "block";
 
-      /*
-       * Prevent the thumb from becoming
-       * too small on long pages.
-       */
+      const calculatedHeight =
+        (clientHeight / scrollHeight) * clientHeight;
+
       const minThumbHeight = 45;
 
       const thumbHeight = Math.min(
         clientHeight,
-        Math.max(
-          calculatedHeight,
-          minThumbHeight
-        )
+        Math.max(calculatedHeight, minThumbHeight)
       );
 
-      /*
-       * Scroll progress:
-       * 0 = top
-       * 1 = bottom
-       */
-      const scrollProgress =
-        scrollTop / maxScroll;
-
-      /*
-       * Maximum distance the thumb
-       * can travel.
-       */
       const maxThumbTop =
         clientHeight - thumbHeight;
+
+      metricsRef.current = {
+        clientHeight,
+        scrollHeight,
+        maxScroll,
+        thumbHeight,
+        maxThumbTop,
+      };
+
+      thumb.style.height = `${thumbHeight}px`;
+
+      updateThumbPosition();
+    };
+
+    const updateThumbPosition = () => {
+      const {
+        maxScroll,
+        maxThumbTop,
+      } = metricsRef.current;
+
+      if (maxScroll <= 0 || maxThumbTop <= 0) {
+        return;
+      }
+
+      const scrollProgress =
+        container.scrollTop / maxScroll;
 
       const thumbTop =
         maxThumbTop * scrollProgress;
 
-      setScrollbar({
-        height: thumbHeight,
-        top: thumbTop,
-      });
+      thumb.style.transform = `translate3d(0, ${thumbTop}px, 0)`;
     };
 
-    // Initial calculation
-    updateScrollbar();
+    const handlePointerDown = (
+      event: PointerEvent
+    ) => {
+      isDraggingRef.current = true;
 
-    // Update while scrolling
+      dragStartYRef.current = event.clientY;
+      dragStartScrollTopRef.current =
+        container.scrollTop;
+
+      thumb.setPointerCapture(event.pointerId);
+
+      thumb.style.cursor = "grabbing";
+    };
+
+    const handlePointerMove = (
+      event: PointerEvent
+    ) => {
+      if (!isDraggingRef.current) return;
+
+      const {
+        maxScroll,
+        maxThumbTop,
+      } = metricsRef.current;
+
+      if (maxScroll <= 0 || maxThumbTop <= 0) {
+        return;
+      }
+
+      const deltaY =
+        event.clientY - dragStartYRef.current;
+
+      const scrollRatio =
+        maxScroll / maxThumbTop;
+
+      container.scrollTop =
+        dragStartScrollTopRef.current +
+        deltaY * scrollRatio;
+    };
+
+    const handlePointerUp = () => {
+      isDraggingRef.current = false;
+      thumb.style.cursor = "grab";
+    };
+
+    updateMetrics();
+
     container.addEventListener(
       "scroll",
-      updateScrollbar,
+      updateThumbPosition,
       {
         passive: true,
       }
     );
 
-    // Update when viewport changes
     window.addEventListener(
       "resize",
-      updateScrollbar
+      updateMetrics
     );
 
-    /*
-     * Detect changes in content height.
-     * Useful for images, accordions, dynamic sections, etc.
-     */
     const resizeObserver =
-      new ResizeObserver(updateScrollbar);
+      new ResizeObserver(updateMetrics);
 
     resizeObserver.observe(container);
+
+    thumb.addEventListener(
+      "pointerdown",
+      handlePointerDown
+    );
+
+    thumb.addEventListener(
+      "pointermove",
+      handlePointerMove
+    );
+
+    thumb.addEventListener(
+      "pointerup",
+      handlePointerUp
+    );
+
+    thumb.addEventListener(
+      "pointercancel",
+      handlePointerUp
+    );
 
     return () => {
       container.removeEventListener(
         "scroll",
-        updateScrollbar
+        updateThumbPosition
       );
 
       window.removeEventListener(
         "resize",
-        updateScrollbar
+        updateMetrics
       );
 
       resizeObserver.disconnect();
+
+      thumb.removeEventListener(
+        "pointerdown",
+        handlePointerDown
+      );
+
+      thumb.removeEventListener(
+        "pointermove",
+        handlePointerMove
+      );
+
+      thumb.removeEventListener(
+        "pointerup",
+        handlePointerUp
+      );
+
+      thumb.removeEventListener(
+        "pointercancel",
+        handlePointerUp
+      );
     };
   }, []);
 
@@ -133,15 +216,10 @@ export default function MobileScrollbar() {
       className="custom-page-scrollbar"
       aria-hidden="true"
     >
-      {scrollbar.height > 0 && (
-        <div
-          className="custom-page-scrollbar-thumb"
-          style={{
-            height: `${scrollbar.height}px`,
-            transform: `translate3d(0, ${scrollbar.top}px, 0)`,
-          }}
-        />
-      )}
+      <div
+        ref={thumbRef}
+        className="custom-page-scrollbar-thumb"
+      />
     </div>
   );
 }
