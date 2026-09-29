@@ -132,7 +132,7 @@ export function ExtensionWriteView({
     <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden bg-white dark:bg-[#0B0912]">
       {/* ── Subtabs Switcher (Screenshot 2: Compose | Reply | Grammar) ── */}
       <div className="p-3 border-b border-zinc-100 dark:border-white/4">
-        <div className="grid grid-cols-3 p-1 rounded-xl bg-zinc-100 dark:bg-white/5 border border-zinc-200/60 dark:border-white/[0.06]">
+        <div className="grid grid-cols-3 p-1 rounded-xl bg-zinc-100 dark:bg-white/5 border border-zinc-200/60 dark:border-white/6">
           {(["compose", "reply", "grammar"] as const).map((tab) => (
             <button
               key={tab}
@@ -265,7 +265,7 @@ export function ExtensionWriteView({
 
           {isLangOpen && (
             <div className="absolute left-0 bottom-full mb-1.5 w-full rounded-xl bg-white dark:bg-[#1B1826] border border-zinc-200 dark:border-white/[0.1] shadow-2xl p-1.5 z-50 font-lexend animate-in fade-in">
-              <div className="p-1.5 border-b border-zinc-100 dark:border-white/[0.06]">
+              <div className="p-1.5 border-b border-zinc-100 dark:border-white/6">
                 <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-zinc-50 dark:bg-black/20 border border-zinc-200 dark:border-white/8">
                   <Search className="size-3 text-zinc-400" />
                   <input

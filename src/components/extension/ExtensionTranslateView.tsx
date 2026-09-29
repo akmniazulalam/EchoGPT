@@ -174,7 +174,7 @@ export function ExtensionTranslateView({
 
             {isSourceOpen && (
               <div className="absolute left-0 top-full mt-1 w-56 rounded-xl bg-white dark:bg-[#1B1826] border border-zinc-200 dark:border-white/[0.1] shadow-2xl p-1 z-50 font-lexend animate-in fade-in">
-                <div className="p-1 border-b border-zinc-100 dark:border-white/[0.06]">
+                <div className="p-1 border-b border-zinc-100 dark:border-white/6">
                   <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-zinc-50 dark:bg-black/20 border border-zinc-200 dark:border-white/8">
                     <Search className="size-3 text-zinc-400" />
                     <input
@@ -238,7 +238,7 @@ export function ExtensionTranslateView({
 
             {isTargetOpen && (
               <div className="absolute right-0 top-full mt-1 w-56 rounded-xl bg-white dark:bg-[#1B1826] border border-zinc-200 dark:border-white/[0.1] shadow-2xl p-1 z-50 font-lexend animate-in fade-in">
-                <div className="p-1 border-b border-zinc-100 dark:border-white/[0.06]">
+                <div className="p-1 border-b border-zinc-100 dark:border-white/6">
                   <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-zinc-50 dark:bg-black/20 border border-zinc-200 dark:border-white/8">
                     <Search className="size-3 text-zinc-400" />
                     <input
@@ -369,7 +369,7 @@ export function ExtensionTranslateView({
           {isModelOpen && (
             <div className="absolute bottom-full mb-1.5 left-0 w-56 rounded-xl bg-white dark:bg-[#15121F] border border-zinc-200 dark:border-white/[0.1] shadow-2xl z-50 overflow-hidden">
               {/* Search */}
-              <div className="p-2 border-b border-zinc-100 dark:border-white/[0.06]">
+              <div className="p-2 border-b border-zinc-100 dark:border-white/6">
                 <div className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-zinc-100 dark:bg-white/5">
                   <Search className="size-3 text-zinc-400 shrink-0" />
                   <input

@@ -115,7 +115,7 @@ export function ExtensionNavRail({ activeTab, onSelectTab }: ExtensionNavRailPro
       </div>
 
       {/* Bottom Group: Upgrade, Settings, Profile */}
-      <div className="flex flex-col items-center gap-1.5 w-full px-1 pt-2 border-t border-zinc-200/60 dark:border-white/[0.06]">
+      <div className="flex flex-col items-center gap-1.5 w-full px-1 pt-2 border-t border-zinc-200/60 dark:border-white/6">
         {/* Upgrade Button */}
         <Link
           href="/subscriptions"

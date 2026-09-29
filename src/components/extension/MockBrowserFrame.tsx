@@ -105,7 +105,7 @@ export function MockBrowserFrame() {
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-zinc-100 dark:bg-[#08070D] font-lexend select-none">
       {/* ── 1. CHROME BROWSER TOP BAR (Tabs & Window Controls) ── */}
-      <div className="h-10 px-3 flex items-center justify-between bg-zinc-200/90 dark:bg-[#121019] border-b border-zinc-300/80 dark:border-white/[0.06] shrink-0">
+      <div className="h-10 px-3 flex items-center justify-between bg-zinc-200/90 dark:bg-[#121019] border-b border-zinc-300/80 dark:border-white/6 shrink-0">
         {/* Window Traffic Lights */}
         <div className="flex items-center gap-2 pr-4">
           <span className="size-3 rounded-full bg-rose-500/80 inline-block" />
@@ -174,7 +174,7 @@ export function MockBrowserFrame() {
         </div>
 
         {/* Omnibox Address Bar */}
-        <div className="flex-1 max-w-xl flex items-center justify-between px-3 py-1.5 rounded-xl bg-zinc-100 dark:bg-white/5 border border-zinc-200/80 dark:border-white/[0.06] text-xs">
+        <div className="flex-1 max-w-xl flex items-center justify-between px-3 py-1.5 rounded-xl bg-zinc-100 dark:bg-white/5 border border-zinc-200/80 dark:border-white/6 text-xs">
           <div className="flex items-center gap-2 min-w-0">
             <Lock className="size-3 text-emerald-500 shrink-0" />
             <span className="text-zinc-900 dark:text-zinc-100 font-medium truncate">
@@ -187,7 +187,7 @@ export function MockBrowserFrame() {
         {/* Right Action Controls: Extension Icons & Width Presets */}
         <div className="flex items-center gap-2">
           {/* Quick Width Presets (Instant test for 360px -> 720px responsive behavior) */}
-          <div className="hidden lg:flex items-center gap-1 p-0.5 rounded-xl bg-zinc-100 dark:bg-white/[0.04] border border-zinc-200/60 dark:border-white/[0.06]">
+          <div className="hidden lg:flex items-center gap-1 p-0.5 rounded-xl bg-zinc-100 dark:bg-white/[0.04] border border-zinc-200/60 dark:border-white/6">
             <span className="text-[10px] font-semibold text-zinc-400 px-1.5 uppercase">
               Width:
             </span>

@@ -319,7 +319,7 @@ export function ExtensionCompareView({ onAddToHistory }: ExtensionCompareViewPro
         >
           <div className="w-full max-w-lg max-h-[85vh] rounded-2xl bg-white dark:bg-[#15121F] border border-zinc-200 dark:border-white/[0.1] shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95">
             {/* Modal Header */}
-            <div className="p-3.5 border-b border-zinc-100 dark:border-white/[0.06] flex items-center justify-between bg-zinc-50/70 dark:bg-white/[0.02]">
+            <div className="p-3.5 border-b border-zinc-100 dark:border-white/6 flex items-center justify-between bg-zinc-50/70 dark:bg-white/[0.02]">
               <div>
                 <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
                   Choose Models to Compare
@@ -338,7 +338,7 @@ export function ExtensionCompareView({ onAddToHistory }: ExtensionCompareViewPro
             </div>
 
             {/* Selected Model Chips */}
-            <div className="p-2.5 bg-zinc-50/40 dark:bg-white/[0.01] border-b border-zinc-100 dark:border-white/[0.06] flex flex-wrap gap-1 max-h-24 overflow-y-auto custom-scrollbar">
+            <div className="p-2.5 bg-zinc-50/40 dark:bg-white/[0.01] border-b border-zinc-100 dark:border-white/6 flex flex-wrap gap-1 max-h-24 overflow-y-auto custom-scrollbar">
               {tempSelectedIds.map((id) => {
                 const model = EXTENDED_COMPARE_CATALOG.find((m) => m.id === id);
                 return (
@@ -360,7 +360,7 @@ export function ExtensionCompareView({ onAddToHistory }: ExtensionCompareViewPro
             </div>
 
             {/* Search Bar & Category Filters */}
-            <div className="p-2.5 border-b border-zinc-100 dark:border-white/[0.06] space-y-2">
+            <div className="p-2.5 border-b border-zinc-100 dark:border-white/6 space-y-2">
               <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-zinc-100 dark:bg-white/5 border border-zinc-200/80 dark:border-white/8">
                 <Search className="size-3.5 text-zinc-400 shrink-0" />
                 <input
@@ -439,7 +439,7 @@ export function ExtensionCompareView({ onAddToHistory }: ExtensionCompareViewPro
             </div>
 
             {/* Modal Footer: Apply Button */}
-            <div className="p-3 border-t border-zinc-100 dark:border-white/[0.06] bg-zinc-50/70 dark:bg-white/[0.02] flex items-center justify-between gap-3">
+            <div className="p-3 border-t border-zinc-100 dark:border-white/6 bg-zinc-50/70 dark:bg-white/[0.02] flex items-center justify-between gap-3">
               <button
                 type="button"
                 onClick={() => setTempSelectedIds([])}

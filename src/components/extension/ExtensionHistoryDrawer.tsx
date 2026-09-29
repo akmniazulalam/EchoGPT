@@ -41,7 +41,7 @@ export function ExtensionHistoryDrawer({
   return (
     <div className="absolute inset-0 z-40 bg-white/95 dark:bg-[#0E0C17]/95 backdrop-blur-md flex flex-col font-lexend animate-in fade-in duration-150">
       {/* Drawer Header */}
-      <div className="p-3 border-b border-zinc-100 dark:border-white/[0.06] flex items-center justify-between">
+      <div className="p-3 border-b border-zinc-100 dark:border-white/6 flex items-center justify-between">
         <div className="flex items-center gap-1.5">
           <Clock className="size-4 text-[#713CF4] dark:text-[#a78bfa]" />
           <h2 className="text-xs font-bold text-zinc-900 dark:text-zinc-100">
@@ -59,7 +59,7 @@ export function ExtensionHistoryDrawer({
       </div>
 
       {/* New Chat Button & Search Input */}
-      <div className="p-2.5 border-b border-zinc-100 dark:border-white/[0.06] space-y-2">
+      <div className="p-2.5 border-b border-zinc-100 dark:border-white/6 space-y-2">
         <button
           type="button"
           onClick={() => {

@@ -223,7 +223,7 @@ export function ConnectorCard({
               {connector.tools.slice(0, 3).map((tool) => (
                 <span
                   key={tool.name}
-                  className="px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-white/5 border border-zinc-200/80 dark:border-white/[0.06] text-[11px] font-mono text-zinc-600 dark:text-zinc-300 truncate max-w-[180px]"
+                  className="px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-white/5 border border-zinc-200/80 dark:border-white/6 text-[11px] font-mono text-zinc-600 dark:text-zinc-300 truncate max-w-[180px]"
                   title={tool.description}
                 >
                   {tool.displayName}
@@ -243,7 +243,7 @@ export function ConnectorCard({
         )}
 
         {/* Meta badges: Auth protected, Demo simulated */}
-        <div className="flex items-center gap-2 mt-4 pt-3 border-t border-zinc-100 dark:border-white/[0.06] text-[11px] text-zinc-400">
+        <div className="flex items-center gap-2 mt-4 pt-3 border-t border-zinc-100 dark:border-white/6 text-[11px] text-zinc-400">
           {connector.hasAuthToken && (
             <span className="inline-flex items-center gap-1 text-zinc-500 dark:text-zinc-400 font-medium">
               <ShieldCheck className="size-3 text-emerald-500" />
@@ -258,7 +258,7 @@ export function ConnectorCard({
       </div>
 
       {/* Card Actions Footer */}
-      <div className="mt-5 pt-3.5 border-t border-zinc-100 dark:border-white/[0.06] flex items-center justify-between gap-3">
+      <div className="mt-5 pt-3.5 border-t border-zinc-100 dark:border-white/6 flex items-center justify-between gap-3">
         <button
           type="button"
           onClick={() => onViewDetails(connector)}

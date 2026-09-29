@@ -157,7 +157,7 @@ export function ConnectorDetailsModal({
                   connector.tools.map((tool) => (
                     <div
                       key={tool.name}
-                      className="p-3.5 rounded-xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/70 dark:border-white/[0.06] space-y-1 hover:border-zinc-300 dark:hover:border-white/[0.12] transition-colors"
+                      className="p-3.5 rounded-xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/70 dark:border-white/6 space-y-1 hover:border-zinc-300 dark:hover:border-white/[0.12] transition-colors"
                     >
                       <div className="flex items-center justify-between gap-2">
                         <div className="flex items-center gap-2">

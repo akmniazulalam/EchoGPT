@@ -217,7 +217,7 @@ export function ChatConnectorPopover({
                     className={`flex items-center gap-2.5 px-3 py-2 rounded-xl border cursor-pointer transition-all ${
                       isActive
                         ? "bg-[#713CF4]/10 dark:bg-[#713CF4]/15 border-[#713CF4]/30"
-                        : "bg-white dark:bg-white/[0.02] border-zinc-200/70 dark:border-white/[0.06] hover:border-zinc-300 dark:hover:border-white/[0.12] hover:bg-zinc-50/80 dark:hover:bg-white/[0.04]"
+                        : "bg-white dark:bg-white/[0.02] border-zinc-200/70 dark:border-white/6 hover:border-zinc-300 dark:hover:border-white/[0.12] hover:bg-zinc-50/80 dark:hover:bg-white/[0.04]"
                     }`}
                   >
                     <div className="size-6.5 rounded-lg flex items-center justify-center bg-white dark:bg-[#251E38] border border-zinc-200/80 dark:border-white/8 text-zinc-800 dark:text-zinc-200 shrink-0">

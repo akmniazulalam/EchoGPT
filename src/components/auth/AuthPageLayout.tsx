@@ -33,7 +33,7 @@ export function AuthPageLayout({
   return (
     <div className="min-h-screen flex flex-col bg-[#FCFCFD] dark:bg-[#090A0F] font-lexend">
       {/* Top bar */}
-      <header className="shrink-0 px-5 sm:px-8 h-14 flex items-center justify-between border-b border-zinc-200/60 dark:border-white/[0.06] bg-white/80 dark:bg-[#090A0F]/80 backdrop-blur-md">
+      <header className="shrink-0 px-5 sm:px-8 h-14 flex items-center justify-between border-b border-zinc-200/60 dark:border-white/6 bg-white/80 dark:bg-[#090A0F]/80 backdrop-blur-md">
         <Link
           href="/"
           className="flex items-center gap-2 outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] rounded-lg group"

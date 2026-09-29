@@ -141,7 +141,7 @@ function TaskConfigModalForm({
           {/* Left Column: Task Overview & Specs (5 Cols) */}
           <div className="lg:col-span-5 space-y-4">
             {/* What this task does */}
-            <div className="p-4 rounded-xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/70 dark:border-white/[0.06] space-y-1.5">
+            <div className="p-4 rounded-xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/70 dark:border-white/6 space-y-1.5">
               <div className="flex items-center gap-1.5 text-xs font-semibold text-zinc-800 dark:text-zinc-200">
                 <Info className="size-3.5 text-[#713CF4]" />
                 <span>What this task does</span>
@@ -152,7 +152,7 @@ function TaskConfigModalForm({
             </div>
 
             {/* What you'll need */}
-            <div className="p-4 rounded-xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/70 dark:border-white/[0.06] space-y-2">
+            <div className="p-4 rounded-xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/70 dark:border-white/6 space-y-2">
               <div className="flex items-center gap-1.5 text-xs font-semibold text-zinc-800 dark:text-zinc-200">
                 <ListTodo className="size-3.5 text-blue-500" />
                 <span>What you&apos;ll need</span>
