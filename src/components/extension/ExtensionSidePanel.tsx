@@ -16,6 +16,14 @@ import { ExtensionSettingsView } from "./ExtensionSettingsView";
 import { ExtensionHistoryDrawer } from "./ExtensionHistoryDrawer";
 import { INITIAL_CONVERSATIONS } from "./data";
 import { AI_MODELS } from "@/config/models";
+import {
+  loadStoredTab,
+  saveStoredTab,
+  loadStoredConversations,
+  saveStoredConversations,
+  loadStoredActiveConvId,
+  saveStoredActiveConvId,
+} from "./storage";
 
 interface ExtensionSidePanelProps {
   onClosePanel?: () => void;
@@ -28,20 +36,43 @@ export function ExtensionSidePanel({
   isPinned = true,
   onTogglePin,
 }: ExtensionSidePanelProps) {
-  const [activeTab, setActiveTab] = useState<ExtensionTab>("chat");
+  const [activeTab, setActiveTabState] = useState<ExtensionTab>(() => loadStoredTab());
   const [selectedModelId, setSelectedModelId] = useState<string>("echogpt");
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
-  // Conversations & Chat State
-  const [conversations, setConversations] =
-    useState<ExtensionConversation[]>(INITIAL_CONVERSATIONS);
-  const [activeConversationId, setActiveConversationId] = useState<string | null>(
-    INITIAL_CONVERSATIONS[0].id
+  // Conversations & Chat State (restored from localStorage)
+  const [conversations, setConversationsState] =
+    useState<ExtensionConversation[]>(() => loadStoredConversations());
+  const [activeConversationId, setActiveConversationIdState] = useState<string | null>(
+    () => loadStoredActiveConvId()
   );
   const [isStreaming, setIsStreaming] = useState(false);
 
   const activeConversation =
     conversations.find((c) => c.id === activeConversationId) || null;
+
+  // Wrapped setters that also persist to localStorage
+  const setActiveTab = (tab: ExtensionTab) => {
+    setActiveTabState(tab);
+    saveStoredTab(tab);
+  };
+
+  const setConversations = (
+    updater:
+      | ExtensionConversation[]
+      | ((prev: ExtensionConversation[]) => ExtensionConversation[])
+  ) => {
+    setConversationsState((prev) => {
+      const next = typeof updater === "function" ? updater(prev) : updater;
+      saveStoredConversations(next);
+      return next;
+    });
+  };
+
+  const setActiveConversationId = (id: string | null) => {
+    setActiveConversationIdState(id);
+    saveStoredActiveConvId(id);
+  };
 
   const handleNewChat = () => {
     const newId = `conv-${Date.now()}`;
@@ -58,9 +89,53 @@ export function ExtensionSidePanel({
     setActiveTab("chat");
   };
 
+  const handleAddToHistory = (
+    title: string,
+    toolType: ExtensionTab,
+    promptOrSummary: string,
+    resultText?: string,
+    modelId?: string
+  ) => {
+    const newId = `conv-${Date.now()}`;
+    const newConv: ExtensionConversation = {
+      id: newId,
+      title: title || `${toolType.toUpperCase()} task`,
+      timestamp: new Date().toISOString(),
+      relativeTime: "Just now",
+      modelId: modelId || selectedModelId,
+      toolType,
+      messages: [
+        {
+          id: `msg-${Date.now()}`,
+          sender: "user",
+          text: promptOrSummary,
+          timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        },
+        ...(resultText
+          ? [
+              {
+                id: `ai-${Date.now() + 1}`,
+                sender: "ai" as const,
+                text: resultText,
+                timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+                modelId: modelId || selectedModelId,
+              },
+            ]
+          : []),
+      ],
+    };
+    setConversations((prev) => [newConv, ...prev]);
+    setActiveConversationId(newId);
+  };
+
   const handleSelectConversation = (id: string) => {
     setActiveConversationId(id);
-    setActiveTab("chat");
+    const conv = conversations.find((c) => c.id === id);
+    if (conv?.toolType && conv.toolType !== "chat") {
+      setActiveTab(conv.toolType);
+    } else {
+      setActiveTab("chat");
+    }
   };
 
   const handleDeleteConversation = (id: string) => {
@@ -145,6 +220,9 @@ export function ExtensionSidePanel({
     setActiveConversationId(null);
   };
 
+  // Prevent INITIAL_CONVERSATIONS from being used as unused import
+  void INITIAL_CONVERSATIONS;
+
   return (
     <div className="relative flex flex-col h-full w-full bg-white dark:bg-[#0B0912] text-zinc-900 dark:text-zinc-100 font-lexend overflow-hidden shadow-2xl">
       {/* ── 1. Top Panel Header ── */}
@@ -161,7 +239,7 @@ export function ExtensionSidePanel({
       {/* ── 2. Main Body: Active View on Left + Nav Rail on Right ── */}
       <div className="relative flex-1 flex min-h-0 overflow-hidden">
         {/* Active View Container */}
-        <main className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
+        <main className="@container flex-1 flex flex-col min-w-0 h-full overflow-hidden">
           {activeTab === "chat" && (
             <ExtensionChatView
               onSelectTab={setActiveTab}
@@ -174,22 +252,37 @@ export function ExtensionSidePanel({
           )}
 
           {activeTab === "write" && (
-            <ExtensionWriteView onInsertToChat={handleInsertToChat} />
+            <ExtensionWriteView
+              onInsertToChat={handleInsertToChat}
+              onAddToHistory={handleAddToHistory}
+            />
           )}
 
           {activeTab === "read" && (
-            <ExtensionReadView onInsertToChat={handleInsertToChat} />
+            <ExtensionReadView
+              onInsertToChat={handleInsertToChat}
+              onAddToHistory={handleAddToHistory}
+            />
           )}
 
           {activeTab === "translate" && (
-            <ExtensionTranslateView onInsertToChat={handleInsertToChat} />
+            <ExtensionTranslateView
+              onInsertToChat={handleInsertToChat}
+              onAddToHistory={handleAddToHistory}
+            />
           )}
 
-          {activeTab === "image" && <ExtensionImageView />}
+          {activeTab === "image" && (
+            <ExtensionImageView onAddToHistory={handleAddToHistory} />
+          )}
 
-          {activeTab === "video" && <ExtensionVideoView />}
+          {activeTab === "video" && (
+            <ExtensionVideoView onAddToHistory={handleAddToHistory} />
+          )}
 
-          {activeTab === "compare" && <ExtensionCompareView />}
+          {activeTab === "compare" && (
+            <ExtensionCompareView onAddToHistory={handleAddToHistory} />
+          )}
 
           {activeTab === "mcp" && <ExtensionMcpView />}
 
