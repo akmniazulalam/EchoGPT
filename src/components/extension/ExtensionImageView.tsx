@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import {
   Sparkles,
@@ -8,8 +8,19 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { IMAGE_MODELS } from "@/config/models";
+import { ExtensionTab } from "./types";
 
-export function ExtensionImageView() {
+interface ExtensionImageViewProps {
+  onAddToHistory?: (
+    title: string,
+    toolType: ExtensionTab,
+    promptOrSummary: string,
+    resultText?: string,
+    modelId?: string
+  ) => void;
+}
+
+export function ExtensionImageView({ onAddToHistory }: ExtensionImageViewProps) {
   const [prompt, setPrompt] = useState("");
   const [aspectRatio, setAspectRatio] = useState("1:1");
   const [count, setCount] = useState(1);
@@ -38,6 +49,27 @@ export function ExtensionImageView() {
   ]);
 
   const selectedModel = IMAGE_MODELS.find((m) => m.id === selectedModelId) || IMAGE_MODELS[0];
+  const modelDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close model dropdown on outside click & Escape
+  useEffect(() => {
+    const handleMouseDown = (e: MouseEvent) => {
+      if (modelDropdownRef.current && !modelDropdownRef.current.contains(e.target as Node)) {
+        setIsModelOpen(false);
+      }
+    };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsModelOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   const handleGenerate = () => {
     if (!prompt.trim()) return;
@@ -53,6 +85,13 @@ export function ExtensionImageView() {
       };
       setCreations((prev) => [newCreation, ...prev]);
       setIsGenerating(false);
+      onAddToHistory?.(
+        `Image: ${prompt.trim().slice(0, 24)}`,
+        "image",
+        `[Prompt]: ${prompt.trim()} (Aspect Ratio: ${aspectRatio})`,
+        `Generated high-resolution image using ${selectedModel.name}`,
+        selectedModelId
+      );
     }, 1200);
   };
 
@@ -147,7 +186,7 @@ export function ExtensionImageView() {
             <span className="text-[10px] text-zinc-400">{creations.length} saved</span>
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 @md:grid-cols-3 @xl:grid-cols-4 gap-2">
             {creations.map((item) => (
               <div
                 key={item.id}
@@ -175,7 +214,7 @@ export function ExtensionImageView() {
       <div className="p-3 border-t border-zinc-200/80 dark:border-white/[0.08] bg-zinc-50/60 dark:bg-[#121019] space-y-1.5">
         <div className="flex items-center gap-2 relative">
           {/* Model Selector Dropdown */}
-          <div className="relative shrink-0">
+          <div ref={modelDropdownRef} className="relative shrink-0">
             <button
               type="button"
               onClick={() => setIsModelOpen((v) => !v)}
