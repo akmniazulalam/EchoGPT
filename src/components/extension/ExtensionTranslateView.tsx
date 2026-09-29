@@ -370,7 +370,7 @@ export function ExtensionTranslateView({
             <div className="absolute bottom-full mb-1.5 left-0 w-56 rounded-xl bg-white dark:bg-[#15121F] border border-zinc-200 dark:border-white/[0.1] shadow-2xl z-50 overflow-hidden">
               {/* Search */}
               <div className="p-2 border-b border-zinc-100 dark:border-white/[0.06]">
-                <div className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-zinc-100 dark:bg-white/[0.05]">
+                <div className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-zinc-100 dark:bg-white/5">
                   <Search className="size-3 text-zinc-400 shrink-0" />
                   <input
                     autoFocus

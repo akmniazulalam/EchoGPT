@@ -174,7 +174,7 @@ export function MockBrowserFrame() {
         </div>
 
         {/* Omnibox Address Bar */}
-        <div className="flex-1 max-w-xl flex items-center justify-between px-3 py-1.5 rounded-xl bg-zinc-100 dark:bg-white/[0.05] border border-zinc-200/80 dark:border-white/[0.06] text-xs">
+        <div className="flex-1 max-w-xl flex items-center justify-between px-3 py-1.5 rounded-xl bg-zinc-100 dark:bg-white/5 border border-zinc-200/80 dark:border-white/[0.06] text-xs">
           <div className="flex items-center gap-2 min-w-0">
             <Lock className="size-3 text-emerald-500 shrink-0" />
             <span className="text-zinc-900 dark:text-zinc-100 font-medium truncate">

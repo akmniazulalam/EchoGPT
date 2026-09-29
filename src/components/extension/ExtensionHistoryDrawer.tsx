@@ -72,7 +72,7 @@ export function ExtensionHistoryDrawer({
           <span>New Conversation</span>
         </button>
 
-        <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-zinc-100 dark:bg-white/[0.05] border border-zinc-200/80 dark:border-white/[0.08]">
+        <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-zinc-100 dark:bg-white/5 border border-zinc-200/80 dark:border-white/[0.08]">
           <Search className="size-3.5 text-zinc-400 shrink-0" />
           <input
             type="text"

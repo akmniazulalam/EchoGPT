@@ -132,7 +132,7 @@ export function ExtensionWriteView({
     <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden bg-white dark:bg-[#0B0912]">
       {/* ── Subtabs Switcher (Screenshot 2: Compose | Reply | Grammar) ── */}
       <div className="p-3 border-b border-zinc-100 dark:border-white/4">
-        <div className="grid grid-cols-3 p-1 rounded-xl bg-zinc-100 dark:bg-white/[0.05] border border-zinc-200/60 dark:border-white/[0.06]">
+        <div className="grid grid-cols-3 p-1 rounded-xl bg-zinc-100 dark:bg-white/5 border border-zinc-200/60 dark:border-white/[0.06]">
           {(["compose", "reply", "grammar"] as const).map((tab) => (
             <button
               key={tab}
@@ -187,7 +187,7 @@ export function ExtensionWriteView({
                   className={`px-2.5 py-1 rounded-full text-xs font-medium transition-all cursor-pointer ${
                     selectedFormat === fmt
                       ? "bg-[#713CF4] text-white shadow-2xs font-semibold"
-                      : "bg-zinc-100 dark:bg-white/[0.05] text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-white/10"
+                      : "bg-zinc-100 dark:bg-white/5 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-white/10"
                   }`}
                 >
                   {fmt}
@@ -211,7 +211,7 @@ export function ExtensionWriteView({
                 className={`px-2.5 py-1 rounded-full text-xs font-medium transition-all cursor-pointer ${
                   selectedTone === tone
                     ? "bg-[#713CF4] text-white shadow-2xs font-semibold"
-                    : "bg-zinc-100 dark:bg-white/[0.05] text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-white/10"
+                    : "bg-zinc-100 dark:bg-white/5 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-white/10"
                 }`}
               >
                 {tone}
@@ -235,7 +235,7 @@ export function ExtensionWriteView({
                   className={`px-2.5 py-1 rounded-full text-xs font-medium transition-all cursor-pointer ${
                     selectedLength === len
                       ? "bg-[#713CF4] text-white shadow-2xs font-semibold"
-                      : "bg-zinc-100 dark:bg-white/[0.05] text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-white/10"
+                      : "bg-zinc-100 dark:bg-white/5 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-white/10"
                   }`}
                 >
                   {len}

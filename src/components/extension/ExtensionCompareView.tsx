@@ -157,7 +157,7 @@ export function ExtensionCompareView({ onAddToHistory }: ExtensionCompareViewPro
         <button
           type="button"
           onClick={handleNewComparison}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-white/[0.05] dark:hover:bg-white/10 text-xs font-semibold text-zinc-700 dark:text-zinc-300 transition-colors cursor-pointer"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-white/5 dark:hover:bg-white/10 text-xs font-semibold text-zinc-700 dark:text-zinc-300 transition-colors cursor-pointer"
         >
           <RotateCw className="size-3" />
           <span>New Comparison</span>
@@ -192,7 +192,7 @@ export function ExtensionCompareView({ onAddToHistory }: ExtensionCompareViewPro
               {selectedModels.map((m) => (
                 <span
                   key={m.id}
-                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-zinc-100 dark:bg-white/[0.05] border border-zinc-200/80 dark:border-white/[0.08] text-xs font-medium text-zinc-700 dark:text-zinc-300"
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-zinc-100 dark:bg-white/5 border border-zinc-200/80 dark:border-white/[0.08] text-xs font-medium text-zinc-700 dark:text-zinc-300"
                 >
                   <ModelLogo modelId={m.id} provider={m.provider} size="xs" />
                   <span>{m.name}</span>
@@ -361,7 +361,7 @@ export function ExtensionCompareView({ onAddToHistory }: ExtensionCompareViewPro
 
             {/* Search Bar & Category Filters */}
             <div className="p-2.5 border-b border-zinc-100 dark:border-white/[0.06] space-y-2">
-              <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-zinc-100 dark:bg-white/[0.05] border border-zinc-200/80 dark:border-white/[0.08]">
+              <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-zinc-100 dark:bg-white/5 border border-zinc-200/80 dark:border-white/[0.08]">
                 <Search className="size-3.5 text-zinc-400 shrink-0" />
                 <input
                   type="text"
@@ -381,7 +381,7 @@ export function ExtensionCompareView({ onAddToHistory }: ExtensionCompareViewPro
                     className={`px-2 py-0.5 rounded-full text-[10.5px] font-semibold whitespace-nowrap transition-colors cursor-pointer ${
                       categoryFilter === cat
                         ? "bg-[#713CF4] text-white"
-                        : "bg-zinc-100 dark:bg-white/[0.05] text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200"
+                        : "bg-zinc-100 dark:bg-white/5 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200"
                     }`}
                   >
                     {cat}

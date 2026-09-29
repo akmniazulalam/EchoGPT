@@ -144,7 +144,7 @@ export function ExtensionImageView({ onAddToHistory }: ExtensionImageViewProps) 
                   className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                     aspectRatio === ratio
                       ? "bg-[#713CF4] text-white shadow-xs"
-                      : "bg-zinc-100 dark:bg-white/[0.05] text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-white/10"
+                      : "bg-zinc-100 dark:bg-white/5 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-white/10"
                   }`}
                 >
                   {ratio}
@@ -167,7 +167,7 @@ export function ExtensionImageView({ onAddToHistory }: ExtensionImageViewProps) 
                   className={`size-7 rounded-lg text-xs font-semibold flex items-center justify-center transition-all cursor-pointer ${
                     count === num
                       ? "bg-[#713CF4] text-white shadow-xs"
-                      : "bg-zinc-100 dark:bg-white/[0.05] text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-white/10"
+                      : "bg-zinc-100 dark:bg-white/5 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-white/10"
                   }`}
                 >
                   {num}

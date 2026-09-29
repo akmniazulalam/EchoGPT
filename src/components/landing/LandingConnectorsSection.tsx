@@ -149,7 +149,7 @@ export function LandingConnectorsSection() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2.5">
-                    <div className="size-8 rounded-xl bg-zinc-100 dark:bg-white/[0.05] border border-zinc-200 dark:border-white/[0.08] flex items-center justify-center text-zinc-800 dark:text-zinc-200 group-hover:scale-105 group-hover:border-[#713CF4]/30 transition-all duration-200 motion-reduce:group-hover:scale-100">
+                    <div className="size-8 rounded-xl bg-zinc-100 dark:bg-white/5 border border-zinc-200 dark:border-white/[0.08] flex items-center justify-center text-zinc-800 dark:text-zinc-200 group-hover:scale-105 group-hover:border-[#713CF4]/30 transition-all duration-200 motion-reduce:group-hover:scale-100">
                       <ConnectorServerIcon url={conn.url} name={conn.name} className="size-4.5" />
                     </div>
                     <div>
