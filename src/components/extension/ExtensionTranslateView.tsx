@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   ArrowLeftRight,
   ChevronDown,
@@ -12,12 +12,24 @@ import {
 } from "lucide-react";
 import { EXTENSION_LANGUAGES } from "./data";
 import { ModelLogo } from "@/components/ui/ModelLogo";
+import { AI_MODELS } from "@/config/models";
+import { ExtensionTab } from "./types";
 
 interface ExtensionTranslateViewProps {
   onInsertToChat?: (text: string) => void;
+  onAddToHistory?: (
+    title: string,
+    toolType: ExtensionTab,
+    promptOrSummary: string,
+    resultText?: string,
+    modelId?: string
+  ) => void;
 }
 
-export function ExtensionTranslateView({ onInsertToChat }: ExtensionTranslateViewProps) {
+export function ExtensionTranslateView({
+  onInsertToChat,
+  onAddToHistory,
+}: ExtensionTranslateViewProps) {
   const [sourceLang, setSourceLang] = useState("auto");
   const [targetLang, setTargetLang] = useState("en");
   const [inputText, setInputText] = useState("");
@@ -30,6 +42,49 @@ export function ExtensionTranslateView({ onInsertToChat }: ExtensionTranslateVie
   const [isTargetOpen, setIsTargetOpen] = useState(false);
   const [sourceSearch, setSourceSearch] = useState("");
   const [targetSearch, setTargetSearch] = useState("");
+
+  // Model selector state
+  const [selectedModelId, setSelectedModelId] = useState("echogpt");
+  const [isModelOpen, setIsModelOpen] = useState(false);
+  const [modelSearch, setModelSearch] = useState("");
+  const modelDropdownRef = useRef<HTMLDivElement>(null);
+  const sourceDropdownRef = useRef<HTMLDivElement>(null);
+  const targetDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdowns on outside click & Escape
+  useEffect(() => {
+    const handleMouseDown = (e: MouseEvent) => {
+      if (modelDropdownRef.current && !modelDropdownRef.current.contains(e.target as Node)) {
+        setIsModelOpen(false);
+      }
+      if (sourceDropdownRef.current && !sourceDropdownRef.current.contains(e.target as Node)) {
+        setIsSourceOpen(false);
+      }
+      if (targetDropdownRef.current && !targetDropdownRef.current.contains(e.target as Node)) {
+        setIsTargetOpen(false);
+      }
+    };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsModelOpen(false);
+        setIsSourceOpen(false);
+        setIsTargetOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  const selectedModel = AI_MODELS.find((m) => m.id === selectedModelId) || AI_MODELS[0];
+  const filteredModels = AI_MODELS.filter(
+    (m) =>
+      m.name.toLowerCase().includes(modelSearch.toLowerCase()) ||
+      (m.provider ?? "").toLowerCase().includes(modelSearch.toLowerCase())
+  ).slice(0, 20);
 
   const sourceLangObj =
     EXTENSION_LANGUAGES.find((l) => l.code === sourceLang) || EXTENSION_LANGUAGES[0];
@@ -81,6 +136,13 @@ export function ExtensionTranslateView({ onInsertToChat }: ExtensionTranslateVie
 
       setTranslatedText(translation);
       setIsTranslating(false);
+      onAddToHistory?.(
+        `Translate (${targetLangObj.name}): ${inputText.trim().slice(0, 20)}`,
+        "translate",
+        `[Translate to ${targetLangObj.name}]: ${inputText.trim()}`,
+        translation,
+        selectedModelId
+      );
     }, 500);
   };
 
@@ -97,7 +159,7 @@ export function ExtensionTranslateView({ onInsertToChat }: ExtensionTranslateVie
       <div className="p-3 border-b border-zinc-100 dark:border-white/[0.04]">
         <div className="flex items-center justify-between gap-2 relative">
           {/* Source Language Button */}
-          <div className="flex-1 relative">
+          <div ref={sourceDropdownRef} className="flex-1 relative">
             <button
               type="button"
               onClick={() => {
@@ -161,7 +223,7 @@ export function ExtensionTranslateView({ onInsertToChat }: ExtensionTranslateVie
           </button>
 
           {/* Target Language Button */}
-          <div className="flex-1 relative">
+          <div ref={targetDropdownRef} className="flex-1 relative">
             <button
               type="button"
               onClick={() => {
@@ -291,10 +353,54 @@ export function ExtensionTranslateView({ onInsertToChat }: ExtensionTranslateVie
 
       {/* ── Bottom Bar: Model Selector + Translate Button ── */}
       <div className="p-3 border-t border-zinc-200/80 dark:border-white/[0.08] bg-zinc-50/60 dark:bg-[#121019] flex items-center gap-2">
-        <div className="shrink-0 flex items-center gap-1.5 px-2.5 py-2 rounded-xl bg-white dark:bg-white/[0.04] border border-zinc-200 dark:border-white/[0.08] text-xs font-semibold text-zinc-800 dark:text-zinc-200">
-          <span className="size-1.5 rounded-full bg-[#713CF4]" />
-          <ModelLogo modelId="echogpt" provider="EchoGPT" size="xs" />
-          <span>EchoGPT</span>
+        {/* Interactive model selector */}
+        <div ref={modelDropdownRef} className="relative shrink-0">
+          <button
+            type="button"
+            onClick={() => { setIsModelOpen((v) => !v); setModelSearch(""); }}
+            className="flex items-center gap-1.5 px-2.5 py-2 rounded-xl bg-white dark:bg-white/[0.04] border border-zinc-200 dark:border-white/[0.08] hover:border-[#713CF4]/50 text-xs font-semibold text-zinc-800 dark:text-zinc-200 transition-colors cursor-pointer"
+          >
+            <span className="size-1.5 rounded-full bg-[#713CF4]" />
+            <ModelLogo modelId={selectedModelId} provider={selectedModel.provider} size="xs" />
+            <span className="max-w-[80px] truncate">{selectedModel.name}</span>
+            <ChevronDown className={`size-3 text-zinc-400 transition-transform ${isModelOpen ? "rotate-180" : ""}`} />
+          </button>
+
+          {isModelOpen && (
+            <div className="absolute bottom-full mb-1.5 left-0 w-56 rounded-xl bg-white dark:bg-[#15121F] border border-zinc-200 dark:border-white/[0.1] shadow-2xl z-50 overflow-hidden">
+              {/* Search */}
+              <div className="p-2 border-b border-zinc-100 dark:border-white/[0.06]">
+                <div className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-zinc-100 dark:bg-white/[0.05]">
+                  <Search className="size-3 text-zinc-400 shrink-0" />
+                  <input
+                    autoFocus
+                    value={modelSearch}
+                    onChange={(e) => setModelSearch(e.target.value)}
+                    placeholder="Search models…"
+                    className="flex-1 bg-transparent text-xs text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 outline-none"
+                  />
+                </div>
+              </div>
+              {/* Model List */}
+              <div className="max-h-48 overflow-y-auto custom-scrollbar py-1">
+                {filteredModels.map((m) => (
+                  <button
+                    key={m.id}
+                    type="button"
+                    onClick={() => { setSelectedModelId(m.id); setIsModelOpen(false); }}
+                    className={`w-full flex items-center gap-2 px-2.5 py-1.5 text-xs hover:bg-zinc-50 dark:hover:bg-white/[0.04] cursor-pointer transition-colors ${
+                      m.id === selectedModelId ? "bg-[#713CF4]/5 text-[#713CF4] dark:text-[#a78bfa]" : "text-zinc-800 dark:text-zinc-200"
+                    }`}
+                  >
+                    <ModelLogo modelId={m.id} provider={m.provider} size="xs" />
+                    <span className="flex-1 text-left truncate">{m.name}</span>
+                    {m.isPro && <span className="text-[9px] font-bold text-amber-500 bg-amber-50 dark:bg-amber-900/20 px-1 rounded">PRO</span>}
+                    {m.id === selectedModelId && <Check className="size-3 shrink-0" />}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         <button
