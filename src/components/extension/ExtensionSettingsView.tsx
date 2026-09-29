@@ -11,6 +11,8 @@ import {
 import { useTheme } from "@/context/ThemeContext";
 import { loadDemoUser, clearDemoUser } from "@/lib/authStorage";
 import { AI_MODELS } from "@/config/models";
+import { loadStoredSettings, saveStoredSettings, DEFAULT_SETTINGS } from "./storage";
+import { ExtensionSettings } from "./types";
 
 interface ExtensionSettingsViewProps {
   onClearHistory?: () => void;
@@ -20,11 +22,25 @@ export function ExtensionSettingsView({ onClearHistory }: ExtensionSettingsViewP
   const { theme, toggleTheme } = useTheme();
   const demoUser = loadDemoUser();
 
-  const [defaultModel, setDefaultModel] = useState("echogpt");
-  const [temperature, setTemperature] = useState(0.7);
-  const [streamResponses, setStreamResponses] = useState(true);
-  const [autoPageContext, setAutoPageContext] = useState(true);
-  const [keyboardShortcuts, setKeyboardShortcuts] = useState(true);
+  const [settings, setSettingsState] = useState<ExtensionSettings>(() => {
+    if (typeof window === "undefined") return DEFAULT_SETTINGS;
+    return loadStoredSettings();
+  });
+
+  const updateSetting = <K extends keyof ExtensionSettings>(
+    key: K,
+    value: ExtensionSettings[K]
+  ) => {
+    setSettingsState((prev) => {
+      const next = { ...prev, [key]: value };
+      saveStoredSettings(next);
+      return next;
+    });
+  };
+
+  // Destructure for use in JSX
+  const { defaultModel, temperature, streamResponses, autoPageContext, keyboardShortcuts } =
+    settings;
 
   const [isSignOutSuccess, setIsSignOutSuccess] = useState(false);
   const [historyCleared, setHistoryCleared] = useState(false);
@@ -46,7 +62,7 @@ export function ExtensionSettingsView({ onClearHistory }: ExtensionSettingsViewP
   return (
     <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden bg-white dark:bg-[#0B0912]">
       {/* ── Scrollable Body Area ── */}
-      <div className="flex-1 overflow-y-auto custom-scrollbar p-3 sm:p-4 space-y-5">
+      <div className="flex-1 overflow-y-auto custom-scrollbar p-3 sm:p-4 space-y-5 max-w-2xl w-full mx-auto">
         {/* ── 1. PROFILE SECTION ── */}
         <div className="p-3.5 rounded-2xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/80 dark:border-white/[0.08] space-y-3">
           <div className="flex items-center gap-3">
@@ -136,7 +152,7 @@ export function ExtensionSettingsView({ onClearHistory }: ExtensionSettingsViewP
             </span>
             <select
               value={defaultModel}
-              onChange={(e) => setDefaultModel(e.target.value)}
+              onChange={(e) => updateSetting("defaultModel", e.target.value)}
               className="w-full px-3 py-2 rounded-xl border border-zinc-200 dark:border-white/[0.1] bg-white dark:bg-[#15121F] text-xs font-medium text-zinc-800 dark:text-zinc-200 outline-none"
             >
               {AI_MODELS.map((m) => (
@@ -161,7 +177,7 @@ export function ExtensionSettingsView({ onClearHistory }: ExtensionSettingsViewP
               max="1.0"
               step="0.1"
               value={temperature}
-              onChange={(e) => setTemperature(parseFloat(e.target.value))}
+              onChange={(e) => updateSetting("temperature", parseFloat(e.target.value))}
               className="w-full accent-[#713CF4] cursor-pointer"
             />
             <div className="flex justify-between text-[10px] text-zinc-400">
@@ -179,7 +195,7 @@ export function ExtensionSettingsView({ onClearHistory }: ExtensionSettingsViewP
             <input
               type="checkbox"
               checked={streamResponses}
-              onChange={(e) => setStreamResponses(e.target.checked)}
+              onChange={(e) => updateSetting("streamResponses", e.target.checked)}
               className="accent-[#713CF4] size-4 cursor-pointer"
             />
           </div>
@@ -203,7 +219,7 @@ export function ExtensionSettingsView({ onClearHistory }: ExtensionSettingsViewP
             <input
               type="checkbox"
               checked={autoPageContext}
-              onChange={(e) => setAutoPageContext(e.target.checked)}
+              onChange={(e) => updateSetting("autoPageContext", e.target.checked)}
               className="accent-[#713CF4] size-4 cursor-pointer"
             />
           </div>
@@ -220,7 +236,7 @@ export function ExtensionSettingsView({ onClearHistory }: ExtensionSettingsViewP
             <input
               type="checkbox"
               checked={keyboardShortcuts}
-              onChange={(e) => setKeyboardShortcuts(e.target.checked)}
+              onChange={(e) => updateSetting("keyboardShortcuts", e.target.checked)}
               className="accent-[#713CF4] size-4 cursor-pointer"
             />
           </div>
