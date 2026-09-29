@@ -61,7 +61,7 @@ export function ExtensionComposer({
     m.provider.toLowerCase().includes(modelSearch.toLowerCase())
   );
 
-  // Close menus on outside click
+  // Close menus on outside click & Escape
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
@@ -71,8 +71,20 @@ export function ExtensionComposer({
         setIsConnectorsOpen(false);
       }
     };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsModelDropdownOpen(false);
+        setIsMentionOpen(false);
+        setIsCommandsOpen(false);
+        setIsConnectorsOpen(false);
+      }
+    };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, []);
 
   const handleSend = () => {
@@ -534,11 +546,11 @@ export function ExtensionComposer({
           type="button"
           onClick={handleSend}
           disabled={!inputText.trim() && !hasScreenshot && attachedFiles.length === 0 && !isReadPageActive}
-          className="size-7 rounded-full bg-[#713CF4] hover:bg-[#602ee0] active:bg-[#5223c7] text-white flex items-center justify-center transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-xs cursor-pointer hover:scale-105 active:scale-95"
+          className="size-7 rounded-full bg-[#713CF4] hover:bg-[#602ee0] active:bg-[#5223c7] text-white flex items-center justify-center p-0 shrink-0 transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-xs cursor-pointer hover:scale-105 active:scale-95"
           title="Send message"
           aria-label="Send message"
         >
-          <Send className="size-3.5 ml-0.5" />
+          <Send className="size-3.5" />
         </button>
       </div>
     </div>
