@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Lexend } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { ThemeProvider } from "@/context/ThemeContext";
 
@@ -28,13 +29,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <head>
         {/*
-          Blocking anti-FOUC theme initialization script.
-          Must be a native synchronous <script> tag in <head> so the browser
-          evaluates it before rendering <body>, guaranteeing zero milliseconds
-          of light mode flash on reload.
+          Blocking anti-FOUC theme initialization.
+          next/script with strategy="beforeInteractive" is injected into <head>
+          by Next.js before any page hydration, guaranteeing zero flash of
+          unstyled content without triggering React's script-in-component-tree
+          warning (unlike a raw <script> tag inside the JSX render tree).
         */}
-        <script
+        <Script
           id="theme-init"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem("echogpt_theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="dark"||(!t&&d)){document.documentElement.classList.add("dark")}else{document.documentElement.classList.remove("dark")}}catch(e){}})()`,
           }}
