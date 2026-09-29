@@ -9,12 +9,23 @@ import {
   Check,
   CheckCircle,
 } from "lucide-react";
+import { ExtensionTab } from "./types";
 
 interface ExtensionReadViewProps {
   onInsertToChat?: (text: string) => void;
+  onAddToHistory?: (
+    title: string,
+    toolType: ExtensionTab,
+    promptOrSummary: string,
+    resultText?: string,
+    modelId?: string
+  ) => void;
 }
 
-export function ExtensionReadView({ onInsertToChat }: ExtensionReadViewProps) {
+export function ExtensionReadView({
+  onInsertToChat,
+  onAddToHistory,
+}: ExtensionReadViewProps) {
   const [webLink, setWebLink] = useState("");
   const [analysisType, setAnalysisType] = useState<
     "Summarize" | "Explain" | "Extract key points" | "Find important facts" | "Simplify"
@@ -48,6 +59,13 @@ export function ExtensionReadView({ onInsertToChat }: ExtensionReadViewProps) {
 
       setAnalysisResult(output);
       setIsAnalyzing(false);
+      onAddToHistory?.(
+        `Read: ${analysisType} (${source.slice(0, 20)})`,
+        "read",
+        `Analyze source: ${source} with goal "${analysisType}"`,
+        output,
+        "echogpt"
+      );
     }, 700);
   };
 
