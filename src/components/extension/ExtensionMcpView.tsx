@@ -135,7 +135,7 @@ export function ExtensionMcpView() {
                       <button
                         type="button"
                         onClick={() => handleTestTool(t.name, c.name)}
-                        className="px-2 py-0.5 rounded text-[10px] font-semibold bg-zinc-100 hover:bg-[#713CF4]/10 dark:bg-white/[0.06] hover:text-[#713CF4] transition-colors cursor-pointer shrink-0"
+                        className="px-2 py-0.5 rounded text-[10px] font-semibold bg-zinc-100 hover:bg-[#713CF4]/10 dark:bg-white/6 hover:text-[#713CF4] transition-colors cursor-pointer shrink-0"
                       >
                         Test
                       </button>

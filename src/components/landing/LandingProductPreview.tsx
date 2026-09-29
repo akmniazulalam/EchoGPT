@@ -147,7 +147,7 @@ export function LandingProductPreview() {
                 <div className="rounded-xl border border-zinc-200 dark:border-white/8 bg-white dark:bg-[#151320] p-3 flex items-center justify-between text-xs text-zinc-400">
                   <span>Ask a follow-up or switch models mid-chat…</span>
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded bg-zinc-100 dark:bg-white/[0.06] text-[10.5px] font-semibold text-zinc-600 dark:text-zinc-400">
+                    <span className="px-2 py-0.5 rounded bg-zinc-100 dark:bg-white/6 text-[10.5px] font-semibold text-zinc-600 dark:text-zinc-400">
                       GPT-5 / Claude Ready
                     </span>
                   </div>
@@ -313,7 +313,7 @@ export function LandingProductPreview() {
                         <span className="text-[10px] font-semibold uppercase tracking-wider text-[#713CF4] dark:text-[#a78bfa]">
                           {t.cat}
                         </span>
-                        <span className="text-[9.5px] px-1.5 py-0.2 rounded bg-zinc-100 dark:bg-white/[0.06] text-zinc-500">
+                        <span className="text-[9.5px] px-1.5 py-0.2 rounded bg-zinc-100 dark:bg-white/6 text-zinc-500">
                           {t.badge}
                         </span>
                       </div>

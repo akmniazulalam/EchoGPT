@@ -144,7 +144,7 @@ export function ConnectorSetupModal({
             </div>
 
             {/* Quota Badge */}
-            <span className="text-[10px] sm:text-[10.5px] font-semibold px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-white/[0.06] text-zinc-600 dark:text-zinc-300 border border-zinc-200 dark:border-white/8 shrink-0">
+            <span className="text-[10px] sm:text-[10.5px] font-semibold px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-white/6 text-zinc-600 dark:text-zinc-300 border border-zinc-200 dark:border-white/8 shrink-0">
               {isProUser ? "Unlimited Pro" : `${connectedCount} of ${quotaLimit}`}
             </span>
           </div>

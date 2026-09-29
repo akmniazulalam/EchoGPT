@@ -131,7 +131,7 @@ export function AuthPageLayout({
               </div>
 
               {/* Divider */}
-              <div className="h-px bg-zinc-100 dark:bg-white/[0.06]" />
+              <div className="h-px bg-zinc-100 dark:bg-white/6" />
 
               {/* Form slot */}
               {children}

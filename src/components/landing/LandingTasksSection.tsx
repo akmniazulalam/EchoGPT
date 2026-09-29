@@ -84,7 +84,7 @@ export function LandingTasksSection() {
                     </div>
                   </div>
 
-                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-white/[0.06] text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-white/8">
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-white/6 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-white/8">
                     {task.recommendedModel}
                   </span>
                 </div>

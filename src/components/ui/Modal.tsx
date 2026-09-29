@@ -120,7 +120,7 @@ export function Modal({
           <button
             type="button"
             onClick={onClose}
-            className="absolute top-4 right-4 z-30 size-8.5 rounded-xl text-zinc-400 hover:text-white dark:text-zinc-400 dark:hover:text-white bg-zinc-100/80 hover:bg-[#DC2626] dark:bg-white/[0.06] dark:hover:bg-[#F87171] border border-zinc-200/60 dark:border-white/8 transition-all flex items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] cursor-pointer"
+            className="absolute top-4 right-4 z-30 size-8.5 rounded-xl text-zinc-400 hover:text-white dark:text-zinc-400 dark:hover:text-white bg-zinc-100/80 hover:bg-[#DC2626] dark:bg-white/6 dark:hover:bg-[#F87171] border border-zinc-200/60 dark:border-white/8 transition-all flex items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] cursor-pointer"
             aria-label="Close modal"
           >
             <X className="size-4" />

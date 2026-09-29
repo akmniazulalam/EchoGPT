@@ -159,7 +159,7 @@ export function ConnectorCard({
                       </button>
                     )}
 
-                    <div className="h-px bg-zinc-100 dark:bg-white/[0.06] my-1" />
+                    <div className="h-px bg-zinc-100 dark:bg-white/6 my-1" />
 
                     <button
                       type="button"

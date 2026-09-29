@@ -234,7 +234,7 @@ export function MockBrowserFrame() {
             className={`relative size-8.5 rounded-xl flex items-center justify-center border transition-all cursor-pointer ${
               isPanelOpen
                 ? "bg-[#713CF4] border-[#713CF4] text-white shadow-md shadow-[#713CF4]/30"
-                : "bg-zinc-100 dark:bg-white/[0.06] border-zinc-200 dark:border-white/8 text-zinc-600 dark:text-zinc-400"
+                : "bg-zinc-100 dark:bg-white/6 border-zinc-200 dark:border-white/8 text-zinc-600 dark:text-zinc-400"
             }`}
             title={
               isPanelOpen
