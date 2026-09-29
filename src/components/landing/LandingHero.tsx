@@ -54,7 +54,7 @@ export function LandingHero() {
         {/* Primary & Secondary Action CTAs */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-1">
           <Link
-            href="/signup"
+            href="/chat"
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-[#713CF4] hover:bg-[#602ee0] active:bg-[#5223c7] text-white font-semibold text-sm transition-all shadow-md shadow-[#713CF4]/25 hover:shadow-lg hover:shadow-[#713CF4]/40 hover:-translate-y-0.5"
           >
             <Sparkles className="size-4" />
