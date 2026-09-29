@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Sparkles,
@@ -15,8 +15,19 @@ import {
 } from "lucide-react";
 import { EXTENDED_COMPARE_CATALOG } from "./data";
 import { ModelLogo } from "@/components/ui/ModelLogo";
+import { ExtensionTab } from "./types";
 
-export function ExtensionCompareView() {
+interface ExtensionCompareViewProps {
+  onAddToHistory?: (
+    title: string,
+    toolType: ExtensionTab,
+    promptOrSummary: string,
+    resultText?: string,
+    modelId?: string
+  ) => void;
+}
+
+export function ExtensionCompareView({ onAddToHistory }: ExtensionCompareViewProps) {
   const [prompt, setPrompt] = useState("");
   const [selectedModelIds, setSelectedModelIds] = useState<string[]>([
     "echogpt",
@@ -64,6 +75,17 @@ export function ExtensionCompareView() {
     setIsChooseModelsOpen(true);
   };
 
+  useEffect(() => {
+    if (!isChooseModelsOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsChooseModelsOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isChooseModelsOpen]);
+
   const handleToggleModelInModal = (id: string) => {
     setTempSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((mId) => mId !== id) : [...prev, id]
@@ -107,6 +129,13 @@ export function ExtensionCompareView() {
 
       setComparisonResults(results);
       setIsComparing(false);
+      onAddToHistory?.(
+        `Compare: ${prompt.trim().slice(0, 24)}`,
+        "compare",
+        `[Comparison prompt across ${results.length} models]: ${prompt.trim()}`,
+        results.map((r) => `### ${r.modelName} (${r.latencyMs}ms)\n${r.response}`).join("\n\n---\n\n"),
+        selectedModelIds[0]
+      );
     }, 800);
   };
 
@@ -172,8 +201,8 @@ export function ExtensionCompareView() {
             </div>
           </div>
         ) : (
-          // Stacked Comparison Response Cards
-          <div className="space-y-3 animate-in fade-in">
+          // Comparison Response Cards (stacked on mobile/narrow, 2-col on wider panel)
+          <div className="grid grid-cols-1 @lg:grid-cols-2 gap-3 animate-in fade-in">
             {comparisonResults.map((res) => (
               <div
                 key={res.modelId}
@@ -282,7 +311,12 @@ export function ExtensionCompareView() {
 
       {/* ── CHOOSE MODELS MODAL / DRAWER (Scales to 100+ Models) ── */}
       {isChooseModelsOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-black/50 backdrop-blur-xs font-lexend animate-in fade-in">
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsChooseModelsOpen(false);
+          }}
+          className="absolute inset-0 z-50 flex items-center justify-center p-3 bg-black/50 font-lexend animate-in fade-in"
+        >
           <div className="w-full max-w-lg max-h-[85vh] rounded-2xl bg-white dark:bg-[#15121F] border border-zinc-200 dark:border-white/[0.1] shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95">
             {/* Modal Header */}
             <div className="p-3.5 border-b border-zinc-100 dark:border-white/[0.06] flex items-center justify-between bg-zinc-50/70 dark:bg-white/[0.02]">
