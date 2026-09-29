@@ -187,7 +187,7 @@ export function ConnectorSetupModal({
                   key={preset.id}
                   type="button"
                   onClick={() => applyPreset(preset)}
-                  className="shrink-0 sm:shrink-0 px-2 py-0.5 rounded-md text-[11px] font-medium bg-zinc-100 hover:bg-zinc-200/70 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-zinc-700 dark:text-zinc-300 border border-zinc-200/80 dark:border-white/[0.08] transition-colors cursor-pointer"
+                  className="shrink-0 sm:shrink-0 px-2 py-0.5 rounded-md text-[11px] font-medium bg-zinc-100 hover:bg-zinc-200/70 dark:bg-white/[0.05] dark:hover:bg-white/10 text-zinc-700 dark:text-zinc-300 border border-zinc-200/80 dark:border-white/[0.08] transition-colors cursor-pointer"
                 >
                   {preset.name}
                 </button>

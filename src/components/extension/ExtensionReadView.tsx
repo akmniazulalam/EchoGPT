@@ -138,7 +138,7 @@ export function ExtensionReadView({
                 className={`px-2.5 py-1 rounded-full text-xs font-medium transition-all cursor-pointer ${
                   analysisType === opt
                     ? "bg-[#713CF4] text-white shadow-2xs font-semibold"
-                    : "bg-zinc-100 dark:bg-white/[0.05] text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-white/[0.1]"
+                    : "bg-zinc-100 dark:bg-white/[0.05] text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-white/10"
                 }`}
               >
                 {opt}

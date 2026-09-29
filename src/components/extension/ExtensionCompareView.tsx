@@ -157,7 +157,7 @@ export function ExtensionCompareView({ onAddToHistory }: ExtensionCompareViewPro
         <button
           type="button"
           onClick={handleNewComparison}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-xs font-semibold text-zinc-700 dark:text-zinc-300 transition-colors cursor-pointer"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-white/[0.05] dark:hover:bg-white/10 text-xs font-semibold text-zinc-700 dark:text-zinc-300 transition-colors cursor-pointer"
         >
           <RotateCw className="size-3" />
           <span>New Comparison</span>
