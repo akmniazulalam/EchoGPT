@@ -20,41 +20,31 @@ import {
 } from "lucide-react";
 import { ExtensionSidePanel } from "./ExtensionSidePanel";
 import { useTheme } from "@/context/ThemeContext";
+import { loadStoredWidth, saveStoredWidth } from "./storage";
 
 export function MockBrowserFrame() {
   const { theme, toggleTheme, mounted } = useTheme();
 
-  // Resizable panel width state (default 440px, min 360px, max 720px)
-  const [panelWidth, setPanelWidth] = useState<number>(440);
+  // Resizable panel width state (default 440px, min 360px, max 1080px)
+  // Restores immediately without visual flash
+  const [panelWidth, setPanelWidth] = useState<number>(() => loadStoredWidth());
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [isPanelOpen, setIsPanelOpen] = useState<boolean>(true);
   const [isPinned, setIsPinned] = useState<boolean>(true);
-
-  // Restore persisted width from localStorage after mount
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem("echogpt:extension-panel-width");
-      if (stored) {
-        const val = parseInt(stored, 10);
-        if (val >= 360 && val <= 720) {
-          // eslint-disable-next-line react-hooks/set-state-in-effect
-          setPanelWidth(val);
-        }
-      }
-    } catch {
-      // Ignore
-    }
-  }, []);
+  const [isReloading, setIsReloading] = useState<boolean>(false);
 
   const handleWidthChange = useCallback((newWidth: number) => {
-    const clamped = Math.max(360, Math.min(720, newWidth));
+    const clamped = Math.max(360, Math.min(1080, newWidth));
     setPanelWidth(clamped);
-    try {
-      localStorage.setItem("echogpt:extension-panel-width", clamped.toString());
-    } catch {
-      // Ignore
-    }
+    saveStoredWidth(clamped);
   }, []);
+
+  const handleBrowserReload = () => {
+    setIsReloading(true);
+    setTimeout(() => {
+      setIsReloading(false);
+    }, 450);
+  };
 
   // Mouse drag handler for horizontal resize
   useEffect(() => {
@@ -176,9 +166,10 @@ export function MockBrowserFrame() {
           </button>
           <button
             type="button"
+            onClick={handleBrowserReload}
             className="p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/[0.06] hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors cursor-pointer"
             title="Reload">
-            <RotateCw className="size-3.5" />
+            <RotateCw className={`size-3.5 ${isReloading ? "animate-spin" : ""}`} />
           </button>
         </div>
 
@@ -201,10 +192,11 @@ export function MockBrowserFrame() {
               Width:
             </span>
             {[
-              { label: "360px (Min)", w: 360 },
-              { label: "440px (Default)", w: 440 },
-              { label: "580px (Mid)", w: 580 },
-              { label: "720px (Max)", w: 720 },
+              { label: "360px", w: 360 },
+              { label: "440px", w: 440 },
+              { label: "720px", w: 720 },
+              { label: "900px", w: 900 },
+              { label: "1080px", w: 1080 },
             ].map((p) => (
               <button
                 key={p.w}
@@ -382,7 +374,7 @@ export async function POST(req: Request) {
             className={`relative w-2.5 hover:w-3 bg-zinc-200/80 dark:bg-white/4 hover:bg-[#713CF4]/40 dark:hover:bg-[#713CF4]/40 cursor-col-resize transition-all shrink-0 flex items-center justify-center select-none z-20 group ${
               isDragging ? "bg-[#713CF4] w-3" : ""
             }`}
-            title="Drag to resize EchoGPT Side Panel (360px – 720px)">
+            title="Drag to resize EchoGPT Side Panel (360px – 1080px)">
             {/* Visual Grip Handle */}
             <div className="p-0.5 rounded bg-zinc-400/60 dark:bg-white/20 group-hover:bg-[#713CF4] group-hover:text-white text-zinc-600 transition-colors">
               <GripVertical className="size-3.5 stroke-2" />
@@ -407,6 +399,11 @@ export async function POST(req: Request) {
               isPinned={isPinned}
               onTogglePin={() => setIsPinned((v) => !v)}
             />
+            {isReloading && (
+              <div className="absolute inset-0 z-50 bg-white/60 dark:bg-black/60 flex items-center justify-center animate-in fade-in duration-100">
+                <div className="size-8 border-2 border-[#713CF4]/30 border-t-[#713CF4] rounded-full animate-spin" />
+              </div>
+            )}
           </div>
         )}
       </div>
