@@ -80,6 +80,7 @@ export const INITIAL_CONVERSATIONS: ExtensionConversation[] = [
     timestamp: new Date(Date.now() - 1000 * 60 * 15).toISOString(),
     relativeTime: "15m ago",
     modelId: "echogpt",
+    toolType: "chat",
     messages: [
       {
         id: "msg-1",
@@ -103,6 +104,7 @@ export const INITIAL_CONVERSATIONS: ExtensionConversation[] = [
     timestamp: new Date(Date.now() - 1000 * 60 * 60 * 3).toISOString(),
     relativeTime: "3h ago",
     modelId: "claude-3-5-sonnet",
+    toolType: "read",
     messages: [
       {
         id: "msg-3",
@@ -126,6 +128,7 @@ export const INITIAL_CONVERSATIONS: ExtensionConversation[] = [
     timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
     relativeTime: "Yesterday",
     modelId: "gpt-4o",
+    toolType: "write",
     messages: [
       {
         id: "msg-5",
@@ -149,6 +152,7 @@ export const INITIAL_CONVERSATIONS: ExtensionConversation[] = [
     timestamp: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString(),
     relativeTime: "2 days ago",
     modelId: "deepseek-r1",
+    toolType: "mcp",
     messages: [
       {
         id: "msg-7",
