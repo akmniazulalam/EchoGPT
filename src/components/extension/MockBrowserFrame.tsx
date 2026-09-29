@@ -133,7 +133,7 @@ export function MockBrowserFrame() {
 
           <button
             type="button"
-            className="p-1 rounded-full text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-300/60 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
+            className="p-1 rounded-full text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-300/60 dark:hover:bg-white/6 transition-colors cursor-pointer"
             title="New Tab">
             <Plus className="size-3.5" />
           </button>
@@ -154,20 +154,20 @@ export function MockBrowserFrame() {
         <div className="flex items-center gap-1 text-zinc-400">
           <button
             type="button"
-            className="p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/[0.06] hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/6 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors cursor-pointer"
             title="Back">
             <ArrowLeft className="size-4" />
           </button>
           <button
             type="button"
-            className="p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/[0.06] hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/6 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors cursor-pointer"
             title="Forward">
             <ArrowRight className="size-4" />
           </button>
           <button
             type="button"
             onClick={handleBrowserReload}
-            className="p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/[0.06] hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/6 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors cursor-pointer"
             title="Reload">
             <RotateCw className={`size-3.5 ${isReloading ? "animate-spin" : ""}`} />
           </button>
@@ -217,7 +217,7 @@ export function MockBrowserFrame() {
           <button
             type="button"
             onClick={toggleTheme}
-            className="size-8 rounded-xl flex items-center justify-center text-zinc-500 hover:text-[#713CF4] dark:text-zinc-400 dark:hover:text-[#a78bfa] hover:bg-zinc-100 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
+            className="size-8 rounded-xl flex items-center justify-center text-zinc-500 hover:text-[#713CF4] dark:text-zinc-400 dark:hover:text-[#a78bfa] hover:bg-zinc-100 dark:hover:bg-white/6 transition-colors cursor-pointer"
             title="Toggle light/dark mode"
             aria-label="Toggle theme">
             {mounted && theme === "dark" ? (

@@ -153,7 +153,7 @@ export function ExtensionChatView({
                   key={idx}
                   type="button"
                   onClick={() => onSendMessage(suggestion)}
-                  className="w-full text-left px-3 py-2 rounded-xl bg-zinc-50 dark:bg-white/[0.03] hover:bg-zinc-100 dark:hover:bg-white/[0.06] border border-zinc-200/60 dark:border-white/4 text-xs font-medium text-zinc-700 dark:text-zinc-300 transition-colors cursor-pointer truncate"
+                  className="w-full text-left px-3 py-2 rounded-xl bg-zinc-50 dark:bg-white/[0.03] hover:bg-zinc-100 dark:hover:bg-white/6 border border-zinc-200/60 dark:border-white/4 text-xs font-medium text-zinc-700 dark:text-zinc-300 transition-colors cursor-pointer truncate"
                   title={suggestion}
                 >
                   {suggestion}
@@ -220,7 +220,7 @@ export function ExtensionChatView({
                         <button
                           type="button"
                           onClick={() => handleCopy(msg.id, msg.text)}
-                          className="p-1 rounded hover:bg-zinc-200/60 dark:hover:bg-white/[0.06] hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors cursor-pointer"
+                          className="p-1 rounded hover:bg-zinc-200/60 dark:hover:bg-white/6 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors cursor-pointer"
                           title="Copy response"
                           aria-label="Copy response"
                         >
@@ -232,7 +232,7 @@ export function ExtensionChatView({
                         </button>
                         <button
                           type="button"
-                          className="p-1 rounded hover:bg-zinc-200/60 dark:hover:bg-white/[0.06] hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors cursor-pointer"
+                          className="p-1 rounded hover:bg-zinc-200/60 dark:hover:bg-white/6 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors cursor-pointer"
                           title="Helpful"
                           aria-label="Helpful"
                         >
@@ -240,7 +240,7 @@ export function ExtensionChatView({
                         </button>
                         <button
                           type="button"
-                          className="p-1 rounded hover:bg-zinc-200/60 dark:hover:bg-white/[0.06] hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors cursor-pointer"
+                          className="p-1 rounded hover:bg-zinc-200/60 dark:hover:bg-white/6 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors cursor-pointer"
                           title="Unhelpful"
                           aria-label="Unhelpful"
                         >

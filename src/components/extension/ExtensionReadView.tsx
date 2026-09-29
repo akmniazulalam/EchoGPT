@@ -219,7 +219,7 @@ export function ExtensionReadView({
                 <button
                   type="button"
                   onClick={handleCopy}
-                  className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200/60 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200/60 dark:hover:bg-white/6 transition-colors cursor-pointer"
                 >
                   {copied ? (
                     <>

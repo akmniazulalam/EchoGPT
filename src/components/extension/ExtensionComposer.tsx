@@ -222,7 +222,7 @@ export function ExtensionComposer({
               setIsCommandsOpen(false);
               setIsConnectorsOpen(false);
             }}
-            className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-semibold text-zinc-800 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-white/[0.06] transition-colors cursor-pointer border border-transparent hover:border-zinc-200 dark:hover:border-white/[0.08]"
+            className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-semibold text-zinc-800 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-white/6 transition-colors cursor-pointer border border-transparent hover:border-zinc-200 dark:hover:border-white/[0.08]"
             title="Change active AI model"
           >
             <span className="size-1.5 rounded-full bg-[#713CF4] animate-pulse" />
@@ -292,7 +292,7 @@ export function ExtensionComposer({
             className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
               hasScreenshot
                 ? "bg-[#713CF4]/15 text-[#713CF4] dark:text-[#a78bfa]"
-                : "hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-white/[0.06]"
+                : "hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-white/6"
             }`}
             title="Capture tab screenshot"
             aria-label="Capture tab screenshot"
@@ -307,7 +307,7 @@ export function ExtensionComposer({
             className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
               attachedFiles.length > 0
                 ? "bg-blue-500/15 text-blue-600 dark:text-blue-400"
-                : "hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-white/[0.06]"
+                : "hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-white/6"
             }`}
             title="Attach file (PDF, TXT, DOCX)"
             aria-label="Attach file"
@@ -329,7 +329,7 @@ export function ExtensionComposer({
             className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
               isReadPageActive
                 ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
-                : "hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-white/[0.06]"
+                : "hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-white/6"
             }`}
             title="Include current active page context"
             aria-label="Include current page context"
@@ -350,7 +350,7 @@ export function ExtensionComposer({
               className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
                 isMentionOpen
                   ? "bg-[#713CF4]/15 text-[#713CF4] dark:text-[#a78bfa]"
-                  : "hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-white/[0.06]"
+                  : "hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-white/6"
               }`}
               title="Mention a bot (@)"
               aria-label="Mention a bot"
@@ -397,7 +397,7 @@ export function ExtensionComposer({
               className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
                 isCommandsOpen
                   ? "bg-[#713CF4]/15 text-[#713CF4] dark:text-[#a78bfa]"
-                  : "hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-white/[0.06]"
+                  : "hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-white/6"
               }`}
               title="Quick shortcut commands (/)"
               aria-label="Shortcut commands"
@@ -444,7 +444,7 @@ export function ExtensionComposer({
               className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
                 activeConnectors.length > 0
                   ? "text-[#713CF4] dark:text-[#a78bfa]"
-                  : "hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-white/[0.06]"
+                  : "hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-white/6"
               }`}
               title="Active MCP Connectors"
               aria-label="Active Connectors"
@@ -528,7 +528,7 @@ export function ExtensionComposer({
           className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-lg font-medium transition-colors cursor-pointer ${
             isWebSearch
               ? "bg-[#713CF4]/15 text-[#713CF4] dark:text-[#a78bfa] font-semibold"
-              : "text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-white/[0.06]"
+              : "text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-white/6"
           }`}
           title="Toggle live Web Search"
         >

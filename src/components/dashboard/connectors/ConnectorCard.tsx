@@ -125,7 +125,7 @@ export function ConnectorCard({
                         setIsMenuOpen(false);
                         onViewDetails(connector);
                       }}
-                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/[0.06] text-zinc-700 dark:text-zinc-200 font-medium flex items-center gap-2"
+                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/6 text-zinc-700 dark:text-zinc-200 font-medium flex items-center gap-2"
                     >
                       <Layers className="size-3.5 text-[#713CF4]" />
                       <span>View Discovered Tools</span>
@@ -138,7 +138,7 @@ export function ConnectorCard({
                           setIsMenuOpen(false);
                           handleRetryClick(e);
                         }}
-                        className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/[0.06] text-amber-600 dark:text-amber-400 font-medium flex items-center gap-2"
+                        className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/6 text-amber-600 dark:text-amber-400 font-medium flex items-center gap-2"
                       >
                         <RotateCw className="size-3.5" />
                         <span>Retry Handshake</span>
@@ -152,7 +152,7 @@ export function ConnectorCard({
                           setIsMenuOpen(false);
                           onToggleEnabled(connector.id);
                         }}
-                        className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/[0.06] text-zinc-700 dark:text-zinc-200 font-medium flex items-center gap-2"
+                        className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-white/6 text-zinc-700 dark:text-zinc-200 font-medium flex items-center gap-2"
                       >
                         <CheckCircle2 className="size-3.5 text-emerald-500" />
                         <span>{connector.enabled ? "Disable Connector" : "Enable Connector"}</span>

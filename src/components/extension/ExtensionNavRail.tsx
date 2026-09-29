@@ -90,7 +90,7 @@ export function ExtensionNavRail({ activeTab, onSelectTab }: ExtensionNavRailPro
               className={`w-full py-1.5 px-1 rounded-xl flex flex-col items-center justify-center gap-0.5 transition-all cursor-pointer group relative ${
                 isActive
                   ? "bg-[#713CF4]/10 dark:bg-[#713CF4]/20 text-[#713CF4] dark:text-[#a78bfa] font-bold"
-                  : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-200/60 dark:hover:bg-white/[0.06]"
+                  : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-200/60 dark:hover:bg-white/6"
               }`}
               title={item.label}
               aria-label={item.label}
@@ -134,7 +134,7 @@ export function ExtensionNavRail({ activeTab, onSelectTab }: ExtensionNavRailPro
           className={`w-full py-1.5 px-1 rounded-xl flex flex-col items-center justify-center gap-0.5 transition-all cursor-pointer group ${
             activeTab === "settings"
               ? "bg-[#713CF4]/10 dark:bg-[#713CF4]/20 text-[#713CF4] dark:text-[#a78bfa] font-bold"
-              : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-200/60 dark:hover:bg-white/[0.06]"
+              : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-200/60 dark:hover:bg-white/6"
           }`}
           title="Settings"
           aria-label="Settings"

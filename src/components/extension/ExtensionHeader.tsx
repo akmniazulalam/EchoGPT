@@ -134,7 +134,7 @@ export function ExtensionHeader({
             className={`p-1.5 rounded-full transition-colors cursor-pointer ${
               isHistoryOpen
                 ? "bg-[#713CF4]/15 text-[#713CF4] dark:text-[#a78bfa]"
-                : "text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-white/[0.06]"
+                : "text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-white/6"
             }`}
             title="Conversation History"
             aria-label="Conversation History"

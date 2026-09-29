@@ -215,7 +215,7 @@ export function ExtensionTranslateView({
           <button
             type="button"
             onClick={handleSwap}
-            className="p-1.5 rounded-lg text-zinc-500 hover:text-[#713CF4] hover:bg-zinc-100 dark:hover:bg-white/[0.06] transition-colors shrink-0 cursor-pointer"
+            className="p-1.5 rounded-lg text-zinc-500 hover:text-[#713CF4] hover:bg-zinc-100 dark:hover:bg-white/6 transition-colors shrink-0 cursor-pointer"
             title="Swap source and target languages"
             aria-label="Swap languages"
           >
@@ -317,7 +317,7 @@ export function ExtensionTranslateView({
                 <button
                   type="button"
                   onClick={handleCopy}
-                  className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200/60 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200/60 dark:hover:bg-white/6 transition-colors cursor-pointer"
                 >
                   {copied ? (
                     <>
