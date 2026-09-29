@@ -64,7 +64,7 @@ export function LandingHero() {
 
           <a
             href="#preview"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl border border-zinc-200 dark:border-white/[0.1] bg-white/80 dark:bg-white/[0.03] text-zinc-800 dark:text-zinc-200 font-semibold text-sm hover:bg-zinc-50 dark:hover:bg-white/6 hover:border-zinc-300 dark:hover:border-white/[0.18] transition-all"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl border border-zinc-200 dark:border-white/[0.1] bg-white/80 dark:bg-white/3 text-zinc-800 dark:text-zinc-200 font-semibold text-sm hover:bg-zinc-50 dark:hover:bg-white/6 hover:border-zinc-300 dark:hover:border-white/[0.18] transition-all"
           >
             <span>Explore Workspaces</span>
           </a>

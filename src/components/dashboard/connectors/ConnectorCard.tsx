@@ -230,7 +230,7 @@ export function ConnectorCard({
                 </span>
               ))}
               {connector.tools.length > 3 && (
-                <span className="px-1.5 py-0.5 rounded-md bg-zinc-50 dark:bg-white/[0.03] text-[10.5px] text-zinc-400 font-mono">
+                <span className="px-1.5 py-0.5 rounded-md bg-zinc-50 dark:bg-white/3 text-[10.5px] text-zinc-400 font-mono">
                   +{connector.tools.length - 3} more
                 </span>
               )}

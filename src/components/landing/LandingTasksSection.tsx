@@ -103,7 +103,7 @@ export function LandingTasksSection() {
                       {task.requirements.map((req, i) => (
                         <span
                           key={i}
-                          className="px-2 py-0.5 rounded-md bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/60 dark:border-white/6 text-[10.5px] text-zinc-600 dark:text-zinc-400"
+                          className="px-2 py-0.5 rounded-md bg-zinc-50 dark:bg-white/3 border border-zinc-200/60 dark:border-white/6 text-[10.5px] text-zinc-600 dark:text-zinc-400"
                         >
                           {req}
                         </span>

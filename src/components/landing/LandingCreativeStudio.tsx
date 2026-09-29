@@ -73,7 +73,7 @@ export function LandingCreativeStudio() {
                       className={`p-2 rounded-xl text-left border transition-all cursor-pointer ${
                         selectedImageModel === m.id
                           ? "bg-[#713CF4]/10 dark:bg-[#713CF4]/15 border-[#713CF4]/40 text-[#713CF4] dark:text-[#a78bfa]"
-                          : "bg-zinc-50 dark:bg-white/[0.03] border-zinc-200/80 dark:border-white/6 text-zinc-700 dark:text-zinc-300"
+                          : "bg-zinc-50 dark:bg-white/3 border-zinc-200/80 dark:border-white/6 text-zinc-700 dark:text-zinc-300"
                       }`}
                     >
                       <p className="text-xs font-bold truncate leading-tight">{m.name}</p>
@@ -198,7 +198,7 @@ export function LandingCreativeStudio() {
                       className={`p-2 rounded-xl text-left border transition-all cursor-pointer ${
                         selectedVideoModel === m.id
                           ? "bg-sky-500/10 dark:bg-sky-500/15 border-sky-500/40 text-sky-600 dark:text-sky-400"
-                          : "bg-zinc-50 dark:bg-white/[0.03] border-zinc-200/80 dark:border-white/6 text-zinc-700 dark:text-zinc-300"
+                          : "bg-zinc-50 dark:bg-white/3 border-zinc-200/80 dark:border-white/6 text-zinc-700 dark:text-zinc-300"
                       }`}
                     >
                       <p className="text-xs font-bold truncate leading-tight">{m.name}</p>

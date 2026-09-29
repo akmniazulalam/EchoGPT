@@ -156,7 +156,7 @@ export function ConnectorsWorkspace() {
 
               {/* 3 Step Diagram */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
-                <div className="p-3.5 rounded-xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/60 dark:border-white/[0.05] space-y-1">
+                <div className="p-3.5 rounded-xl bg-zinc-50 dark:bg-white/3 border border-zinc-200/60 dark:border-white/[0.05] space-y-1">
                   <div className="flex items-center gap-2 text-xs font-bold text-zinc-800 dark:text-zinc-200">
                     <span className="size-5 rounded-full bg-[#713CF4] text-white text-[11px] flex items-center justify-center">
                       1
@@ -168,7 +168,7 @@ export function ConnectorsWorkspace() {
                   </p>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/60 dark:border-white/[0.05] space-y-1">
+                <div className="p-3.5 rounded-xl bg-zinc-50 dark:bg-white/3 border border-zinc-200/60 dark:border-white/[0.05] space-y-1">
                   <div className="flex items-center gap-2 text-xs font-bold text-zinc-800 dark:text-zinc-200">
                     <span className="size-5 rounded-full bg-[#713CF4] text-white text-[11px] flex items-center justify-center">
                       2
@@ -180,7 +180,7 @@ export function ConnectorsWorkspace() {
                   </p>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/60 dark:border-white/[0.05] space-y-1">
+                <div className="p-3.5 rounded-xl bg-zinc-50 dark:bg-white/3 border border-zinc-200/60 dark:border-white/[0.05] space-y-1">
                   <div className="flex items-center gap-2 text-xs font-bold text-zinc-800 dark:text-zinc-200">
                     <span className="size-5 rounded-full bg-[#713CF4] text-white text-[11px] flex items-center justify-center">
                       3

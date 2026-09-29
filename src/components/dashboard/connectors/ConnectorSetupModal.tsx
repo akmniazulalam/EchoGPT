@@ -302,7 +302,7 @@ export function ConnectorSetupModal({
           )}
 
           {/* Security Note */}
-          <div className="p-2 rounded-lg bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/60 dark:border-white/6 text-[10.5px] text-zinc-500 dark:text-zinc-400 flex items-center gap-2">
+          <div className="p-2 rounded-lg bg-zinc-50 dark:bg-white/3 border border-zinc-200/60 dark:border-white/6 text-[10.5px] text-zinc-500 dark:text-zinc-400 flex items-center gap-2">
             <ShieldAlert className="size-3.5 shrink-0 text-amber-500" />
             <p className="leading-tight">
               Only connect servers you trust — tools can execute actions on your behalf.
