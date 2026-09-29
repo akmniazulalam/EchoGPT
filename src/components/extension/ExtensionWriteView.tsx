@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Sparkles,
   Copy,
@@ -18,12 +18,23 @@ import {
 } from "./data";
 import { AI_MODELS } from "@/config/models";
 import { ModelLogo } from "@/components/ui/ModelLogo";
+import { ExtensionTab } from "./types";
 
 interface ExtensionWriteViewProps {
   onInsertToChat?: (text: string) => void;
+  onAddToHistory?: (
+    title: string,
+    toolType: ExtensionTab,
+    promptOrSummary: string,
+    resultText?: string,
+    modelId?: string
+  ) => void;
 }
 
-export function ExtensionWriteView({ onInsertToChat }: ExtensionWriteViewProps) {
+export function ExtensionWriteView({
+  onInsertToChat,
+  onAddToHistory,
+}: ExtensionWriteViewProps) {
   const [subTab, setSubTab] = useState<"compose" | "reply" | "grammar">("compose");
   const [topic, setTopic] = useState("");
   const [selectedFormat, setSelectedFormat] = useState("Automatic");
@@ -41,6 +52,33 @@ export function ExtensionWriteView({ onInsertToChat }: ExtensionWriteViewProps) 
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedOutput, setGeneratedOutput] = useState("");
   const [copied, setCopied] = useState(false);
+
+  const langDropdownRef = useRef<HTMLDivElement>(null);
+  const modelDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdowns on click outside & Escape
+  useEffect(() => {
+    const handleMouseDown = (e: MouseEvent) => {
+      if (langDropdownRef.current && !langDropdownRef.current.contains(e.target as Node)) {
+        setIsLangOpen(false);
+      }
+      if (modelDropdownRef.current && !modelDropdownRef.current.contains(e.target as Node)) {
+        setIsModelMenuOpen(false);
+      }
+    };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsLangOpen(false);
+        setIsModelMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   const currentLangObj =
     EXTENSION_LANGUAGES.find((l) => l.code === selectedLang) || EXTENSION_LANGUAGES[0];
@@ -73,6 +111,13 @@ export function ExtensionWriteView({ onInsertToChat }: ExtensionWriteViewProps) 
 
       setGeneratedOutput(result);
       setIsGenerating(false);
+      onAddToHistory?.(
+        `Write: ${topic.trim().slice(0, 24) || "Draft"}`,
+        "write",
+        topic.trim(),
+        result,
+        selectedModelId
+      );
     }, 600);
   };
 
@@ -201,7 +246,7 @@ export function ExtensionWriteView({ onInsertToChat }: ExtensionWriteViewProps) 
         )}
 
         {/* OUTPUT LANGUAGE Real Dropdown */}
-        <div className="space-y-1.5 relative">
+        <div ref={langDropdownRef} className="space-y-1.5 relative">
           <label className="text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
             Output Language
           </label>
@@ -321,7 +366,7 @@ export function ExtensionWriteView({ onInsertToChat }: ExtensionWriteViewProps) 
       {/* ── Bottom Action Bar (Model Selector + Generate Button) ── */}
       <div className="p-3 border-t border-zinc-200/80 dark:border-white/[0.08] bg-zinc-50/60 dark:bg-[#121019] flex items-center gap-2 relative">
         {/* Model Selector Pill */}
-        <div className="relative shrink-0">
+        <div ref={modelDropdownRef} className="relative shrink-0">
           <button
             type="button"
             onClick={() => setIsModelMenuOpen((v) => !v)}
