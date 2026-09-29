@@ -379,7 +379,7 @@ export async function POST(req: Request) {
           <div
             onMouseDown={() => setIsDragging(true)}
             onTouchStart={() => setIsDragging(true)}
-            className={`relative w-2.5 hover:w-3 bg-zinc-200/80 dark:bg-white/[0.04] hover:bg-[#713CF4]/40 dark:hover:bg-[#713CF4]/40 cursor-col-resize transition-all shrink-0 flex items-center justify-center select-none z-30 group ${
+            className={`relative w-2.5 hover:w-3 bg-zinc-200/80 dark:bg-white/4 hover:bg-[#713CF4]/40 dark:hover:bg-[#713CF4]/40 cursor-col-resize transition-all shrink-0 flex items-center justify-center select-none z-20 group ${
               isDragging ? "bg-[#713CF4] w-3" : ""
             }`}
             title="Drag to resize EchoGPT Side Panel (360px – 720px)">
