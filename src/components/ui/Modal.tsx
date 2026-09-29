@@ -85,7 +85,7 @@ export function Modal({
       <div
         ref={modalRef}
         onClick={(e) => e.stopPropagation()}
-        className={`relative w-full ${maxWidthStyles[maxWidth] || maxWidthStyles.md} max-h-[calc(100dvh-32px)] sm:max-h-[calc(100dvh-48px)] flex flex-col bg-white dark:bg-[#121118] border border-zinc-200 dark:border-white/[0.08] rounded-2xl sm:rounded-3xl shadow-2xl z-10 overflow-hidden animate-in zoom-in-95 fade-in duration-200 ${className}`}
+        className={`relative w-full ${maxWidthStyles[maxWidth] || maxWidthStyles.md} max-h-[calc(100dvh-32px)] sm:max-h-[calc(100dvh-48px)] flex flex-col bg-white dark:bg-[#121118] border border-zinc-200 dark:border-white/8 rounded-2xl sm:rounded-3xl shadow-2xl z-10 overflow-hidden animate-in zoom-in-95 fade-in duration-200 ${className}`}
       >
         {/* Header (rendered if title exists) */}
         {title ? (
@@ -120,7 +120,7 @@ export function Modal({
           <button
             type="button"
             onClick={onClose}
-            className="absolute top-4 right-4 z-30 size-8.5 rounded-xl text-zinc-400 hover:text-white dark:text-zinc-400 dark:hover:text-white bg-zinc-100/80 hover:bg-[#DC2626] dark:bg-white/[0.06] dark:hover:bg-[#F87171] border border-zinc-200/60 dark:border-white/[0.08] transition-all flex items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] cursor-pointer"
+            className="absolute top-4 right-4 z-30 size-8.5 rounded-xl text-zinc-400 hover:text-white dark:text-zinc-400 dark:hover:text-white bg-zinc-100/80 hover:bg-[#DC2626] dark:bg-white/[0.06] dark:hover:bg-[#F87171] border border-zinc-200/60 dark:border-white/8 transition-all flex items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] cursor-pointer"
             aria-label="Close modal"
           >
             <X className="size-4" />

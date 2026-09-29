@@ -45,7 +45,7 @@ const CAPABILITIES = [
 
 export function LandingCapabilityStrip() {
   return (
-    <section className="py-8 sm:py-10 border-y border-zinc-200/80 dark:border-white/[0.08] bg-zinc-50/50 dark:bg-white/[0.02]">
+    <section className="py-8 sm:py-10 border-y border-zinc-200/80 dark:border-white/8 bg-zinc-50/50 dark:bg-white/[0.02]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 sm:gap-8">
           {CAPABILITIES.map((cap) => {

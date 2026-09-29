@@ -134,7 +134,7 @@ export function LandingCoreFeatures() {
               <Link
                 key={feat.title}
                 href={feat.href}
-                className="group relative flex flex-col justify-between p-6 rounded-2xl border border-zinc-200/80 dark:border-white/[0.08] bg-white dark:bg-[#12111A] hover:border-[#713CF4]/40 hover:shadow-lg hover:shadow-[#713CF4]/5 hover:-translate-y-0.5 motion-reduce:hover:translate-y-0 transition-all duration-200"
+                className="group relative flex flex-col justify-between p-6 rounded-2xl border border-zinc-200/80 dark:border-white/8 bg-white dark:bg-[#12111A] hover:border-[#713CF4]/40 hover:shadow-lg hover:shadow-[#713CF4]/5 hover:-translate-y-0.5 motion-reduce:hover:translate-y-0 transition-all duration-200"
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between gap-2">

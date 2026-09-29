@@ -95,7 +95,7 @@ export function LandingHero() {
       <div className="relative mt-12 sm:mt-16 max-w-5xl mx-auto px-4 sm:px-6">
         <div className="relative rounded-2xl border border-zinc-200/90 dark:border-white/[0.1] bg-white dark:bg-[#111019] shadow-2xl shadow-[#713CF4]/10 overflow-hidden font-lexend">
           {/* Top Window Chrome */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-200/80 dark:border-white/[0.08] bg-zinc-50/80 dark:bg-white/[0.02]">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-200/80 dark:border-white/8 bg-zinc-50/80 dark:bg-white/[0.02]">
             <div className="flex items-center gap-2">
               <span className="size-2.5 rounded-full bg-rose-400/80" />
               <span className="size-2.5 rounded-full bg-amber-400/80" />
@@ -127,7 +127,7 @@ export function LandingHero() {
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-100 dark:bg-white/[0.04] text-[11px] font-semibold text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-white/[0.08]">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-100 dark:bg-white/[0.04] text-[11px] font-semibold text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-white/8">
                   <Cpu className="size-3 text-[#713CF4]" />
                   <span>Grok 3 PRO</span>
                 </span>
@@ -161,7 +161,7 @@ export function LandingHero() {
 
                 <div className="flex-1 space-y-2.5 max-w-2xl">
                   {/* Tool execution badge */}
-                  <div className="inline-flex items-center flex-wrap gap-2 px-2.5 py-1 rounded-lg bg-zinc-100 dark:bg-white/[0.04] border border-zinc-200/80 dark:border-white/[0.08] text-[11px] text-zinc-600 dark:text-zinc-300 text-balance">
+                  <div className="inline-flex items-center flex-wrap gap-2 px-2.5 py-1 rounded-lg bg-zinc-100 dark:bg-white/[0.04] border border-zinc-200/80 dark:border-white/8 text-[11px] text-zinc-600 dark:text-zinc-300 text-balance">
                     <Terminal className="size-3 text-[#713CF4]" />
                     <span className="font-mono font-medium">
                       Tool called: postgresql.query_latency(window=&quot;15m&quot;)

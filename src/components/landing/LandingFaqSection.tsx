@@ -65,7 +65,7 @@ export function LandingFaqSection() {
             return (
               <div
                 key={faq.q}
-                className="rounded-2xl border border-zinc-200/80 dark:border-white/[0.08] bg-white dark:bg-[#12111A] overflow-hidden transition-colors"
+                className="rounded-2xl border border-zinc-200/80 dark:border-white/8 bg-white dark:bg-[#12111A] overflow-hidden transition-colors"
               >
                 <button
                   type="button"

@@ -66,7 +66,7 @@ export function LandingTasksSection() {
           {filteredTasks.map((task) => (
             <div
               key={task.id}
-              className="p-5 rounded-2xl border border-zinc-200/80 dark:border-white/[0.08] bg-white dark:bg-[#12111A] hover:border-[#713CF4]/40 hover:shadow-md hover:shadow-[#713CF4]/5 hover:-translate-y-0.5 motion-reduce:hover:translate-y-0 transition-all duration-200 flex flex-col justify-between space-y-4 group"
+              className="p-5 rounded-2xl border border-zinc-200/80 dark:border-white/8 bg-white dark:bg-[#12111A] hover:border-[#713CF4]/40 hover:shadow-md hover:shadow-[#713CF4]/5 hover:-translate-y-0.5 motion-reduce:hover:translate-y-0 transition-all duration-200 flex flex-col justify-between space-y-4 group"
             >
               <div className="space-y-2.5">
                 <div className="flex items-center justify-between gap-2">
@@ -84,7 +84,7 @@ export function LandingTasksSection() {
                     </div>
                   </div>
 
-                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-white/[0.06] text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-white/[0.08]">
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-white/[0.06] text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-white/8">
                     {task.recommendedModel}
                   </span>
                 </div>

@@ -116,7 +116,7 @@ export function MockBrowserFrame() {
         {/* Chrome Tabs */}
         <div className="flex-1 flex items-center gap-1 overflow-x-auto custom-scrollbar h-full pt-1.5 max-w-2xl">
           {/* Active Tab */}
-          <div className="h-full px-3.5 flex items-center gap-2 rounded-t-xl bg-white dark:bg-[#1B1827] text-zinc-900 dark:text-zinc-100 text-xs font-medium shadow-xs border-t border-x border-zinc-300/60 dark:border-white/[0.08] min-w-[180px] max-w-[240px] truncate">
+          <div className="h-full px-3.5 flex items-center gap-2 rounded-t-xl bg-white dark:bg-[#1B1827] text-zinc-900 dark:text-zinc-100 text-xs font-medium shadow-xs border-t border-x border-zinc-300/60 dark:border-white/8 min-w-[180px] max-w-[240px] truncate">
             <span className="size-3.5 rounded-full bg-black dark:bg-white text-white dark:text-black font-extrabold text-[8px] flex items-center justify-center shrink-0">
               N
             </span>
@@ -149,7 +149,7 @@ export function MockBrowserFrame() {
       </div>
 
       {/* ── 2. CHROME OMNIBOX & EXTENSION CONTROLS BAR ── */}
-      <div className="h-11 px-3 flex items-center justify-between gap-3 bg-white dark:bg-[#15121F] border-b border-zinc-200 dark:border-white/[0.08] shrink-0">
+      <div className="h-11 px-3 flex items-center justify-between gap-3 bg-white dark:bg-[#15121F] border-b border-zinc-200 dark:border-white/8 shrink-0">
         {/* Navigation Arrows */}
         <div className="flex items-center gap-1 text-zinc-400">
           <button
@@ -234,7 +234,7 @@ export function MockBrowserFrame() {
             className={`relative size-8.5 rounded-xl flex items-center justify-center border transition-all cursor-pointer ${
               isPanelOpen
                 ? "bg-[#713CF4] border-[#713CF4] text-white shadow-md shadow-[#713CF4]/30"
-                : "bg-zinc-100 dark:bg-white/[0.06] border-zinc-200 dark:border-white/[0.08] text-zinc-600 dark:text-zinc-400"
+                : "bg-zinc-100 dark:bg-white/[0.06] border-zinc-200 dark:border-white/8 text-zinc-600 dark:text-zinc-400"
             }`}
             title={
               isPanelOpen
@@ -393,7 +393,7 @@ export async function POST(req: Request) {
         {isPanelOpen && (
           <div
             style={{ width: `${panelWidth}px` }}
-            className="h-full shrink-0 flex flex-col border-l border-zinc-200 dark:border-white/[0.08] shadow-2xl relative z-20 animate-in slide-in-from-right-4 duration-150">
+            className="h-full shrink-0 flex flex-col border-l border-zinc-200 dark:border-white/8 shadow-2xl relative z-20 animate-in slide-in-from-right-4 duration-150">
             <ExtensionSidePanel
               onClosePanel={() => setIsPanelOpen(false)}
               isPinned={isPinned}

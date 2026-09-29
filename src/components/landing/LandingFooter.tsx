@@ -90,7 +90,7 @@ export function LandingFooter() {
                     rel="noopener noreferrer"
                     aria-label={`EchoGPT on ${item.name}`}
                     title={`Follow EchoGPT on ${item.name}`}
-                    className={`size-8.5 rounded-xl flex items-center justify-center bg-white dark:bg-white/[0.04] border border-zinc-200/80 dark:border-white/[0.08] text-zinc-500 dark:text-zinc-400 shadow-2xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xs motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#07060B] ${item.hoverClass}`}
+                    className={`size-8.5 rounded-xl flex items-center justify-center bg-white dark:bg-white/[0.04] border border-zinc-200/80 dark:border-white/8 text-zinc-500 dark:text-zinc-400 shadow-2xs transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xs motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#713CF4] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#07060B] ${item.hoverClass}`}
                   >
                     <Icon className="size-4" />
                   </a>

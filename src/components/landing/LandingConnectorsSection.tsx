@@ -60,7 +60,7 @@ export function LandingConnectorsSection() {
         </div>
 
         {/* Simplified Architectural Flow: Chat ➔ Connector ➔ Tool ➔ Output */}
-        <div className="rounded-2xl border border-zinc-200/90 dark:border-white/[0.08] bg-white dark:bg-[#12111A] p-5 sm:p-7 shadow-sm space-y-6">
+        <div className="rounded-2xl border border-zinc-200/90 dark:border-white/8 bg-white dark:bg-[#12111A] p-5 sm:p-7 shadow-sm space-y-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
             <div>
               <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-100">
@@ -144,12 +144,12 @@ export function LandingConnectorsSection() {
           {SAMPLE_CONNECTORS.map((conn) => (
             <div
               key={conn.name}
-              className="p-5 rounded-2xl border border-zinc-200/80 dark:border-white/[0.08] bg-white dark:bg-[#12111A] flex flex-col justify-between space-y-4 hover:border-[#713CF4]/40 hover:shadow-lg hover:shadow-[#713CF4]/5 hover:-translate-y-0.5 motion-reduce:hover:translate-y-0 transition-all duration-200 group"
+              className="p-5 rounded-2xl border border-zinc-200/80 dark:border-white/8 bg-white dark:bg-[#12111A] flex flex-col justify-between space-y-4 hover:border-[#713CF4]/40 hover:shadow-lg hover:shadow-[#713CF4]/5 hover:-translate-y-0.5 motion-reduce:hover:translate-y-0 transition-all duration-200 group"
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2.5">
-                    <div className="size-8 rounded-xl bg-zinc-100 dark:bg-white/5 border border-zinc-200 dark:border-white/[0.08] flex items-center justify-center text-zinc-800 dark:text-zinc-200 group-hover:scale-105 group-hover:border-[#713CF4]/30 transition-all duration-200 motion-reduce:group-hover:scale-100">
+                    <div className="size-8 rounded-xl bg-zinc-100 dark:bg-white/5 border border-zinc-200 dark:border-white/8 flex items-center justify-center text-zinc-800 dark:text-zinc-200 group-hover:scale-105 group-hover:border-[#713CF4]/30 transition-all duration-200 motion-reduce:group-hover:scale-100">
                       <ConnectorServerIcon url={conn.url} name={conn.name} className="size-4.5" />
                     </div>
                     <div>

@@ -715,7 +715,7 @@ Implemented and verified ✓
 #### UpgradeProModal Redesign (Visual Reference Elevation)
 
 - **High-End 2-Column Responsive Architecture**:
-  - Modal container expanded to `5xl` with bespoke squircle backdrop blur and hair-line border accents (`dark:border-white/[0.08]`).
+  - Modal container expanded to `5xl` with bespoke squircle backdrop blur and hair-line border accents (`dark:border-white/8`).
   - Desktop (≥ 1024px): 58% Features column on left, 42% Billing/Pricing/Models column on right.
   - Mobile (< 1024px): Intelligently inverted stack order (`order-1` for Billing/Pricing/CTA, `order-2` for full Features breakdown) so mobile users immediately see plans and the Upgrade CTA on first paint without endless scrolling.
 - **Categorized Premium Features Engine**:
@@ -2181,7 +2181,7 @@ Unchanged: Hero secondary CTA (#preview anchor), Pricing Pro CTA (openUpgradeMod
 - Uses font-lexend, #713CF4 brand color, existing dark/light theme via useTheme()
 - Inputs custom-styled (no shared Input component exists)
 - focus:ring-2 focus:ring-[#713CF4]/50 focus states
-- Auth card: bg-white dark:bg-[#12111A] with border border-zinc-200/80 dark:border-white/[0.08]
+- Auth card: bg-white dark:bg-[#12111A] with border border-zinc-200/80 dark:border-white/8
 - Desktop: two-column with left branding panel (logo, tagline, 4 feature bullets, ambient gradient block)
 - Mobile: full-width form card only, no decorative branding panel
 

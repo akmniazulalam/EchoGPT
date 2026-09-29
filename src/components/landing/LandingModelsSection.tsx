@@ -87,7 +87,7 @@ export function LandingModelsSection() {
                 className={`p-4 rounded-2xl border transition-all duration-200 cursor-pointer flex flex-col justify-between space-y-3 group ${
                   isSelected
                     ? "bg-[#713CF4]/6 dark:bg-[#713CF4]/12 border-[#713CF4]/40 shadow-xs ring-1 ring-[#713CF4]/30"
-                    : "bg-white dark:bg-[#12111A] border-zinc-200/80 dark:border-white/[0.08] hover:border-[#713CF4]/30 dark:hover:border-[#713CF4]/30 hover:shadow-md hover:shadow-[#713CF4]/5 hover:-translate-y-0.5 motion-reduce:hover:translate-y-0 hover:bg-zinc-50/60 dark:hover:bg-white/[0.03]"
+                    : "bg-white dark:bg-[#12111A] border-zinc-200/80 dark:border-white/8 hover:border-[#713CF4]/30 dark:hover:border-[#713CF4]/30 hover:shadow-md hover:shadow-[#713CF4]/5 hover:-translate-y-0.5 motion-reduce:hover:translate-y-0 hover:bg-zinc-50/60 dark:hover:bg-white/[0.03]"
                 }`}
               >
                 <div className="space-y-2">

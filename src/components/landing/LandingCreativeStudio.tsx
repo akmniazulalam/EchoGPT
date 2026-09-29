@@ -39,7 +39,7 @@ export function LandingCreativeStudio() {
         {/* Dual Panels Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* ── PANEL 1: IMAGE STUDIO ── */}
-          <div className="rounded-2xl border border-zinc-200/90 dark:border-white/[0.08] bg-white dark:bg-[#12111A] p-5 sm:p-6 shadow-sm space-y-5 flex flex-col justify-between">
+          <div className="rounded-2xl border border-zinc-200/90 dark:border-white/8 bg-white dark:bg-[#12111A] p-5 sm:p-6 shadow-sm space-y-5 flex flex-col justify-between">
             <div className="space-y-4">
               {/* Studio Header */}
               <div className="flex items-center justify-between pb-3 border-b border-zinc-100 dark:border-white/[0.06]">
@@ -164,7 +164,7 @@ export function LandingCreativeStudio() {
           </div>
 
           {/* ── PANEL 2: VIDEO STUDIO ── */}
-          <div className="rounded-2xl border border-zinc-200/90 dark:border-white/[0.08] bg-white dark:bg-[#12111A] p-5 sm:p-6 shadow-sm space-y-5 flex flex-col justify-between">
+          <div className="rounded-2xl border border-zinc-200/90 dark:border-white/8 bg-white dark:bg-[#12111A] p-5 sm:p-6 shadow-sm space-y-5 flex flex-col justify-between">
             <div className="space-y-4">
               {/* Studio Header */}
               <div className="flex items-center justify-between pb-3 border-b border-zinc-100 dark:border-white/[0.06]">

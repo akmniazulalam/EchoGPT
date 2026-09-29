@@ -68,7 +68,7 @@ export function LandingWhySection() {
             return (
               <div
                 key={p.title}
-                className="p-6 rounded-2xl border border-zinc-200/80 dark:border-white/[0.08] bg-white dark:bg-[#12111A] space-y-3 hover:border-[#713CF4]/30 dark:hover:border-[#713CF4]/30 hover:shadow-md hover:shadow-[#713CF4]/5 hover:-translate-y-0.5 motion-reduce:hover:translate-y-0 transition-all duration-200 cursor-pointer group"
+                className="p-6 rounded-2xl border border-zinc-200/80 dark:border-white/8 bg-white dark:bg-[#12111A] space-y-3 hover:border-[#713CF4]/30 dark:hover:border-[#713CF4]/30 hover:shadow-md hover:shadow-[#713CF4]/5 hover:-translate-y-0.5 motion-reduce:hover:translate-y-0 transition-all duration-200 cursor-pointer group"
               >
                 <div className="size-10 rounded-xl bg-[#713CF4]/10 dark:bg-[#713CF4]/15 border border-[#713CF4]/20 flex items-center justify-center text-[#713CF4] dark:text-[#a78bfa] group-hover:scale-105 group-hover:border-[#713CF4]/40 transition-all duration-200 motion-reduce:group-hover:scale-100">
                   <Icon className="size-5" />

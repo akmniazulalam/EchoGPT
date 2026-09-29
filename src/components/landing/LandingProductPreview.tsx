@@ -85,7 +85,7 @@ export function LandingProductPreview() {
         {/* Preview Frame */}
         <div className="rounded-2xl border border-zinc-200/90 dark:border-white/[0.1] bg-white dark:bg-[#111019] shadow-xl overflow-hidden font-lexend">
           {/* Top Bar with Route Indicator */}
-          <div className="px-4 py-3 border-b border-zinc-200/80 dark:border-white/[0.08] bg-zinc-50/70 dark:bg-white/[0.02] flex items-center justify-between gap-4">
+          <div className="px-4 py-3 border-b border-zinc-200/80 dark:border-white/8 bg-zinc-50/70 dark:bg-white/[0.02] flex items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <span className="size-2.5 rounded-full bg-rose-400/80" />
               <span className="size-2.5 rounded-full bg-amber-400/80" />
@@ -130,7 +130,7 @@ export function LandingProductPreview() {
                     <div className="size-7 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-white/[0.1] flex items-center justify-center shrink-0">
                       <Cpu className="size-3.5 text-[#713CF4]" />
                     </div>
-                    <div className="flex-1 bg-white dark:bg-[#151320] border border-zinc-200 dark:border-white/[0.08] p-3.5 rounded-2xl rounded-tl-xs space-y-2 text-xs sm:text-sm text-zinc-800 dark:text-zinc-200 leading-relaxed">
+                    <div className="flex-1 bg-white dark:bg-[#151320] border border-zinc-200 dark:border-white/8 p-3.5 rounded-2xl rounded-tl-xs space-y-2 text-xs sm:text-sm text-zinc-800 dark:text-zinc-200 leading-relaxed">
                       <p>
                         A <strong>B-tree index</strong> on `created_at` will drop scan times
                         from <strong>2,400ms</strong> to under <strong>4ms</strong>.
@@ -144,7 +144,7 @@ export function LandingProductPreview() {
                 </div>
 
                 {/* Simulated Input */}
-                <div className="rounded-xl border border-zinc-200 dark:border-white/[0.08] bg-white dark:bg-[#151320] p-3 flex items-center justify-between text-xs text-zinc-400">
+                <div className="rounded-xl border border-zinc-200 dark:border-white/8 bg-white dark:bg-[#151320] p-3 flex items-center justify-between text-xs text-zinc-400">
                   <span>Ask a follow-up or switch models mid-chat…</span>
                   <div className="flex items-center gap-2">
                     <span className="px-2 py-0.5 rounded bg-zinc-100 dark:bg-white/[0.06] text-[10.5px] font-semibold text-zinc-600 dark:text-zinc-400">
@@ -211,7 +211,7 @@ export function LandingProductPreview() {
                 </div>
 
                 {/* Studio Canvas Preview */}
-                <div className="rounded-2xl border border-zinc-200 dark:border-white/[0.08] bg-white dark:bg-[#151320] p-4 shadow-sm space-y-3">
+                <div className="rounded-2xl border border-zinc-200 dark:border-white/8 bg-white dark:bg-[#151320] p-4 shadow-sm space-y-3">
                   <div className="h-44 rounded-xl bg-gradient-to-tr from-violet-600/20 via-pink-500/20 to-amber-400/20 border border-zinc-200/60 dark:border-white/[0.06] flex flex-col items-center justify-center text-center p-4 relative overflow-hidden">
                     <Sparkles className="size-8 text-[#713CF4] mb-2 animate-pulse" />
                     <p className="text-xs font-bold text-zinc-900 dark:text-zinc-100">
@@ -263,7 +263,7 @@ export function LandingProductPreview() {
                 </div>
 
                 {/* Video Preview Card */}
-                <div className="rounded-2xl border border-zinc-200 dark:border-white/[0.08] bg-white dark:bg-[#151320] p-4 shadow-sm space-y-3">
+                <div className="rounded-2xl border border-zinc-200 dark:border-white/8 bg-white dark:bg-[#151320] p-4 shadow-sm space-y-3">
                   <div className="h-44 rounded-xl bg-gradient-to-br from-indigo-900/30 via-sky-800/20 to-black/40 border border-zinc-200/60 dark:border-white/[0.06] flex flex-col items-center justify-center text-center p-4 relative overflow-hidden">
                     <Video className="size-8 text-sky-400 mb-2" />
                     <p className="text-xs font-bold text-zinc-900 dark:text-zinc-100">
@@ -307,7 +307,7 @@ export function LandingProductPreview() {
                   ].map((t) => (
                     <div
                       key={t.title}
-                      className="p-3.5 rounded-xl border border-zinc-200/80 dark:border-white/[0.08] bg-white dark:bg-[#151320] space-y-1.5 hover:border-[#713CF4]/30 transition-colors"
+                      className="p-3.5 rounded-xl border border-zinc-200/80 dark:border-white/8 bg-white dark:bg-[#151320] space-y-1.5 hover:border-[#713CF4]/30 transition-colors"
                     >
                       <div className="flex items-center justify-between">
                         <span className="text-[10px] font-semibold uppercase tracking-wider text-[#713CF4] dark:text-[#a78bfa]">
@@ -346,7 +346,7 @@ export function LandingProductPreview() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Model 1 */}
-                  <div className="p-3.5 rounded-xl border border-zinc-200/80 dark:border-white/[0.08] bg-white dark:bg-[#151320] space-y-2">
+                  <div className="p-3.5 rounded-xl border border-zinc-200/80 dark:border-white/8 bg-white dark:bg-[#151320] space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
                         <span className="size-2 rounded-full bg-emerald-500" />
@@ -363,7 +363,7 @@ export function LandingProductPreview() {
                   </div>
 
                   {/* Model 2 */}
-                  <div className="p-3.5 rounded-xl border border-zinc-200/80 dark:border-white/[0.08] bg-white dark:bg-[#151320] space-y-2">
+                  <div className="p-3.5 rounded-xl border border-zinc-200/80 dark:border-white/8 bg-white dark:bg-[#151320] space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
                         <span className="size-2 rounded-full bg-[#713CF4]" />
