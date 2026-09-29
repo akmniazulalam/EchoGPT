@@ -2189,3 +2189,48 @@ Unchanged: Hero secondary CTA (#preview anchor), Pricing Pro CTA (openUpgradeMod
 
 - npm run lint: 0 errors, 0 warnings
 - npm run build: exit 0, **22 static routes** (up from 19)
+
+---
+
+### Milestone 8 � EchoGPT Chrome Extension Companion Concept
+
+**Goal:** Deliver the final Chrome Extension portion of the assignment as a simulated, production-quality Chrome Side Panel at route /extension.
+
+#### Architecture & Simulated Browser Environment
+
+- **Dedicated Route:** /extension (src/app/extension/page.tsx).
+- **Simulated Browser Frame (MockBrowserFrame.tsx):**
+  - Realistic Chrome window controls and browser tabs ("Next.js 16 Documentation", "GitHub � echogpt/multi-ai-companion").
+  - Chrome Omnibox address bar with padlock and URL (https://nextjs.org/docs/app/building-your-application).
+  - Extensions bar featuring glowing EchoGPT extension icon (toggles side panel).
+  - Quick width preset switcher buttons (360px, 440px, 580px, 720px) for 1-click responsive evaluation.
+  - Active simulated webpage on the left with interactive action cards ("Read in Side Panel").
+  - Drag-to-resize divider on the left edge with cursor col-resize and grip icon (||), supporting horizontal resizing between 360px and 720px with local storage persistence.
+
+#### Side Panel Components (src/components/extension/)
+
+| Component | Responsibility |
+|---|---|
+| MockBrowserFrame.tsx | Simulated Chrome window, omnibox, webpage, resize handle & width presets |
+| ExtensionSidePanel.tsx | Main side panel orchestrator managing active tab, models, history, and message flow |
+| ExtensionHeader.tsx | Window bar ('EchoGPT - Multi-AI Chat Sidebar'), pin, popout, close, view title, '+ New Chat' pill, history toggle |
+| ExtensionNavRail.tsx | Vertical right rail with colorful icons: Chat, Write, Read, Translate, Image, Video, Compare, MCP, Upgrade, Settings, Profile Avatar |
+| ExtensionComposer.tsx | Interactive prompt composer: model selector dropdown, screenshot (scissors), file attach (paperclip), read page (book), mention bot (@), shortcut commands (/), live MCP connectors, web search toggle |
+| ExtensionChatView.tsx | Greeting, colorful quick actions (Write, Translate, Read, Image, Video, Compare, MCP), prompt suggestions, message thread, response copy/thumbs/retry |
+| ExtensionWriteView.tsx | Compose / Reply / Grammar tabs, topic, format pills (12 options), tone pills (9 options), length pills (4 options), 30+ languages dropdown, model selector, demo generation result |
+| ExtensionReadView.tsx | Active browser tab detection, read link input, read file dropzone, summary focus options (Summarize, Explain, Key points, Facts, Simplify), concise/detailed output |
+| ExtensionTranslateView.tsx | Dual language selectors (Source: Auto Detect + 30 langs, Target: English + 30 langs), swap button (?), translation result card with copy |
+| ExtensionImageView.tsx | Prompt textarea, aspect ratio (1:1, 3:2, 2:3, auto), count (1-4), image model selector (Flux Pro, DALL-E 3, Midjourney, SDXL), demo creations gallery |
+| ExtensionVideoView.tsx | Prompt textarea, duration (5s, 10s), aspect ratio (16:9, 9:16, 1:1), video model selector (Veo 3.1 fast, Sora, Runway, Kling), animated preview player |
+| ExtensionCompareView.tsx | 'Message 3 models' composer, 'EchoGPT + 3 models' pill, 'CHOOSE MODELS' scalable modal with 100+ data-driven models, multi-selection chips, stacked response cards |
+| ExtensionMcpView.tsx | Connected MCP servers (GitHub, Postgres, Slack, Linear), tools list, enable toggles, live tool test handshake, link to /connectors |
+| ExtensionSettingsView.tsx | Profile information, sign out, light/dark appearance toggle, default AI model & temperature slider, browser integration shortcuts, history clear |
+| ExtensionHistoryDrawer.tsx | Compact history drawer with search, recent conversation list, relative dates, load conversation into chat, delete conversation |
+
+#### Verification
+
+- 
+npm run lint: 0 errors, 0 warnings ?
+- 
+npm run build: exit 0, **23 static routes** compiled cleanly ?
+- Route /extension fully prerendered as static content.
