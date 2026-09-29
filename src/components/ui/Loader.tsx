@@ -1,8 +1,10 @@
+import Image from "next/image";
+
 const Loader = () => {
   return (
     <div className="w-screen h-screen flex flex-col gap-6 items-center justify-center bg-white dark:bg-[#090A0F]">
       <div className="w-35 h-35 animate-fade-in">
-        <img
+        <Image
           src="/logo.svg"
           alt="logo"
           width={140}
