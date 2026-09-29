@@ -132,7 +132,7 @@ export function ConnectorSetupModal({
     >
       <div className="flex flex-col h-full max-h-[calc(100dvh-32px)] font-lexend overflow-hidden">
         {/* Compact Modal Header (Always visible at top) */}
-        <div className="px-4 py-3 sm:px-5 sm:py-3.5 border-b border-zinc-100 dark:border-white/[0.08] bg-zinc-50/70 dark:bg-white/[0.02] shrink-0">
+        <div className="px-4 py-3 sm:px-5 sm:py-3.5 border-b border-zinc-100 dark:border-white/8 bg-zinc-50/70 dark:bg-white/[0.02] shrink-0">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 pr-6">
               <h3 className="text-sm sm:text-base font-bold text-zinc-900 dark:text-zinc-50 truncate">
@@ -144,7 +144,7 @@ export function ConnectorSetupModal({
             </div>
 
             {/* Quota Badge */}
-            <span className="text-[10px] sm:text-[10.5px] font-semibold px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-white/[0.06] text-zinc-600 dark:text-zinc-300 border border-zinc-200 dark:border-white/[0.08] shrink-0">
+            <span className="text-[10px] sm:text-[10.5px] font-semibold px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-white/[0.06] text-zinc-600 dark:text-zinc-300 border border-zinc-200 dark:border-white/8 shrink-0">
               {isProUser ? "Unlimited Pro" : `${connectedCount} of ${quotaLimit}`}
             </span>
           </div>
@@ -187,7 +187,7 @@ export function ConnectorSetupModal({
                   key={preset.id}
                   type="button"
                   onClick={() => applyPreset(preset)}
-                  className="shrink-0 sm:shrink-0 px-2 py-0.5 rounded-md text-[11px] font-medium bg-zinc-100 hover:bg-zinc-200/70 dark:bg-white/5 dark:hover:bg-white/10 text-zinc-700 dark:text-zinc-300 border border-zinc-200/80 dark:border-white/[0.08] transition-colors cursor-pointer"
+                  className="shrink-0 sm:shrink-0 px-2 py-0.5 rounded-md text-[11px] font-medium bg-zinc-100 hover:bg-zinc-200/70 dark:bg-white/5 dark:hover:bg-white/10 text-zinc-700 dark:text-zinc-300 border border-zinc-200/80 dark:border-white/8 transition-colors cursor-pointer"
                 >
                   {preset.name}
                 </button>
@@ -224,7 +224,7 @@ export function ConnectorSetupModal({
               className={`w-full text-xs sm:text-[13px] h-9 px-3 rounded-lg bg-white dark:bg-[#181524] border ${
                 errors.name
                   ? "border-rose-500 focus:border-rose-500"
-                  : "border-zinc-200 dark:border-white/[0.08] focus:border-[#713CF4]"
+                  : "border-zinc-200 dark:border-white/8 focus:border-[#713CF4]"
               } text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 outline-none focus:ring-1 focus:ring-[#713CF4] transition-all`}
             />
             {errors.name ? (
@@ -257,7 +257,7 @@ export function ConnectorSetupModal({
               className={`w-full text-xs sm:text-[13px] h-9 px-3 rounded-lg bg-white dark:bg-[#181524] border ${
                 errors.serverUrl
                   ? "border-rose-500 focus:border-rose-500"
-                  : "border-zinc-200 dark:border-white/[0.08] focus:border-[#713CF4]"
+                  : "border-zinc-200 dark:border-white/8 focus:border-[#713CF4]"
               } text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 outline-none focus:ring-1 focus:ring-[#713CF4] transition-all font-mono`}
             />
             {errors.serverUrl ? (
@@ -284,7 +284,7 @@ export function ConnectorSetupModal({
               onChange={(e) => setAuthHeader(e.target.value)}
               placeholder="Bearer your-token-here"
               disabled={isLoading}
-              className="w-full text-xs sm:text-[13px] h-9 px-3 rounded-lg bg-white dark:bg-[#181524] border border-zinc-200 dark:border-white/[0.08] text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 outline-none focus:border-[#713CF4] focus:ring-1 focus:ring-[#713CF4] transition-all font-mono"
+              className="w-full text-xs sm:text-[13px] h-9 px-3 rounded-lg bg-white dark:bg-[#181524] border border-zinc-200 dark:border-white/8 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 outline-none focus:border-[#713CF4] focus:ring-1 focus:ring-[#713CF4] transition-all font-mono"
             />
             <p className="text-[10px] text-zinc-400 dark:text-zinc-500 leading-tight">
               Only required if your MCP server requires authentication.
@@ -311,7 +311,7 @@ export function ConnectorSetupModal({
         </form>
 
         {/* Compact Modal Actions Footer (Always visible at bottom) */}
-        <div className="px-4 py-3 sm:px-5 sm:py-3.5 border-t border-zinc-100 dark:border-white/[0.08] bg-zinc-50/70 dark:bg-white/[0.02] flex items-center justify-end gap-2 shrink-0">
+        <div className="px-4 py-3 sm:px-5 sm:py-3.5 border-t border-zinc-100 dark:border-white/8 bg-zinc-50/70 dark:bg-white/[0.02] flex items-center justify-end gap-2 shrink-0">
           <Button
             type="button"
             variant="ghost"

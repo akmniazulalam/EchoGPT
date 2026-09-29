@@ -17,7 +17,7 @@ export function ConnectorEmptyState({
   return (
     <div className="flex flex-col items-center justify-center text-center py-16 sm:py-24 px-4 max-w-lg mx-auto">
       {/* Icon matching Screenshot 1 */}
-      <div className="size-16 sm:size-18 rounded-2xl flex items-center justify-center bg-zinc-100 dark:bg-[#181524] border border-zinc-200/80 dark:border-white/[0.08] text-zinc-400 dark:text-zinc-500 mb-5 shadow-xs">
+      <div className="size-16 sm:size-18 rounded-2xl flex items-center justify-center bg-zinc-100 dark:bg-[#181524] border border-zinc-200/80 dark:border-white/8 text-zinc-400 dark:text-zinc-500 mb-5 shadow-xs">
         <McpBranchIcon className="size-8" />
       </div>
 

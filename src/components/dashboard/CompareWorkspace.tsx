@@ -198,7 +198,7 @@ export function CompareWorkspace() {
               selectedModelIds={selectedModelIds}
               onToggleModel={handleToggleModel}
               triggerLabel={`${selectedModelIds.length} Models ▾`}
-              triggerClassName="h-8.5 text-xs font-semibold px-3 rounded-xl border-zinc-200/80 dark:border-white/[0.08]"
+              triggerClassName="h-8.5 text-xs font-semibold px-3 rounded-xl border-zinc-200/80 dark:border-white/8"
               headerTitle="Select Comparison Models"
               maxSelected={4}
               allowProSelection={true}

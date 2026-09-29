@@ -57,9 +57,9 @@ export function ConnectorDetailsModal({
     >
       <div className="flex flex-col max-h-[85vh]">
         {/* Header */}
-        <div className="p-5 sm:p-6 border-b border-zinc-100 dark:border-white/[0.08] bg-zinc-50/60 dark:bg-white/[0.02]">
+        <div className="p-5 sm:p-6 border-b border-zinc-100 dark:border-white/8 bg-zinc-50/60 dark:bg-white/[0.02]">
           <div className="flex items-start gap-4">
-            <div className="size-13 rounded-2xl flex items-center justify-center bg-white dark:bg-[#251E38] border border-zinc-200/80 dark:border-white/[0.08] text-zinc-900 dark:text-zinc-100 shadow-sm shrink-0">
+            <div className="size-13 rounded-2xl flex items-center justify-center bg-white dark:bg-[#251E38] border border-zinc-200/80 dark:border-white/8 text-zinc-900 dark:text-zinc-100 shadow-sm shrink-0">
               <ConnectorServerIcon
                 url={connector.serverUrl}
                 name={connector.name}
@@ -195,7 +195,7 @@ export function ConnectorDetailsModal({
         </div>
 
         {/* Footer Actions */}
-        <div className="p-4 sm:p-5 border-t border-zinc-100 dark:border-white/[0.08] bg-zinc-50/60 dark:bg-white/[0.02] flex items-center justify-between gap-3">
+        <div className="p-4 sm:p-5 border-t border-zinc-100 dark:border-white/8 bg-zinc-50/60 dark:bg-white/[0.02] flex items-center justify-between gap-3">
           <Button
             type="button"
             variant="ghost"

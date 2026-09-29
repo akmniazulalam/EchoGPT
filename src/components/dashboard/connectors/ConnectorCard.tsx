@@ -75,7 +75,7 @@ export function ConnectorCard({
   };
 
   return (
-    <div className="group relative flex flex-col justify-between p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#161322] border border-zinc-200/90 dark:border-white/[0.08] hover:border-[#713CF4]/60 dark:hover:border-[#713CF4]/60 shadow-xs hover:shadow-xl hover:shadow-[#713CF4]/5 transition-all duration-200">
+    <div className="group relative flex flex-col justify-between p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#161322] border border-zinc-200/90 dark:border-white/8 hover:border-[#713CF4]/60 dark:hover:border-[#713CF4]/60 shadow-xs hover:shadow-xl hover:shadow-[#713CF4]/5 transition-all duration-200">
       <div>
         {/* Top Header */}
         <div className="flex items-start justify-between gap-3 mb-3">
@@ -118,7 +118,7 @@ export function ConnectorCard({
                     className="fixed inset-0 z-30"
                     onClick={() => setIsMenuOpen(false)}
                   />
-                  <div className="absolute right-0 top-full mt-1 w-44 rounded-xl bg-white dark:bg-[#1C182A] border border-zinc-200 dark:border-white/[0.08] shadow-xl z-40 p-1.5 text-xs animate-in fade-in zoom-in-95 duration-100">
+                  <div className="absolute right-0 top-full mt-1 w-44 rounded-xl bg-white dark:bg-[#1C182A] border border-zinc-200 dark:border-white/8 shadow-xl z-40 p-1.5 text-xs animate-in fade-in zoom-in-95 duration-100">
                     <button
                       type="button"
                       onClick={() => {

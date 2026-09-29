@@ -194,7 +194,7 @@ export function ExtensionChatView({
                   </div>
                 ) : (
                   // AI Response Card
-                  <div className="max-w-[94%] rounded-2xl rounded-tl-xs bg-zinc-50 dark:bg-[#16131F] border border-zinc-200/80 dark:border-white/[0.08] p-3 text-xs sm:text-sm text-zinc-800 dark:text-zinc-200 leading-relaxed shadow-xs space-y-2">
+                  <div className="max-w-[94%] rounded-2xl rounded-tl-xs bg-zinc-50 dark:bg-[#16131F] border border-zinc-200/80 dark:border-white/8 p-3 text-xs sm:text-sm text-zinc-800 dark:text-zinc-200 leading-relaxed shadow-xs space-y-2">
                     {/* Header with Model Logo */}
                     <div className="flex items-center justify-between pb-1.5 border-b border-zinc-200/50 dark:border-white/4">
                       <div className="flex items-center gap-1.5">
@@ -274,7 +274,7 @@ export function ExtensionChatView({
       </div>
 
       {/* ── Fixed Prompt Composer at Bottom ── */}
-      <div className="p-3 border-t border-zinc-200/80 dark:border-white/[0.08] bg-zinc-50/50 dark:bg-[#121019]">
+      <div className="p-3 border-t border-zinc-200/80 dark:border-white/8 bg-zinc-50/50 dark:bg-[#121019]">
         <ExtensionComposer
           onSendMessage={onSendMessage}
           selectedModelId={selectedModelId}

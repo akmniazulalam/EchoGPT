@@ -149,7 +149,7 @@ export function ChatConnectorPopover({
         className="absolute bottom-full left-0 mb-2 w-80 lg:w-96 max-w-[calc(100vw-1.5rem)] max-h-[calc(100dvh-120px)] rounded-2xl bg-white dark:bg-[#15131F] border border-zinc-200 dark:border-white/[0.1] shadow-2xl z-50 overflow-hidden font-lexend animate-in fade-in zoom-in-95 duration-150 flex flex-col"
       >
         {/* Compact Header */}
-        <div className="px-3.5 py-3 sm:px-4 sm:py-3.5 border-b border-zinc-100 dark:border-white/[0.08] bg-zinc-50/70 dark:bg-white/[0.02] shrink-0">
+        <div className="px-3.5 py-3 sm:px-4 sm:py-3.5 border-b border-zinc-100 dark:border-white/8 bg-zinc-50/70 dark:bg-white/[0.02] shrink-0">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
               <h3 className="text-sm sm:text-base font-bold text-zinc-900 dark:text-zinc-50 leading-tight">
@@ -220,7 +220,7 @@ export function ChatConnectorPopover({
                         : "bg-white dark:bg-white/[0.02] border-zinc-200/70 dark:border-white/[0.06] hover:border-zinc-300 dark:hover:border-white/[0.12] hover:bg-zinc-50/80 dark:hover:bg-white/[0.04]"
                     }`}
                   >
-                    <div className="size-6.5 rounded-lg flex items-center justify-center bg-white dark:bg-[#251E38] border border-zinc-200/80 dark:border-white/[0.08] text-zinc-800 dark:text-zinc-200 shrink-0">
+                    <div className="size-6.5 rounded-lg flex items-center justify-center bg-white dark:bg-[#251E38] border border-zinc-200/80 dark:border-white/8 text-zinc-800 dark:text-zinc-200 shrink-0">
                       <ConnectorServerIcon
                         url={conn.serverUrl}
                         name={conn.name}
@@ -255,7 +255,7 @@ export function ChatConnectorPopover({
         </div>
 
         {/* Compact Footer */}
-        <div className="px-3.5 py-2.5 sm:px-4 sm:py-3 border-t border-zinc-100 dark:border-white/[0.08] bg-zinc-50/70 dark:bg-white/[0.02] flex items-center justify-between gap-3 shrink-0">
+        <div className="px-3.5 py-2.5 sm:px-4 sm:py-3 border-t border-zinc-100 dark:border-white/8 bg-zinc-50/70 dark:bg-white/[0.02] flex items-center justify-between gap-3 shrink-0">
           <button
             type="button"
             onClick={() => {

@@ -235,7 +235,7 @@ export function ExtensionComposer({
           {isModelDropdownOpen && (
             <div className="absolute left-0 bottom-full mb-1.5 w-64 max-h-72 rounded-xl bg-white dark:bg-[#1B1826] border border-zinc-200 dark:border-white/[0.1] shadow-xl z-50 overflow-hidden flex flex-col font-lexend animate-in fade-in zoom-in-95 duration-100">
               <div className="p-2 border-b border-zinc-100 dark:border-white/[0.06] bg-zinc-50 dark:bg-white/[0.02]">
-                <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white dark:bg-black/20 border border-zinc-200/80 dark:border-white/[0.08]">
+                <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white dark:bg-black/20 border border-zinc-200/80 dark:border-white/8">
                   <Search className="size-3.5 text-zinc-400" />
                   <input
                     type="text"

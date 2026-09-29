@@ -192,7 +192,7 @@ export function ExtensionCompareView({ onAddToHistory }: ExtensionCompareViewPro
               {selectedModels.map((m) => (
                 <span
                   key={m.id}
-                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-zinc-100 dark:bg-white/5 border border-zinc-200/80 dark:border-white/[0.08] text-xs font-medium text-zinc-700 dark:text-zinc-300"
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-zinc-100 dark:bg-white/5 border border-zinc-200/80 dark:border-white/8 text-xs font-medium text-zinc-700 dark:text-zinc-300"
                 >
                   <ModelLogo modelId={m.id} provider={m.provider} size="xs" />
                   <span>{m.name}</span>
@@ -206,7 +206,7 @@ export function ExtensionCompareView({ onAddToHistory }: ExtensionCompareViewPro
             {comparisonResults.map((res) => (
               <div
                 key={res.modelId}
-                className="p-3.5 rounded-2xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/80 dark:border-white/[0.08] space-y-2.5 shadow-xs"
+                className="p-3.5 rounded-2xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/80 dark:border-white/8 space-y-2.5 shadow-xs"
               >
                 {/* Model Header */}
                 <div className="flex items-center justify-between pb-2 border-b border-zinc-200/60 dark:border-white/4">
@@ -253,7 +253,7 @@ export function ExtensionCompareView({ onAddToHistory }: ExtensionCompareViewPro
         )}
 
         {isComparing && (
-          <div className="p-4 rounded-2xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/80 dark:border-white/[0.08] flex items-center justify-center gap-2 text-xs text-zinc-500 animate-pulse">
+          <div className="p-4 rounded-2xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/80 dark:border-white/8 flex items-center justify-center gap-2 text-xs text-zinc-500 animate-pulse">
             <Sparkles className="size-4 text-[#713CF4] animate-spin" />
             <span>Querying {selectedModelIds.length} models simultaneously...</span>
           </div>
@@ -261,7 +261,7 @@ export function ExtensionCompareView({ onAddToHistory }: ExtensionCompareViewPro
       </div>
 
       {/* ── Bottom Input & Model Selector Control (Section 11) ── */}
-      <div className="p-3 border-t border-zinc-200/80 dark:border-white/[0.08] bg-zinc-50/60 dark:bg-[#121019] space-y-2">
+      <div className="p-3 border-t border-zinc-200/80 dark:border-white/8 bg-zinc-50/60 dark:bg-[#121019] space-y-2">
         {/* Prompt Input Row */}
         <div className="flex items-center gap-2">
           <input
@@ -288,7 +288,7 @@ export function ExtensionCompareView({ onAddToHistory }: ExtensionCompareViewPro
         <button
           type="button"
           onClick={handleOpenChooseModels}
-          className="w-full flex items-center justify-between px-3 py-1.5 rounded-xl bg-white dark:bg-white/[0.04] border border-zinc-200/80 dark:border-white/[0.08] hover:border-zinc-300 dark:hover:border-white/[0.15] transition-colors cursor-pointer text-xs"
+          className="w-full flex items-center justify-between px-3 py-1.5 rounded-xl bg-white dark:bg-white/[0.04] border border-zinc-200/80 dark:border-white/8 hover:border-zinc-300 dark:hover:border-white/[0.15] transition-colors cursor-pointer text-xs"
         >
           <div className="flex items-center gap-2 min-w-0">
             <span className="font-semibold text-zinc-800 dark:text-zinc-200">
@@ -361,7 +361,7 @@ export function ExtensionCompareView({ onAddToHistory }: ExtensionCompareViewPro
 
             {/* Search Bar & Category Filters */}
             <div className="p-2.5 border-b border-zinc-100 dark:border-white/[0.06] space-y-2">
-              <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-zinc-100 dark:bg-white/5 border border-zinc-200/80 dark:border-white/[0.08]">
+              <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-zinc-100 dark:bg-white/5 border border-zinc-200/80 dark:border-white/8">
                 <Search className="size-3.5 text-zinc-400 shrink-0" />
                 <input
                   type="text"

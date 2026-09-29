@@ -128,7 +128,7 @@ export function ConnectorsWorkspace() {
         <div className="max-w-6xl mx-auto space-y-6 pb-16">
           {/* How MCP Connectors Work (Educational Mental Model Banner) */}
           {showHowItWorks && (
-            <div className="relative p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#161322] border border-zinc-200/90 dark:border-white/[0.08] shadow-xs space-y-4">
+            <div className="relative p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#161322] border border-zinc-200/90 dark:border-white/8 shadow-xs space-y-4">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-2.5">
                   <div className="size-8 rounded-lg flex items-center justify-center bg-[#713CF4]/10 text-[#713CF4] dark:text-[#a78bfa]">
@@ -214,7 +214,7 @@ export function ConnectorsWorkspace() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search connectors, servers, or tools..."
-                    className="w-full text-xs sm:text-sm pl-10 pr-9 py-2.5 rounded-xl bg-white dark:bg-[#161322] border border-zinc-200 dark:border-white/[0.08] text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 shadow-xs focus:outline-none focus:ring-1 focus:ring-[#713CF4]"
+                    className="w-full text-xs sm:text-sm pl-10 pr-9 py-2.5 rounded-xl bg-white dark:bg-[#161322] border border-zinc-200 dark:border-white/8 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 shadow-xs focus:outline-none focus:ring-1 focus:ring-[#713CF4]"
                   />
                   {searchQuery && (
                     <button

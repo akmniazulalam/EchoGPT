@@ -121,7 +121,7 @@ export function AuthPageLayout({
 
           {/* ── Right: Form card ── */}
           <div className="w-full lg:max-w-sm xl:max-w-md">
-            <div className="bg-white dark:bg-[#12111A] rounded-2xl border border-zinc-200/80 dark:border-white/[0.08] shadow-xl shadow-zinc-200/50 dark:shadow-none p-7 sm:p-8 space-y-6">
+            <div className="bg-white dark:bg-[#12111A] rounded-2xl border border-zinc-200/80 dark:border-white/8 shadow-xl shadow-zinc-200/50 dark:shadow-none p-7 sm:p-8 space-y-6">
               {/* Card heading */}
               <div className="space-y-1">
                 <h2 className="text-xl font-extrabold text-zinc-900 dark:text-zinc-50 tracking-tight">
