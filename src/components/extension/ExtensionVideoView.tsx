@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import {
   Sparkles,
@@ -11,8 +11,19 @@ import {
   RotateCw,
 } from "lucide-react";
 import { VIDEO_MODELS } from "@/config/models";
+import { ExtensionTab } from "./types";
 
-export function ExtensionVideoView() {
+interface ExtensionVideoViewProps {
+  onAddToHistory?: (
+    title: string,
+    toolType: ExtensionTab,
+    promptOrSummary: string,
+    resultText?: string,
+    modelId?: string
+  ) => void;
+}
+
+export function ExtensionVideoView({ onAddToHistory }: ExtensionVideoViewProps) {
   const [prompt, setPrompt] = useState("");
   const [duration, setDuration] = useState("5s");
   const [aspectRatio, setAspectRatio] = useState("16:9");
@@ -22,6 +33,27 @@ export function ExtensionVideoView() {
   const [videoGenerated, setVideoGenerated] = useState(false);
 
   const selectedModel = VIDEO_MODELS.find((m) => m.id === selectedModelId) || VIDEO_MODELS[0];
+  const modelDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close model dropdown on outside click & Escape
+  useEffect(() => {
+    const handleMouseDown = (e: MouseEvent) => {
+      if (modelDropdownRef.current && !modelDropdownRef.current.contains(e.target as Node)) {
+        setIsModelOpen(false);
+      }
+    };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsModelOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   const handleGenerate = () => {
     if (!prompt.trim()) return;
@@ -29,6 +61,13 @@ export function ExtensionVideoView() {
     setTimeout(() => {
       setVideoGenerated(true);
       setIsGenerating(false);
+      onAddToHistory?.(
+        `Video: ${prompt.trim().slice(0, 24)}`,
+        "video",
+        `[Video Prompt]: ${prompt.trim()} (${duration}, ${aspectRatio})`,
+        `Generated 1080p cinematic video clip with ${selectedModel.name}`,
+        selectedModelId
+      );
     }, 1400);
   };
 
@@ -156,7 +195,7 @@ export function ExtensionVideoView() {
       <div className="p-3 border-t border-zinc-200/80 dark:border-white/[0.08] bg-zinc-50/60 dark:bg-[#121019] space-y-1.5">
         <div className="flex items-center gap-2 relative">
           {/* Model Selector Dropdown */}
-          <div className="relative shrink-0">
+          <div ref={modelDropdownRef} className="relative shrink-0">
             <button
               type="button"
               onClick={() => setIsModelOpen((v) => !v)}
