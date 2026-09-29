@@ -109,7 +109,7 @@ export function LandingProductPreview() {
             {/* 1. CHAT TAB */}
             {activeTab === "chat" && (
               <div className="space-y-4 max-w-3xl mx-auto w-full">
-                <div className="flex items-center justify-between pb-3 border-b border-zinc-200/60 dark:border-white/[0.06]">
+                <div className="flex items-center justify-between pb-3 border-b border-zinc-200/60 dark:border-white/6">
                   <div className="flex items-center gap-2">
                     <span className="size-2 rounded-full bg-emerald-500" />
                     <span className="text-xs font-bold text-zinc-900 dark:text-zinc-100">
@@ -136,7 +136,7 @@ export function LandingProductPreview() {
                         from <strong>2,400ms</strong> to under <strong>4ms</strong>.
                         Write latency increases slightly by ~3.2% per batch insert.
                       </p>
-                      <div className="p-2 rounded-lg bg-zinc-50 dark:bg-black/40 border border-zinc-200/60 dark:border-white/[0.06] font-mono text-[11px] text-zinc-700 dark:text-zinc-300">
+                      <div className="p-2 rounded-lg bg-zinc-50 dark:bg-black/40 border border-zinc-200/60 dark:border-white/6 font-mono text-[11px] text-zinc-700 dark:text-zinc-300">
                         <code>CREATE INDEX CONCURRENTLY idx_orders_created ON orders (created_at DESC);</code>
                       </div>
                     </div>
@@ -181,7 +181,7 @@ export function LandingProductPreview() {
                             className={`px-2 py-0.5 rounded-md text-[11px] font-medium border ${
                               i === 1
                                 ? "bg-[#713CF4]/10 text-[#713CF4] border-[#713CF4]/30"
-                                : "bg-zinc-100 dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-white/[0.06]"
+                                : "bg-zinc-100 dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-white/6"
                             }`}
                           >
                             {r}
@@ -199,7 +199,7 @@ export function LandingProductPreview() {
                             className={`px-2 py-0.5 rounded-md text-[11px] font-medium border ${
                               i === 0
                                 ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
-                                : "bg-zinc-100 dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-white/[0.06]"
+                                : "bg-zinc-100 dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-white/6"
                             }`}
                           >
                             {s}
@@ -212,7 +212,7 @@ export function LandingProductPreview() {
 
                 {/* Studio Canvas Preview */}
                 <div className="rounded-2xl border border-zinc-200 dark:border-white/8 bg-white dark:bg-[#151320] p-4 shadow-sm space-y-3">
-                  <div className="h-44 rounded-xl bg-gradient-to-tr from-violet-600/20 via-pink-500/20 to-amber-400/20 border border-zinc-200/60 dark:border-white/[0.06] flex flex-col items-center justify-center text-center p-4 relative overflow-hidden">
+                  <div className="h-44 rounded-xl bg-gradient-to-tr from-violet-600/20 via-pink-500/20 to-amber-400/20 border border-zinc-200/60 dark:border-white/6 flex flex-col items-center justify-center text-center p-4 relative overflow-hidden">
                     <Sparkles className="size-8 text-[#713CF4] mb-2 animate-pulse" />
                     <p className="text-xs font-bold text-zinc-900 dark:text-zinc-100">
                       High-Precision 4K Asset Rendered
@@ -264,7 +264,7 @@ export function LandingProductPreview() {
 
                 {/* Video Preview Card */}
                 <div className="rounded-2xl border border-zinc-200 dark:border-white/8 bg-white dark:bg-[#151320] p-4 shadow-sm space-y-3">
-                  <div className="h-44 rounded-xl bg-gradient-to-br from-indigo-900/30 via-sky-800/20 to-black/40 border border-zinc-200/60 dark:border-white/[0.06] flex flex-col items-center justify-center text-center p-4 relative overflow-hidden">
+                  <div className="h-44 rounded-xl bg-gradient-to-br from-indigo-900/30 via-sky-800/20 to-black/40 border border-zinc-200/60 dark:border-white/6 flex flex-col items-center justify-center text-center p-4 relative overflow-hidden">
                     <Video className="size-8 text-sky-400 mb-2" />
                     <p className="text-xs font-bold text-zinc-900 dark:text-zinc-100">
                       Coherent Temporal Physics Verified
@@ -284,7 +284,7 @@ export function LandingProductPreview() {
             {/* 4. AI TASKS TAB */}
             {activeTab === "tasks" && (
               <div className="space-y-4 max-w-4xl mx-auto w-full">
-                <div className="flex items-center justify-between pb-2 border-b border-zinc-200/60 dark:border-white/[0.06]">
+                <div className="flex items-center justify-between pb-2 border-b border-zinc-200/60 dark:border-white/6">
                   <div>
                     <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
                       Structured Productivity Workflows
@@ -332,7 +332,7 @@ export function LandingProductPreview() {
             {/* 5. COMPARE TAB */}
             {activeTab === "compare" && (
               <div className="space-y-4 max-w-4xl mx-auto w-full">
-                <div className="flex items-center justify-between pb-2 border-b border-zinc-200/60 dark:border-white/[0.06]">
+                <div className="flex items-center justify-between pb-2 border-b border-zinc-200/60 dark:border-white/6">
                   <div>
                     <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
                       Side-by-Side Model Benchmark

@@ -42,7 +42,7 @@ export function LandingCreativeStudio() {
           <div className="rounded-2xl border border-zinc-200/90 dark:border-white/8 bg-white dark:bg-[#12111A] p-5 sm:p-6 shadow-sm space-y-5 flex flex-col justify-between">
             <div className="space-y-4">
               {/* Studio Header */}
-              <div className="flex items-center justify-between pb-3 border-b border-zinc-100 dark:border-white/[0.06]">
+              <div className="flex items-center justify-between pb-3 border-b border-zinc-100 dark:border-white/6">
                 <div className="flex items-center gap-2.5">
                   <div className="size-8 rounded-xl bg-pink-500/10 text-pink-600 dark:text-pink-400 flex items-center justify-center border border-pink-500/20">
                     <Sparkles className="size-4" />
@@ -73,7 +73,7 @@ export function LandingCreativeStudio() {
                       className={`p-2 rounded-xl text-left border transition-all cursor-pointer ${
                         selectedImageModel === m.id
                           ? "bg-[#713CF4]/10 dark:bg-[#713CF4]/15 border-[#713CF4]/40 text-[#713CF4] dark:text-[#a78bfa]"
-                          : "bg-zinc-50 dark:bg-white/[0.03] border-zinc-200/80 dark:border-white/[0.06] text-zinc-700 dark:text-zinc-300"
+                          : "bg-zinc-50 dark:bg-white/[0.03] border-zinc-200/80 dark:border-white/6 text-zinc-700 dark:text-zinc-300"
                       }`}
                     >
                       <p className="text-xs font-bold truncate leading-tight">{m.name}</p>
@@ -100,7 +100,7 @@ export function LandingCreativeStudio() {
                         className={`px-2 py-0.5 rounded-md text-[11px] font-medium border transition-colors cursor-pointer ${
                           selectedImageRatio === ratio
                             ? "bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 border-transparent"
-                            : "bg-zinc-100 dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-white/[0.06]"
+                            : "bg-zinc-100 dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-white/6"
                         }`}
                       >
                         {ratio}
@@ -122,7 +122,7 @@ export function LandingCreativeStudio() {
                         className={`px-2 py-0.5 rounded-md text-[11px] font-medium border transition-colors cursor-pointer ${
                           selectedImageStyle === style
                             ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
-                            : "bg-zinc-100 dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-white/[0.06]"
+                            : "bg-zinc-100 dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-white/6"
                         }`}
                       >
                         {style}
@@ -133,7 +133,7 @@ export function LandingCreativeStudio() {
               </div>
 
               {/* Render Canvas Preview */}
-              <div className="rounded-xl border border-zinc-200/80 dark:border-white/[0.06] bg-zinc-900 text-white p-4 space-y-3 relative overflow-hidden">
+              <div className="rounded-xl border border-zinc-200/80 dark:border-white/6 bg-zinc-900 text-white p-4 space-y-3 relative overflow-hidden">
                 <div className="h-36 rounded-lg bg-gradient-to-tr from-violet-900/60 via-purple-800/40 to-pink-900/40 flex flex-col justify-end p-3 relative">
                   <div className="absolute top-2.5 right-2.5 flex items-center gap-1.5">
                     <span className="text-[10px] px-2 py-0.5 rounded bg-black/60 text-white/90 backdrop-blur-xs font-mono">
@@ -151,7 +151,7 @@ export function LandingCreativeStudio() {
             </div>
 
             {/* Panel Footer */}
-            <div className="pt-3 border-t border-zinc-100 dark:border-white/[0.06] flex items-center justify-between">
+            <div className="pt-3 border-t border-zinc-100 dark:border-white/6 flex items-center justify-between">
               <span className="text-xs text-zinc-500">Sub-second generation ready</span>
               <Link
                 href="/image-studio"
@@ -167,7 +167,7 @@ export function LandingCreativeStudio() {
           <div className="rounded-2xl border border-zinc-200/90 dark:border-white/8 bg-white dark:bg-[#12111A] p-5 sm:p-6 shadow-sm space-y-5 flex flex-col justify-between">
             <div className="space-y-4">
               {/* Studio Header */}
-              <div className="flex items-center justify-between pb-3 border-b border-zinc-100 dark:border-white/[0.06]">
+              <div className="flex items-center justify-between pb-3 border-b border-zinc-100 dark:border-white/6">
                 <div className="flex items-center gap-2.5">
                   <div className="size-8 rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-400 flex items-center justify-center border border-sky-500/20">
                     <Video className="size-4" />
@@ -198,7 +198,7 @@ export function LandingCreativeStudio() {
                       className={`p-2 rounded-xl text-left border transition-all cursor-pointer ${
                         selectedVideoModel === m.id
                           ? "bg-sky-500/10 dark:bg-sky-500/15 border-sky-500/40 text-sky-600 dark:text-sky-400"
-                          : "bg-zinc-50 dark:bg-white/[0.03] border-zinc-200/80 dark:border-white/[0.06] text-zinc-700 dark:text-zinc-300"
+                          : "bg-zinc-50 dark:bg-white/[0.03] border-zinc-200/80 dark:border-white/6 text-zinc-700 dark:text-zinc-300"
                       }`}
                     >
                       <p className="text-xs font-bold truncate leading-tight">{m.name}</p>
@@ -225,7 +225,7 @@ export function LandingCreativeStudio() {
                         className={`px-3 py-0.5 rounded-md text-[11px] font-medium border transition-colors cursor-pointer ${
                           selectedVideoDuration === dur
                             ? "bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 border-transparent"
-                            : "bg-zinc-100 dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-white/[0.06]"
+                            : "bg-zinc-100 dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-white/6"
                         }`}
                       >
                         {dur} Clip
@@ -245,7 +245,7 @@ export function LandingCreativeStudio() {
                         className={`px-2 py-0.5 rounded-md text-[11px] font-medium border ${
                           idx === 0
                             ? "bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/30"
-                            : "bg-zinc-100 dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-white/[0.06]"
+                            : "bg-zinc-100 dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-white/6"
                         }`}
                       >
                         {cam}
@@ -256,7 +256,7 @@ export function LandingCreativeStudio() {
               </div>
 
               {/* Video Timeline Preview */}
-              <div className="rounded-xl border border-zinc-200/80 dark:border-white/[0.06] bg-zinc-900 text-white p-4 space-y-3 relative overflow-hidden">
+              <div className="rounded-xl border border-zinc-200/80 dark:border-white/6 bg-zinc-900 text-white p-4 space-y-3 relative overflow-hidden">
                 <div className="h-36 rounded-lg bg-gradient-to-br from-indigo-950/80 via-sky-950/50 to-black flex flex-col justify-between p-3 relative">
                   <div className="flex items-center justify-between">
                     <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded bg-black/60 text-white/90 backdrop-blur-xs font-mono">
@@ -281,7 +281,7 @@ export function LandingCreativeStudio() {
             </div>
 
             {/* Panel Footer */}
-            <div className="pt-3 border-t border-zinc-100 dark:border-white/[0.06] flex items-center justify-between">
+            <div className="pt-3 border-t border-zinc-100 dark:border-white/6 flex items-center justify-between">
               <span className="text-xs text-zinc-500">Veo 3.1 default included free</span>
               <Link
                 href="/video-studio"

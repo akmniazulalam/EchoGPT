@@ -107,7 +107,7 @@ export function LandingPricingSection() {
                 <span className="text-xs text-zinc-400">/ month</span>
               </div>
 
-              <ul className="space-y-2.5 pt-2 border-t border-zinc-100 dark:border-white/[0.06] text-xs sm:text-[13px] text-zinc-600 dark:text-zinc-300">
+              <ul className="space-y-2.5 pt-2 border-t border-zinc-100 dark:border-white/6 text-xs sm:text-[13px] text-zinc-600 dark:text-zinc-300">
                 <li className="flex items-start gap-2.5 font-medium text-zinc-900 dark:text-zinc-100">
                   <Check className="size-4 text-[#713CF4] shrink-0 mt-0.5" />
                   <span>Every Frontier Model (GPT-5, Claude 3.7, Grok 3, o3)</span>

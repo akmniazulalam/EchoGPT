@@ -103,7 +103,7 @@ export function LandingTasksSection() {
                       {task.requirements.map((req, i) => (
                         <span
                           key={i}
-                          className="px-2 py-0.5 rounded-md bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/60 dark:border-white/[0.06] text-[10.5px] text-zinc-600 dark:text-zinc-400"
+                          className="px-2 py-0.5 rounded-md bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/60 dark:border-white/6 text-[10.5px] text-zinc-600 dark:text-zinc-400"
                         >
                           {req}
                         </span>
@@ -113,7 +113,7 @@ export function LandingTasksSection() {
                 )}
               </div>
 
-              <div className="pt-3 border-t border-zinc-100 dark:border-white/[0.06] flex items-center justify-between">
+              <div className="pt-3 border-t border-zinc-100 dark:border-white/6 flex items-center justify-between">
                 <span className="text-[11px] text-zinc-400">
                   {task.fields?.length || 3} Form parameters
                 </span>

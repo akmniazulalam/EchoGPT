@@ -116,7 +116,7 @@ export function LandingHero() {
           {/* Internal Workspace Simulation */}
           <div className="p-4 sm:p-6 lg:p-7 space-y-5 bg-[#FAFAFC] dark:bg-[#0B0A11]">
             {/* Top Workspace Header */}
-            <div className="flex items-center justify-between gap-3 pb-3 border-b border-zinc-200/60 dark:border-white/[0.06]">
+            <div className="flex items-center justify-between gap-3 pb-3 border-b border-zinc-200/60 dark:border-white/6">
               <div className="flex items-center gap-2">
                 <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
                   WORKSPACE / CHAT /
@@ -179,7 +179,7 @@ export function LandingHero() {
                       <strong>14.2ms</strong> across 42,000 requests. Here is the
                       decoupled event architecture using Kafka and Redis Cache:
                     </p>
-                    <div className="p-2.5 rounded-xl bg-zinc-50 dark:bg-black/40 border border-zinc-200/60 dark:border-white/[0.06] font-mono text-[11px] text-zinc-700 dark:text-zinc-300">
+                    <div className="p-2.5 rounded-xl bg-zinc-50 dark:bg-black/40 border border-zinc-200/60 dark:border-white/6 font-mono text-[11px] text-zinc-700 dark:text-zinc-300">
                       <code>Client ➔ API Gateway ➔ Event Stream ➔ Redis ➔ Postgres</code>
                     </div>
                   </div>
@@ -189,7 +189,7 @@ export function LandingHero() {
 
             {/* Bottom Composer Preview */}
             <div className="rounded-xl border border-zinc-200 dark:border-white/[0.1] bg-white dark:bg-[#151320] p-3 shadow-xs space-y-2">
-              <div className="flex items-center justify-between text-xs text-zinc-400 dark:text-zinc-500 border-b border-zinc-100 dark:border-white/[0.06] pb-2">
+              <div className="flex items-center justify-between text-xs text-zinc-400 dark:text-zinc-500 border-b border-zinc-100 dark:border-white/6 pb-2">
                 <div className="flex items-center gap-2">
                   <span className="font-semibold text-zinc-800 dark:text-zinc-200">
                     Grok 3 PRO

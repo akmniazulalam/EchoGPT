@@ -161,7 +161,7 @@ export function LandingCoreFeatures() {
                   </div>
                 </div>
 
-                <div className="pt-4 mt-4 border-t border-zinc-100 dark:border-white/[0.06] flex items-center justify-between text-xs font-semibold text-[#713CF4] dark:text-[#a78bfa]">
+                <div className="pt-4 mt-4 border-t border-zinc-100 dark:border-white/6 flex items-center justify-between text-xs font-semibold text-[#713CF4] dark:text-[#a78bfa]">
                   <span>Explore workspace</span>
                   <ArrowRight className="size-3.5 group-hover:translate-x-1 transition-transform motion-reduce:group-hover:translate-x-0" />
                 </div>

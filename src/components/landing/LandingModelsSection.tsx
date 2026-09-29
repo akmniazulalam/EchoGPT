@@ -125,7 +125,7 @@ export function LandingModelsSection() {
                   </p>
                 </div>
 
-                <div className="pt-2 border-t border-zinc-100 dark:border-white/[0.06] flex items-center justify-between text-[11px] text-zinc-400">
+                <div className="pt-2 border-t border-zinc-100 dark:border-white/6 flex items-center justify-between text-[11px] text-zinc-400">
                   <span>Context: {model.contextWindow || "128K"}</span>
                   <span className="text-[#713CF4] dark:text-[#a78bfa] font-semibold text-[10.5px]">
                     {isSelected ? "Selected" : "Select model"}

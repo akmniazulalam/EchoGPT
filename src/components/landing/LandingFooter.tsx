@@ -198,7 +198,7 @@ export function LandingFooter() {
         </div>
 
         {/* Bottom Bar: Copyright & Platform Links */}
-        <div className="pt-8 border-t border-zinc-200/80 dark:border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-zinc-400 dark:text-zinc-500">
+        <div className="pt-8 border-t border-zinc-200/80 dark:border-white/6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-zinc-400 dark:text-zinc-500">
           <p>© {new Date().getFullYear()} EchoGPT. Built for modern AI productivity & creation.</p>
           <div className="flex items-center gap-4">
             <Link href="/support" className="hover:text-[#713CF4] dark:hover:text-[#a78bfa] transition-colors">

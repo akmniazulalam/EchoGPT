@@ -78,7 +78,7 @@ export function LandingConnectorsSection() {
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 relative">
             {/* Step 1 */}
-            <div className="p-4 rounded-xl bg-zinc-50 dark:bg-white/[0.02] border border-zinc-200/70 dark:border-white/[0.06] space-y-2">
+            <div className="p-4 rounded-xl bg-zinc-50 dark:bg-white/[0.02] border border-zinc-200/70 dark:border-white/6 space-y-2">
               <div className="flex items-center gap-2">
                 <span className="size-6 rounded-lg bg-[#713CF4] text-white text-[11px] font-bold flex items-center justify-center">
                   1
@@ -93,7 +93,7 @@ export function LandingConnectorsSection() {
             </div>
 
             {/* Step 2 */}
-            <div className="p-4 rounded-xl bg-zinc-50 dark:bg-white/[0.02] border border-zinc-200/70 dark:border-white/[0.06] space-y-2">
+            <div className="p-4 rounded-xl bg-zinc-50 dark:bg-white/[0.02] border border-zinc-200/70 dark:border-white/6 space-y-2">
               <div className="flex items-center gap-2">
                 <span className="size-6 rounded-lg bg-[#713CF4] text-white text-[11px] font-bold flex items-center justify-center">
                   2
@@ -108,7 +108,7 @@ export function LandingConnectorsSection() {
             </div>
 
             {/* Step 3 */}
-            <div className="p-4 rounded-xl bg-zinc-50 dark:bg-white/[0.02] border border-zinc-200/70 dark:border-white/[0.06] space-y-2">
+            <div className="p-4 rounded-xl bg-zinc-50 dark:bg-white/[0.02] border border-zinc-200/70 dark:border-white/6 space-y-2">
               <div className="flex items-center gap-2">
                 <span className="size-6 rounded-lg bg-[#713CF4] text-white text-[11px] font-bold flex items-center justify-center">
                   3
@@ -175,7 +175,7 @@ export function LandingConnectorsSection() {
                     {conn.tools.map((t) => (
                       <div
                         key={t.name}
-                        className="p-2 rounded-lg bg-zinc-50 dark:bg-white/[0.02] border border-zinc-200/60 dark:border-white/[0.06]"
+                        className="p-2 rounded-lg bg-zinc-50 dark:bg-white/[0.02] border border-zinc-200/60 dark:border-white/6"
                       >
                         <code className="text-[11px] font-mono font-semibold text-[#713CF4] dark:text-[#a78bfa] block">
                           {t.name}()
@@ -189,7 +189,7 @@ export function LandingConnectorsSection() {
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-zinc-100 dark:border-white/[0.06] flex items-center justify-between text-xs">
+              <div className="pt-3 border-t border-zinc-100 dark:border-white/6 flex items-center justify-between text-xs">
                 <span className="text-[11px] text-zinc-400">1-Click Test Preset</span>
                 <Link
                   href="/connectors"
