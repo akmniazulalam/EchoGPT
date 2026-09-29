@@ -134,7 +134,12 @@ export function ExtensionHistoryDrawer({
                   >
                     {conv.title}
                   </p>
-                  <div className="flex items-center gap-1.5 text-[10px] text-zinc-400 mt-0.5">
+                  <div className="flex items-center gap-1.5 text-[10px] text-zinc-400 mt-0.5 flex-wrap">
+                    {conv.toolType && conv.toolType !== "chat" && (
+                      <span className="text-[9px] uppercase font-bold px-1.5 py-0.2 rounded bg-[#713CF4]/10 text-[#713CF4] dark:text-[#a78bfa] border border-[#713CF4]/20">
+                        {conv.toolType}
+                      </span>
+                    )}
                     <span>{conv.relativeTime}</span>
                     <span>·</span>
                     <span>{conv.messages.length} messages</span>
