@@ -202,7 +202,7 @@ export function ExtensionCompareView() {
                     <button
                       type="button"
                       onClick={() => handleCopy(res.modelId, res.response)}
-                      className="p-1 rounded hover:bg-zinc-200/60 dark:hover:bg-white/[0.06] text-zinc-500 hover:text-zinc-800 transition-colors cursor-pointer"
+                      className="p-1 rounded hover:bg-zinc-200/60 dark:hover:bg-white/6 text-zinc-500 hover:text-zinc-800 dark:hover:text-white transition-colors cursor-pointer"
                       title="Copy response"
                     >
                       {copiedId === res.modelId ? (
