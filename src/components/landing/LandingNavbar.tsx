@@ -80,7 +80,7 @@ export function LandingNavbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0.75 z-40 transition-all duration-200 ${
+      className={`fixed top-0 inset-x-0 z-40 transition-all duration-200 ${
         scrolled
           ? "bg-white/90 dark:bg-[#16131f] backdrop-blur-md border-b border-zinc-200/80 dark:border-white/8 shadow-xs"
           : "bg-white/70 dark:bg-[#16131f] border-transparent"

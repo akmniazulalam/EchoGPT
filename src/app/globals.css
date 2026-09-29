@@ -111,50 +111,45 @@ body::-webkit-scrollbar-thumb,
   border-radius: 999px;
 }
 
-/* #landing-scroll-container {
+#landing-scroll-container {
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
 
 #landing-scroll-container::-webkit-scrollbar {
   display: none;
-} */
+}
 
 .custom-page-scrollbar {
-  display: none;
+  display: block;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 3px;
+  height: 100dvh;
+  z-index: 99999;
 }
 
 .custom-page-scrollbar-thumb {
-  display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 3px;
+  height: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #7c3aed 55%,
+    #713cf4 100%
+  );
+  border-radius: 999px;
+  will-change: transform;
+  cursor: grab;
+  touch-action: none;
 }
 
-@media (max-width: 767px) {
-  .custom-page-scrollbar {
-    display: block;
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 8px;
-    height: 100dvh;
-    z-index: 99999;
-    pointer-events: none;
-  }
-
-  .custom-page-scrollbar-thumb {
-    display: block;
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 3px;
-    background: linear-gradient(
-      to bottom,
-      transparent 0%,
-      #7c3aed 55%,
-      #713cf4 100%
-    );
-    border-radius: 999px;
-    will-change: transform;
-  }
+.custom-page-scrollbar-thumb:active {
+  cursor: grabbing;
 }
 
 html,
