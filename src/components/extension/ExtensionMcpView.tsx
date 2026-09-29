@@ -77,14 +77,14 @@ export function ExtensionMcpView() {
               key={c.id}
               className={`p-3 rounded-2xl border transition-all ${
                 c.enabled
-                  ? "bg-zinc-50 dark:bg-white/[0.03] border-zinc-200/80 dark:border-white/[0.08]"
+                  ? "bg-zinc-50 dark:bg-white/[0.03] border-zinc-200/80 dark:border-white/8"
                   : "bg-zinc-50/50 dark:bg-white/[0.01] border-zinc-200/40 dark:border-white/[0.03] opacity-60"
               }`}
             >
               {/* Connector Card Top */}
               <div className="flex items-center justify-between pb-2 border-b border-zinc-200/50 dark:border-white/4">
                 <div className="flex items-center gap-2 min-w-0">
-                  <div className="size-7 rounded-xl bg-white dark:bg-[#1A1725] border border-zinc-200 dark:border-white/[0.08] flex items-center justify-center text-zinc-700 dark:text-zinc-200 shrink-0">
+                  <div className="size-7 rounded-xl bg-white dark:bg-[#1A1725] border border-zinc-200 dark:border-white/8 flex items-center justify-center text-zinc-700 dark:text-zinc-200 shrink-0">
                     <Terminal className="size-3.5 text-[#713CF4]" />
                   </div>
                   <div className="min-w-0">
@@ -171,7 +171,7 @@ export function ExtensionMcpView() {
       </div>
 
       {/* Footer Link */}
-      <div className="p-3 border-t border-zinc-200/80 dark:border-white/[0.08] bg-zinc-50/60 dark:bg-[#121019] text-center">
+      <div className="p-3 border-t border-zinc-200/80 dark:border-white/8 bg-zinc-50/60 dark:bg-[#121019] text-center">
         <Link
           href="/connectors"
           className="text-xs font-semibold text-[#713CF4] dark:text-[#a78bfa] hover:underline"

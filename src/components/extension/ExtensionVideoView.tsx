@@ -155,7 +155,7 @@ export function ExtensionVideoView({ onAddToHistory }: ExtensionVideoViewProps) 
 
         {/* Result Video Preview Card */}
         {videoGenerated && (
-          <div className="p-3.5 rounded-2xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/80 dark:border-white/[0.08] space-y-3 animate-in fade-in">
+          <div className="p-3.5 rounded-2xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/80 dark:border-white/8 space-y-3 animate-in fade-in">
             <div className="flex items-center justify-between pb-1 border-b border-zinc-200/60 dark:border-white/4">
               <span className="text-xs font-bold text-zinc-800 dark:text-zinc-200 flex items-center gap-1.5">
                 <Film className="size-3.5 text-[#713CF4]" />
@@ -192,14 +192,14 @@ export function ExtensionVideoView({ onAddToHistory }: ExtensionVideoViewProps) 
       </div>
 
       {/* ── Bottom Bar: Model Selector + Generate Action ── */}
-      <div className="p-3 border-t border-zinc-200/80 dark:border-white/[0.08] bg-zinc-50/60 dark:bg-[#121019] space-y-1.5">
+      <div className="p-3 border-t border-zinc-200/80 dark:border-white/8 bg-zinc-50/60 dark:bg-[#121019] space-y-1.5">
         <div className="flex items-center gap-2 relative">
           {/* Model Selector Dropdown */}
           <div ref={modelDropdownRef} className="relative shrink-0">
             <button
               type="button"
               onClick={() => setIsModelOpen((v) => !v)}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white dark:bg-white/[0.04] border border-zinc-200 dark:border-white/[0.08] text-xs font-semibold text-zinc-800 dark:text-zinc-200 hover:border-zinc-300 cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white dark:bg-white/[0.04] border border-zinc-200 dark:border-white/8 text-xs font-semibold text-zinc-800 dark:text-zinc-200 hover:border-zinc-300 cursor-pointer"
             >
               <span className="truncate max-w-[110px]">{selectedModel.name}</span>
               <ChevronDown className="size-3.5 text-zinc-400" />

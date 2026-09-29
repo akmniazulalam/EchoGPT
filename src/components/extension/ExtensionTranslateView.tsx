@@ -175,7 +175,7 @@ export function ExtensionTranslateView({
             {isSourceOpen && (
               <div className="absolute left-0 top-full mt-1 w-56 rounded-xl bg-white dark:bg-[#1B1826] border border-zinc-200 dark:border-white/[0.1] shadow-2xl p-1 z-50 font-lexend animate-in fade-in">
                 <div className="p-1 border-b border-zinc-100 dark:border-white/[0.06]">
-                  <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-zinc-50 dark:bg-black/20 border border-zinc-200 dark:border-white/[0.08]">
+                  <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-zinc-50 dark:bg-black/20 border border-zinc-200 dark:border-white/8">
                     <Search className="size-3 text-zinc-400" />
                     <input
                       type="text"
@@ -239,7 +239,7 @@ export function ExtensionTranslateView({
             {isTargetOpen && (
               <div className="absolute right-0 top-full mt-1 w-56 rounded-xl bg-white dark:bg-[#1B1826] border border-zinc-200 dark:border-white/[0.1] shadow-2xl p-1 z-50 font-lexend animate-in fade-in">
                 <div className="p-1 border-b border-zinc-100 dark:border-white/[0.06]">
-                  <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-zinc-50 dark:bg-black/20 border border-zinc-200 dark:border-white/[0.08]">
+                  <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-zinc-50 dark:bg-black/20 border border-zinc-200 dark:border-white/8">
                     <Search className="size-3 text-zinc-400" />
                     <input
                       type="text"
@@ -307,7 +307,7 @@ export function ExtensionTranslateView({
 
         {/* Translation Result Card */}
         {translatedText && (
-          <div className="p-3.5 rounded-2xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/80 dark:border-white/[0.08] space-y-3 animate-in fade-in">
+          <div className="p-3.5 rounded-2xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/80 dark:border-white/8 space-y-3 animate-in fade-in">
             <div className="flex items-center justify-between pb-2 border-b border-zinc-200/60 dark:border-white/4">
               <span className="text-xs font-bold text-zinc-800 dark:text-zinc-200 flex items-center gap-1.5">
                 <Sparkles className="size-3.5 text-[#713CF4]" />
@@ -352,13 +352,13 @@ export function ExtensionTranslateView({
       </div>
 
       {/* ── Bottom Bar: Model Selector + Translate Button ── */}
-      <div className="p-3 border-t border-zinc-200/80 dark:border-white/[0.08] bg-zinc-50/60 dark:bg-[#121019] flex items-center gap-2">
+      <div className="p-3 border-t border-zinc-200/80 dark:border-white/8 bg-zinc-50/60 dark:bg-[#121019] flex items-center gap-2">
         {/* Interactive model selector */}
         <div ref={modelDropdownRef} className="relative shrink-0">
           <button
             type="button"
             onClick={() => { setIsModelOpen((v) => !v); setModelSearch(""); }}
-            className="flex items-center gap-1.5 px-2.5 py-2 rounded-xl bg-white dark:bg-white/[0.04] border border-zinc-200 dark:border-white/[0.08] hover:border-[#713CF4]/50 text-xs font-semibold text-zinc-800 dark:text-zinc-200 transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-2.5 py-2 rounded-xl bg-white dark:bg-white/[0.04] border border-zinc-200 dark:border-white/8 hover:border-[#713CF4]/50 text-xs font-semibold text-zinc-800 dark:text-zinc-200 transition-colors cursor-pointer"
           >
             <span className="size-1.5 rounded-full bg-[#713CF4]" />
             <ModelLogo modelId={selectedModelId} provider={selectedModel.provider} size="xs" />

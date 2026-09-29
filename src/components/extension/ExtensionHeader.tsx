@@ -50,7 +50,7 @@ export function ExtensionHeader({
   };
 
   return (
-    <header className="shrink-0 flex flex-col border-b border-zinc-200/80 dark:border-white/[0.08] bg-white dark:bg-[#16131F] select-none">
+    <header className="shrink-0 flex flex-col border-b border-zinc-200/80 dark:border-white/8 bg-white dark:bg-[#16131F] select-none">
       {/* 1. Chrome Companion Window Bar */}
       <div className="h-8.5 px-3 flex items-center justify-between bg-zinc-100/80 dark:bg-white/[0.03] border-b border-zinc-200/50 dark:border-white/4">
         <div className="flex items-center gap-1.5 min-w-0">

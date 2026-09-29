@@ -202,14 +202,14 @@ export function ExtensionReadView({
 
         {/* ── Loading Skeleton / Result ── */}
         {isAnalyzing && (
-          <div className="p-4 rounded-2xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/80 dark:border-white/[0.08] flex items-center justify-center gap-2 text-xs text-zinc-500 animate-pulse">
+          <div className="p-4 rounded-2xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/80 dark:border-white/8 flex items-center justify-center gap-2 text-xs text-zinc-500 animate-pulse">
             <Sparkles className="size-4 text-[#713CF4] animate-spin" />
             <span>Analyzing content with EchoGPT...</span>
           </div>
         )}
 
         {analysisResult && !isAnalyzing && (
-          <div className="p-3.5 rounded-2xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/80 dark:border-white/[0.08] space-y-3 animate-in fade-in">
+          <div className="p-3.5 rounded-2xl bg-zinc-50 dark:bg-white/[0.03] border border-zinc-200/80 dark:border-white/8 space-y-3 animate-in fade-in">
             <div className="flex items-center justify-between pb-2 border-b border-zinc-200/60 dark:border-white/4">
               <span className="text-xs font-bold text-zinc-800 dark:text-zinc-200 flex items-center gap-1.5">
                 <CheckCircle className="size-3.5 text-emerald-500" />

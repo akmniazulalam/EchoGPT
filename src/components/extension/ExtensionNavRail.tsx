@@ -76,7 +76,7 @@ export function ExtensionNavRail({ activeTab, onSelectTab }: ExtensionNavRailPro
   return (
     <aside
       aria-label="Extension navigation rail"
-      className="w-13.5 sm:w-14 shrink-0 flex flex-col items-center justify-between py-2 border-l border-zinc-200/80 dark:border-white/[0.08] bg-zinc-50/70 dark:bg-[#12111A] select-none z-10"
+      className="w-13.5 sm:w-14 shrink-0 flex flex-col items-center justify-between py-2 border-l border-zinc-200/80 dark:border-white/8 bg-zinc-50/70 dark:bg-[#12111A] select-none z-10"
     >
       {/* Top Group: Primary Extension Modes */}
       <div className="flex flex-col items-center gap-1 w-full px-1">
