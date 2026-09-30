@@ -116,7 +116,7 @@ export function MockBrowserFrame() {
         {/* Chrome Tabs */}
         <div className="flex-1 flex items-center gap-1 overflow-x-auto custom-scrollbar h-full pt-1.5 max-w-2xl">
           {/* Active Tab */}
-          <div className="h-full px-3.5 flex items-center gap-2 rounded-t-xl bg-white dark:bg-[#1B1827] text-zinc-900 dark:text-zinc-100 text-xs font-medium shadow-xs border-t border-x border-zinc-300/60 dark:border-white/8 min-w-[180px] max-w-[240px] truncate">
+          <div className="h-full px-3.5 flex items-center gap-2 rounded-t-xl bg-white dark:bg-[#1B1827] text-zinc-900 dark:text-zinc-100 text-xs font-medium shadow-xs border-t border-x border-zinc-300/60 dark:border-white/8 min-w-45 max-w-60 truncate">
             <span className="size-3.5 rounded-full bg-black dark:bg-white text-white dark:text-black font-extrabold text-[8px] flex items-center justify-center shrink-0">
               N
             </span>
@@ -124,7 +124,7 @@ export function MockBrowserFrame() {
           </div>
 
           {/* Inactive Tab */}
-          <div className="h-full px-3 flex items-center gap-2 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-300/50 dark:hover:bg-white/[0.04] rounded-t-xl text-xs transition-colors cursor-pointer min-w-[150px] max-w-[200px] truncate">
+          <div className="h-full px-3 flex items-center gap-2 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-300/50 dark:hover:bg-white/4 rounded-t-xl text-xs transition-colors cursor-pointer min-w-37.5 max-w-50 truncate">
             <span className="size-3.5 rounded bg-zinc-400/40 text-zinc-700 dark:text-zinc-300 text-[8px] flex items-center justify-center shrink-0">
               GH
             </span>
@@ -174,7 +174,7 @@ export function MockBrowserFrame() {
         </div>
 
         {/* Omnibox Address Bar */}
-        <div className="flex-1 max-w-xl flex items-center justify-between px-3 py-1.5 rounded-xl bg-zinc-100 dark:bg-white/5 border border-zinc-200/80 dark:border-white/6 text-xs">
+        <div className="sm:flex-1 max-w-xl hidden sm:flex items-center justify-between px-3 py-1.5 rounded-xl bg-zinc-100 dark:bg-white/5 border border-zinc-200/80 dark:border-white/6 text-xs">
           <div className="flex items-center gap-2 min-w-0">
             <Lock className="size-3 text-emerald-500 shrink-0" />
             <span className="text-zinc-900 dark:text-zinc-100 font-medium truncate">
@@ -187,7 +187,7 @@ export function MockBrowserFrame() {
         {/* Right Action Controls: Extension Icons & Width Presets */}
         <div className="flex items-center gap-2">
           {/* Quick Width Presets (Instant test for 360px -> 720px responsive behavior) */}
-          <div className="hidden lg:flex items-center gap-1 p-0.5 rounded-xl bg-zinc-100 dark:bg-white/[0.04] border border-zinc-200/60 dark:border-white/6">
+          <div className="hidden lg:flex items-center gap-1 p-0.5 rounded-xl bg-zinc-100 dark:bg-white/4 border border-zinc-200/60 dark:border-white/6">
             <span className="text-[10px] font-semibold text-zinc-400 px-1.5 uppercase">
               Width:
             </span>
@@ -258,7 +258,7 @@ export function MockBrowserFrame() {
       {/* ── 3. MAIN WORKSPACE VIEWPORT: Mock Web Page (Left) + Side Panel (Right) ── */}
       <div className="flex-1 flex min-h-0 overflow-hidden relative">
         {/* ── Left Side: Simulated Active Webpage (e.g. Next.js Documentation) ── */}
-        <div className="flex-1 flex flex-col min-w-0 h-full overflow-y-auto custom-scrollbar bg-white dark:bg-[#0E0C17] p-6 sm:p-10 select-text">
+        <div className="hidden lg:flex-1 lg:flex flex-col min-w-0 h-full overflow-y-auto custom-scrollbar bg-white dark:bg-[#0E0C17] p-6 sm:p-10 select-text">
           <div className="max-w-3xl mx-auto space-y-6">
             {/* Breadcrumb */}
             <div className="flex items-center gap-1.5 text-xs text-zinc-400 font-medium">
@@ -371,7 +371,7 @@ export async function POST(req: Request) {
           <div
             onMouseDown={() => setIsDragging(true)}
             onTouchStart={() => setIsDragging(true)}
-            className={`relative w-2.5 hover:w-3 bg-zinc-200/80 dark:bg-white/4 hover:bg-[#713CF4]/40 dark:hover:bg-[#713CF4]/40 cursor-col-resize transition-all shrink-0 flex items-center justify-center select-none z-20 group ${
+            className={`relative w-2.5 hover:w-3 bg-zinc-200/80 dark:bg-white/4 hover:bg-[#713CF4]/40 dark:hover:bg-[#713CF4]/40 cursor-col-resize transition-all shrink-0 hidden lg:flex items-center justify-center select-none z-20 group ${
               isDragging ? "bg-[#713CF4] w-3" : ""
             }`}
             title="Drag to resize EchoGPT Side Panel (360px – 1080px)">
@@ -392,8 +392,8 @@ export async function POST(req: Request) {
         {/* ── Right Side: EchoGPT Chrome Side Panel ── */}
         {isPanelOpen && (
           <div
-            style={{ width: `${panelWidth}px` }}
-            className="h-full shrink-0 flex flex-col border-l border-zinc-200 dark:border-white/8 shadow-2xl relative z-20 animate-in slide-in-from-right-4 duration-150">
+            style={{ "--panel-width": `${panelWidth}px` } as React.CSSProperties}
+            className="w-full lg:w-(--panel-width) h-full shrink-0 flex flex-col border-l border-zinc-200 dark:border-white/8 shadow-2xl relative z-20 animate-in slide-in-from-right-4 duration-150">
             <ExtensionSidePanel
               onClosePanel={() => setIsPanelOpen(false)}
               isPinned={isPinned}
